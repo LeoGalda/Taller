@@ -12,15 +12,19 @@ int main(int argc, char* argv[]){
 		printf("ingresa la ruta del archivo nabo!");
 		return ERROR;
 	}	
-	encriptador_t datos;
-	encriptador_crear(&datos);
-	encriptador_encriptar(&datos,archivo);	
-	size_t datosEncriptados = encriptador_get_datos(&datos);
-	printf("%zu\n",datosEncriptados);
+	Encriptador encriptador;
+	encriptador_crear(&encriptador);
+	encriptador_encriptar(&encriptador,archivo);	
+//	size_t datosEncriptados =
+	encriptador_get_datos(&encriptador);
+//	printf("%zu\n",datosEncriptados);
 	encriptador_destroy(&datos);
 	fclose(archivo);
 	return SUCCESS;
 }
 
 
+FILE buscarArchivo(argv){
+	return argv[1];
+}
 
