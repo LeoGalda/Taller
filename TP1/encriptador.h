@@ -17,7 +17,7 @@ typedef struct EncriptadorLista{
 
 // inicializa la instancia this para ser utilizada
 // Pre: this apunta un sector valido de memoria
-void encriptador_create(Encriptador *this);
+void encriptador_crear(Encriptador *this);
 
 void encriptador_encriptar(Encriptador *this, FILE *datos_a_encriptar);
 

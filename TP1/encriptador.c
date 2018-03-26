@@ -8,30 +8,10 @@
 #define SUCCESS 0
 #define ERROR 1
 
+char EncriptarDato(char uncaracter);
+void agregarDatoEncriptadoAlEncriptador(Encriptador *this, char datoEncriptado);
 
-char EncriptarDato(char unCaracter){
-        return toupper(unCaracter);
-}
-
-
-void agregarDatoEncriptadoAlEncriptador(Encriptador *this, char datoEncriptado){
-        Elemento *unElemento;
-        unElemento = (Elemento *) malloc(sizeof(Elemento));
-        unElemento->dato = datoEncriptado;
-        unElemento->siguiente = NULL;
-
-        if (this->tamanio > 0){
-                 this->fin->siguiente = unElemento;
-                 this->fin = unElemento;
-        }else{
-                this->inicio = unElemento;
-                this->fin = unElemento;
-        }
-        this->tamanio++;
-}
-
-
-void encriptador_create(Encriptador *this) {
+void encriptador_crear(Encriptador *this) {
 	this->inicio = NULL;
 	this->fin = NULL;
 	this->tamanio = 0;	
@@ -51,8 +31,8 @@ void encriptador_encriptar(Encriptador *this, FILE *datosAEncriptar) {
 void encriptador_get_datos(Encriptador *this){
 	Elemento *unElemento = this->inicio;
 	while (unElemento != NULL){
-		printf("%d",unElemento->dato);
-		unElemento->siguiente;
+		printf("%c",unElemento->dato);
+		unElemento = unElemento->siguiente;
 	}
 //	return this->datos;
 }
@@ -62,4 +42,23 @@ void encriptador_destroy(Encriptador *this){
 	//nada para destruir
 }
 
+char EncriptarDato(char unCaracter){	
+    return toupper(unCaracter);
+}
+
+void agregarDatoEncriptadoAlEncriptador(Encriptador *this, char datoEncriptado){
+    Elemento *unElemento;
+    unElemento = (Elemento *) malloc(sizeof(Elemento));
+    unElemento->dato = datoEncriptado;
+    unElemento->siguiente = NULL;
+
+    if (this->tamanio > 0){
+             this->fin->siguiente = unElemento;
+             this->fin = unElemento;
+    }else{
+            this->inicio = unElemento;
+            this->fin = unElemento;
+    }
+    this->tamanio++;
+}
 
