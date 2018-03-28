@@ -16,7 +16,6 @@ typedef struct EncriptadorLista{
 	int tamanio;
 	char *key;
 	char arrayDeEstados[256];
-
 } Encriptador;
 
 
@@ -26,7 +25,11 @@ void encriptador_crear(Encriptador *this,char *key);
 
 void encriptador_encriptar(Encriptador *this, FILE *datos_a_encriptar);
 
-void encriptador_get_datos(Encriptador *this);
+void encriptador_desencriptar(Encriptador *this, FILE *archivoSalida);
+
+void encriptador_salida_estandar(Encriptador *this);
+
+void encriptador_salida_errores(Encriptador *this);
 
 void encriptador_destroy(Encriptador *this);
 

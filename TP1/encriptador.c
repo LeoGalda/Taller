@@ -8,7 +8,7 @@
 #define SUCCESS 0
 #define ERROR 1
 
-int encriptarDato(unsigned char key_stream,char unCaracter);
+int encriptarDato(unsigned char key_stream,unsigned char unCaracter);
 void agregarDatoEncriptadoAlEncriptador(Encriptador *this, int datoEncriptado, int key_stream);
 void faseKSA(Encriptador *this);
 unsigned char fasePRGA(Encriptador *this);
@@ -30,29 +30,61 @@ void encriptador_encriptar(Encriptador *this, FILE *datosAEncriptar) {
 	while (unCaracter != EOF) {
 		key_stream = fasePRGA(this);
 		datoEncriptado = encriptarDato(key_stream,unCaracter);
-		printf("encriptando: %02x\n",datoEncriptado);
-		agregarDatoEncriptadoAlEncriptador(this, datoEncriptado,key_stream);
+//		printf("encriptando: %02x\n",datoEncriptado);
+		agregarDatoEncriptadoAlEncriptador(this, datoEncriptado, key_stream);
 		unCaracter = getc(datosAEncriptar);
 	}
 }
 
-
-void encriptador_get_datos(Encriptador *this){
-	Elemento *unElemento = this->inicio;
-	while (unElemento != NULL){
-		printf("elemento: %02x\n",unElemento->dato);
-		printf("key: %02X\n",unElemento->keyStream);
-		unElemento = unElemento->siguiente;
+void encriptador_desencriptar(Encriptador *this, FILE *archivoSalida){	
+	int datoEncriptado;
+	Elemento *elemento = this->inicio;
+	printf("dato desencriptado:\n");
+	while (elemento != NULL){		
+		datoEncriptado = encriptarDato(elemento->keyStream, elemento->dato);
+		printf("%02x", datoEncriptado);
+		putc(datoEncriptado,archivoSalida);
+		//agregarDatoEncriptadoAlEncriptador(this, datoEncriptado, anteriorElemento->keyStream);
+		elemento = elemento->siguiente;
 	}
-//	return this->datos;
+	printf("\n");
+/*	while (unElemento != NULL){
+		printf("asignando: %02x", unElemento->dato);
+		key_stream = fasePRGA(this);	
+		datoEncriptado = encriptarDato(key_stream, unElemento->dato);
+		agregarDatoEncriptadoAlEncriptador(this, datoEncriptado, key_stream);
+		unElemento = unElemento->siguiente;
+	}*/
+	
+
 }
 
+
+void encriptador_salida_estandar(Encriptador *this){
+	Elemento *unElemento = this->inicio;
+	printf("Salida estandar: \n");
+	while (unElemento != NULL){
+		printf("%02x",unElemento->dato);		
+		unElemento = unElemento->siguiente;
+	}
+	printf("\n");
+}
+
+void encriptador_salida_errores(Encriptador *this){
+	Elemento *unElemento = this->inicio;
+	printf("Salida errores: \n");
+	while (unElemento != NULL){
+		printf("%02X",unElemento->keyStream);
+		unElemento = unElemento->siguiente;
+	}
+	printf("\n");
+}
 
 void encriptador_destroy(Encriptador *this){
 	//nada para destruir
 }
 
-int encriptarDato(unsigned char key_stream, char unCaracter){	
+int encriptarDato(unsigned char key_stream, unsigned char unCaracter){	
     return key_stream ^ unCaracter;
 }    
 

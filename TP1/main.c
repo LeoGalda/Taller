@@ -7,6 +7,9 @@
 char* buscarArchivo(char* argumento);
 
 int main(int argc, char* argv[]){
+
+
+//cliente	
 	FILE* input;
 	char* archivo;
 	char* clave;
@@ -19,13 +22,20 @@ int main(int argc, char* argv[]){
 		return ERROR;
 	}	
 	Encriptador encriptador;
-	encriptador_crear(&encriptador,clave);
+	encriptador_crear(&encriptador, clave);
 	encriptador_encriptar(&encriptador,input);	
-//	size_t datosEncriptados =
-	encriptador_get_datos(&encriptador);
-//	printf("%zu\n",datosEncriptados);
+	encriptador_salida_estandar(&encriptador);
+	encriptador_salida_errores(&encriptador);
 	encriptador_destroy(&encriptador);
 	fclose(input);
+
+
+//servidor
+	FILE * salida = fopen ("./out", "w+");
+	Encriptador desencriptador;		
+	desencriptador = encriptador;
+	encriptador_desencriptar(&desencriptador,salida);
+	fclose(salida);
 	return SUCCESS;
 }
 
