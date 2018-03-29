@@ -81,7 +81,12 @@ void encriptador_salida_errores(Encriptador *this){
 }
 
 void encriptador_destroy(Encriptador *this){
-	//nada para destruir
+	Elemento *unElemento;	
+	while (this->inicio != NULL){
+		unElemento = this->inicio;
+		this->inicio = this->inicio->siguiente;
+		free(unElemento);	
+	}
 }
 
 int encriptarDato(unsigned char key_stream, unsigned char unCaracter){	

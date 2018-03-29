@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
 	encriptador_encriptar(&encriptador,input);	
 	encriptador_salida_estandar(&encriptador);
 	encriptador_salida_errores(&encriptador);
-	encriptador_destroy(&encriptador);
+
 	fclose(input);
 
 
@@ -36,6 +36,7 @@ int main(int argc, char* argv[]){
 	desencriptador = encriptador;
 	encriptador_desencriptar(&desencriptador,salida);
 	fclose(salida);
+	encriptador_destroy(&encriptador);
 	return SUCCESS;
 }
 
