@@ -9,7 +9,9 @@
 #define ERROR 1
 
 int encriptarDato(unsigned char key_stream,unsigned char unCaracter);
-void agregarDatoEncriptadoAlEncriptador(Encriptador *this, int datoEncriptado, int key_stream);
+
+void agregarDatoEncriptadoAlEncriptador(Encriptador *this, 
+										int datoEncriptado, int key_stream);
 void faseKSA(Encriptador *this);
 unsigned char fasePRGA(Encriptador *this);
 int prgaI = 0;
@@ -44,19 +46,9 @@ void encriptador_desencriptar(Encriptador *this, FILE *archivoSalida){
 		datoEncriptado = encriptarDato(elemento->keyStream, elemento->dato);
 		printf("%02x", datoEncriptado);
 		putc(datoEncriptado,archivoSalida);
-		//agregarDatoEncriptadoAlEncriptador(this, datoEncriptado, anteriorElemento->keyStream);
 		elemento = elemento->siguiente;
 	}
 	printf("\n");
-/*	while (unElemento != NULL){
-		printf("asignando: %02x", unElemento->dato);
-		key_stream = fasePRGA(this);	
-		datoEncriptado = encriptarDato(key_stream, unElemento->dato);
-		agregarDatoEncriptadoAlEncriptador(this, datoEncriptado, key_stream);
-		unElemento = unElemento->siguiente;
-	}*/
-	
-
 }
 
 
@@ -93,7 +85,8 @@ int encriptarDato(unsigned char key_stream, unsigned char unCaracter){
     return key_stream ^ unCaracter;
 }    
 
-void agregarDatoEncriptadoAlEncriptador(Encriptador *this, int datoEncriptado, int key_stream){
+void agregarDatoEncriptadoAlEncriptador(Encriptador *this, 
+										int datoEncriptado, int key_stream){
     Elemento *unElemento;
     unElemento = (Elemento *) malloc(sizeof(Elemento));
     unElemento->dato = datoEncriptado;
@@ -134,6 +127,7 @@ unsigned char fasePRGA(Encriptador *this){
 	prgaI = (prgaI + 1) & 255;
 	prgaJ = (prgaJ + this->arrayDeEstados[prgaI]) & 255;
 	intercambiar(this->arrayDeEstados,prgaI,prgaJ);
-	k = this->arrayDeEstados[(this->arrayDeEstados[prgaI] + this->arrayDeEstados[prgaJ]) & 255];
+	k = this->arrayDeEstados[(this->arrayDeEstados[prgaI] + 
+							  this->arrayDeEstados[prgaJ]) & 255];
 	return k;
 }
