@@ -56,12 +56,13 @@ int cliente_conectar(Cliente *this){
         	conectado = (status != -1);
     	}
 	}
-
     freeaddrinfo(ptr);
-
-    if (conectado == false) {
-    	return 1; 
-    }
+    if (!conectado) return 1;    
     printf("creo que me conecte");
     return 0;
+}
+
+int cliente_enviar_datos(Cliente *this,Encriptador *encriptadorCliente){
+	printf("enviando datos");
+	return 0;
 }

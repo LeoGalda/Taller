@@ -17,11 +17,7 @@
 #define SUCCESS 0
 #define ERROR 1
 
-#define REQUEST_MAX_LEN 128
-#define RESPONSE_MAX_LEN 1024
-
-char* buscarArchivo(char *argumento);
-
+#define REQUEST_MAX_LEN 64
 
 int ejecutarServidor(char *puerto,char *key){
 	int status,peerskt;
@@ -33,7 +29,7 @@ int ejecutarServidor(char *puerto,char *key){
 	while (corriendo) {
 	    printf("esperando un cliente\n");
 	    peerskt = servidor_conectar(&servidor);	    
-	    printf("--- conectando ---");
+	    printf("--- conectando ---\n");
 	    if (peerskt == -1) {
 	        printf("Error: %s\n", strerror(errno));
 	         corriendo = false;
@@ -69,31 +65,48 @@ int ejecutarServidor(char *puerto,char *key){
 		return SUCCESS;
 }
 
-int ejecutarCliente(int cantidad,char *ip, char* puerto, char *clave,char *arch){
-		int status;
-		Cliente cliente;
-		cliente_create(&cliente, puerto, clave, ip);
-		status = cliente_configurar(&cliente);		
-		if(status) return 1;
-		status = cliente_conectar(&cliente);
-		if(status) return 1;
-		FILE* input;
-		char *archivo;		
-		if (cantidad > 1){		
-			archivo = buscarArchivo(arch);
-			input = fopen(archivo,"r"); 			
-		}else{
-			printf("ingresa la ruta del archivo nabo!\n");
-			return ERROR;
-		}	
-		Encriptador encriptador;
-		encriptador_crear(&encriptador, clave);
-		encriptador_encriptar(&encriptador,input);	
-		encriptador_salida_estandar(&encriptador);
-		encriptador_salida_errores(&encriptador);
-		fclose(input);
+Encriptador ejecutarEncriptador(char *clave,FILE *input,
+								int *prgaI,int *prgaJ, int mierda,
+								Encriptador *encriptador){	
+	encriptador_crear(encriptador, clave);	
+	if(mierda == 0){
+		encriptador_fase_KSA(encriptador);		
+	}	
+	encriptador_encriptar(encriptador,input,REQUEST_MAX_LEN,prgaI,prgaJ);	
+	encriptador_salida_estandar(encriptador);
+	encriptador_salida_errores(encriptador);
+/*	FILE * salida = fopen("./out", "w+");
+	Encriptador desencriptador;		
+	desencriptador = *encriptador;
+	encriptador_desencriptar(&desencriptador,salida);
+	encriptador_salida_errores(&encriptador);	*/
+	return *encriptador;
+}
 
-		return SUCCESS;
+int ejecutarCliente(int cantidad,char *ip, char* puerto, 
+					char *clave,char *arch){		
+	int status;
+	Cliente cliente;
+	cliente_create(&cliente, puerto, clave, ip);
+	status = cliente_configurar(&cliente);		
+	if(status) return 1;
+	status = cliente_conectar(&cliente);		
+	if(status) return 1;
+	FILE* input;							
+	input = fopen(arch,"r"); 					
+	int prgaI = 0;
+	int prgaJ = 0;
+	int mierda = 0;
+	Encriptador encriptador,encriptadorCliente;
+	while(!feof(input)){	
+		encriptadorCliente = ejecutarEncriptador(clave, input,&prgaI,&prgaJ,mierda,&encriptador);
+		status = cliente_enviar_datos(&cliente, &encriptadorCliente);		
+		if(status) return 1;
+		encriptador_destroy(&encriptadorCliente);
+		mierda++;
+	}
+	fclose(input);		
+	return SUCCESS;
 }
 
 
@@ -108,8 +121,4 @@ int main(int argc, char* argv[]){
 	}
 }
 
-
-char* buscarArchivo(char* argv){
-	return argv;
-}
 
