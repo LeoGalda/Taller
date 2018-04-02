@@ -58,7 +58,7 @@ int servidor_conectar(Servidor *this){
 	 return accept(this->socket, NULL, NULL);   // aceptamos un cliente	      	
 }
 
-int recv_message(int skt, unsigned char *buf, int size) {
+int recv_message(int skt, unsigned char *buf, int size,bool *corriendo) {
    	int received = 0;
    	int s = 0;
    	bool socketValido = true;
@@ -68,34 +68,40 @@ int recv_message(int skt, unsigned char *buf, int size) {
 
       	if(s > 0){
       		received += s;
-      	}
-      	else{
+      	}else{
       		socketValido = false;
       	}
    	}   	
-   	printf("tamaño:%i\n", size);
+/*   	printf("tamaño:%i\n", size);
    	printf("recibido:%i\n", received);
    	printf("esto tiene buf?:");   	 
    	for(int l = 0; l < received; l++){
 		printf("%02x\n", *buf);
 		buf++;
-	}
-    if (socketValido || s == 0) {
+	}*/
+    if (socketValido){ 
     	return received;
-   	}
-   	else {   		
+   	}else if (s == 0){
+   		*corriendo = false;
+   		return received;
+   	}else {   		
    		printf("nooo");
       	return -1;
    	}   	
 }
 
-int servidor_recibir_datos(Servidor *this, int peerskt,unsigned char *buf, int *rec){		
-	*rec = recv_message(peerskt, buf, RESPONSE_MAX_LEN);     			
+int servidor_recibir_datos(Servidor *this, int peerskt,unsigned char *buf,
+							 int *rec,bool *corriendo){		
+	*rec = recv_message(peerskt, buf, RESPONSE_MAX_LEN,corriendo);     			
+	if (!*corriendo){
+		shutdown(peerskt, SHUT_RDWR);
+    	close(peerskt);    
+    	printf("cierro socket\n");
+    	return 1;
+	}
 	if(*rec < 0){
 		printf("problema\n");
 		return 1;
 	}
-    shutdown(peerskt, SHUT_RDWR);
-    close(peerskt);    
     return 0;
 }

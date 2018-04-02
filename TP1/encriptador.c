@@ -27,22 +27,22 @@ void encriptador_encriptar(Encriptador *this, FILE *datosAEncriptar,
 	char unCaracter;
 	unsigned char key_stream;
 	unsigned char datoEncriptado;
-//	faseKSA(this);		
-	for(int c = 0;(c < cantidad) && (!feof(datosAEncriptar));c++){
-	//while (unCaracter != EOF) {
-		unCaracter = getc(datosAEncriptar);
-		key_stream = fasePRGA(this, prgaI, prgaJ);		
-		datoEncriptado = encriptarDato(key_stream,unCaracter);
-		agregarDatoEncriptadoAlEncriptador(this, datoEncriptado, key_stream);
+	for(int c = 0; (c < cantidad) && 
+		((unCaracter = getc(datosAEncriptar)) != EOF); c++){			
+			key_stream = fasePRGA(this, prgaI, prgaJ);		
+			datoEncriptado = encriptarDato(key_stream,unCaracter);
+			agregarDatoEncriptadoAlEncriptador(this, datoEncriptado,
+											   key_stream);	
 	}
 }
 
-void encriptador_desencriptar(Encriptador *this, unsigned char *datosAEncriptar,
-							int cantidad,int *prgaI, int *prgaJ){
+void encriptador_desencriptar(Encriptador *this,
+							  unsigned char *datosAEncriptar,
+							  int cantidad,int *prgaI, int *prgaJ){
 	unsigned char unCaracter;
 	unsigned char key_stream;
 	unsigned char datoEncriptado;
-	for(int c = 0; c < cantidad;c++){	
+	for(int c = 0; c < cantidad; c++){
 		unCaracter = *datosAEncriptar;
 		key_stream = fasePRGA(this, prgaI, prgaJ);		
 		datoEncriptado = encriptarDato(key_stream,unCaracter);
@@ -53,14 +53,12 @@ void encriptador_desencriptar(Encriptador *this, unsigned char *datosAEncriptar,
 
 void encriptador_guardar_en_salida(Encriptador *this, FILE *archivoSalida){	
 	int datoEncriptado;
-	Elemento *elemento = this->inicio;
-	printf("dato desencriptado:\n");
+	Elemento *elemento = this->inicio;	
 	while (elemento != NULL){		
 		datoEncriptado = elemento->dato;		
 		putc(datoEncriptado,archivoSalida);
 		elemento = elemento->siguiente;
-	}
-	printf("\n");
+	}	
 }
 
 
@@ -90,12 +88,13 @@ void encriptador_destroy(Encriptador *this){
 	}
 }
 
-unsigned char encriptarDato(unsigned char key_stream, unsigned char unCaracter){	
+unsigned char encriptarDato(unsigned char key_stream,unsigned char unCaracter){
     return key_stream ^ unCaracter;
 }    
 
 void agregarDatoEncriptadoAlEncriptador(Encriptador *this, 
-										unsigned char datoEncriptado, unsigned char key_stream){
+										unsigned char datoEncriptado,
+										 unsigned char key_stream){
     Elemento *unElemento;
     unElemento = (Elemento *) malloc(sizeof(Elemento));
     unElemento->dato = datoEncriptado;

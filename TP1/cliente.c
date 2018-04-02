@@ -46,16 +46,15 @@ int cliente_conectar(Cliente *this){
     	if (this->socket == -1) {
 	        printf("Error: %s\n", strerror(errno));
     	    return 1;
-    	}
-    	else{
-	        status = connect(this->socket, aux->ai_addr, aux->ai_addrlen);
-    	    if (status == -1) {
-        	    printf("Error: %s\n", strerror(errno));
-            	close(this->socket);
-            	return 1;
-        	}
-        	conectado = (status != -1);
-    	}
+    	}else{
+	        	status = connect(this->socket, aux->ai_addr, aux->ai_addrlen);
+    	    	if (status == -1) {
+        	    	printf("Error: %s\n", strerror(errno));
+            		close(this->socket);
+            		return 1;
+        		}
+        		conectado = (status != -1);
+    		}
 	}
     freeaddrinfo(ptr);
     if (!conectado) return 1;        
@@ -75,21 +74,18 @@ int cliente_enviar_datos(Cliente *this, Encriptador *encriptador){
 		cantidad++;
 		unElemento = unElemento->siguiente;
 	}   	    			
-   	while (bytesEnviados < cantidad && errorDelSocket == false && socketCerrado == false) {
-   		for(int w = 0; w < cantidad; w++){
-   			printf("info:%i", informacion[bytesEnviados]);
-   		}
-    	status = send(this->socket, &informacion[bytesEnviados], cantidad - bytesEnviados, MSG_NOSIGNAL);
+   	while (bytesEnviados < cantidad && errorDelSocket == false && 
+   			socketCerrado == false) {
+    	status = send(this->socket, &informacion[bytesEnviados],
+    				  cantidad - bytesEnviados, MSG_NOSIGNAL);
 
-    	if (status < 0) {  // ups,  hubo un error
-        	printf("Error: %s\n", strerror(errno));
+    	if (status < 0) {
+        	printf("Error enviar cliente datos: %s\n", strerror(errno));
             errorDelSocket = true;
-        }
-      	else if (status == 0) { // nos cerraron el socket :(
-        	socketCerrado = true;
-      	}
-      	else {
-         	bytesEnviados += status;
+        }else if (status == 0) {
+        		socketCerrado = true;
+      	}else {
+         		bytesEnviados += status;
       	}
    	}   	
 	if (socketCerrado || errorDelSocket) {

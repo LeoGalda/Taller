@@ -20,16 +20,16 @@
 #define REQUEST_MAX_LEN 64
 #define RESPONSE_MAX_LEN 50
 
-void ejecutarDesencriptador(char *clave,unsigned char *buf,Encriptador *desencriptador,
-							int *prgaI,int *prgaJ,int recibidos){		
-	FILE *salida = fopen("./out", "w+");
+void ejecutarDesencriptador(char *clave,unsigned char *buf,
+							Encriptador *desencriptador,int *prgaI,int *prgaJ,
+							int recibidos, int control){			
 	encriptador_crear(desencriptador, clave);	
-	encriptador_fase_KSA(desencriptador);			
+	if (control == 0){
+		encriptador_fase_KSA(desencriptador);			
+	}	
 	encriptador_desencriptar(desencriptador,buf,recibidos,prgaI,prgaJ);	
-	encriptador_guardar_en_salida(desencriptador,salida);
 	encriptador_salida_estandar(desencriptador);
 	encriptador_salida_errores(desencriptador);		
-	fclose(salida);
 }
 
 
@@ -44,24 +44,27 @@ int ejecutarServidor(char *puerto,char *key){
 	status = servidor_configurar(&servidor);	
 	if(status) return 1;	
 	Encriptador desencriptador;
+	FILE *salida = fopen("./out", "w+");
 	int prgaI = 0;
 	int prgaJ = 0;
-//	int control = 0;
+	int control = 0;
+	printf("esperando un cliente\n");
+	peerskt = servidor_conectar(&servidor);	    
+	printf("--- conectando ---\n");
 	while (corriendo) {
-	    printf("esperando un cliente\n");
-	    peerskt = servidor_conectar(&servidor);	    
-	    printf("--- conectando ---\n");
 	    if (peerskt == -1) {
 	        printf("Error: %s\n", strerror(errno));
 	         corriendo = false;
-	    }	    
-	    else{
-	        printf("NuevoCliente\n");
-	        servidor_recibir_datos(&servidor,peerskt,buf,&recibidos);	        	        
-	        ejecutarDesencriptador(key,buf,&desencriptador,&prgaI,&prgaJ,recibidos);
-	        corriendo = false;
+	    }else{
+	      printf("NuevoCliente\n");
+	      servidor_recibir_datos(&servidor,peerskt,buf,&recibidos,&corriendo);
+	      ejecutarDesencriptador(key,buf,&desencriptador,&prgaI,&prgaJ,
+	       						  recibidos,control);
+	      encriptador_guardar_en_salida(&desencriptador,salida);	        
+	      control++;
 	    }
 	}
+	fclose(salida);
 	encriptador_destroy(&desencriptador);
 	printf("terminando\n");
    	shutdown(servidor.socket, SHUT_RDWR);
@@ -115,7 +118,7 @@ int ejecutarCliente(int cantidad,char *ip, char* puerto,
 int main(int argc, char* argv[]){
 	if(strcmp(argv[1],"server") == 0){		
 		return ejecutarServidor(argv[2],argv[3]);
-	}else if(strcmp(argv[1],"client") == 0){
+	}else if (strcmp(argv[1],"client") == 0){
 		return ejecutarCliente(argc,argv[2],argv[3],argv[4],argv[5]);
 	}else{
 		printf("ingresaste cualquier cosa\n");
