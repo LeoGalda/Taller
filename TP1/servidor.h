@@ -15,6 +15,6 @@ int servidor_configurar(Servidor *this);
 
 int servidor_conectar(Servidor *this);
 
-int servidor_recibir_datos(Servidor *this, int peerskt, int *buf, int *rec);
+int servidor_recibir_datos(Servidor *this, int peerskt, unsigned char *buf, int *rec);
 
 #endif

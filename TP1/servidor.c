@@ -58,7 +58,7 @@ int servidor_conectar(Servidor *this){
 	 return accept(this->socket, NULL, NULL);   // aceptamos un cliente	      	
 }
 
-int recv_message(int skt, int *buf, int size) {
+int recv_message(int skt, unsigned char *buf, int size) {
    	int received = 0;
    	int s = 0;
    	bool socketValido = true;
@@ -89,7 +89,7 @@ int recv_message(int skt, int *buf, int size) {
    	}   	
 }
 
-int servidor_recibir_datos(Servidor *this, int peerskt,int *buf, int *rec){		
+int servidor_recibir_datos(Servidor *this, int peerskt,unsigned char *buf, int *rec){		
 	*rec = recv_message(peerskt, buf, RESPONSE_MAX_LEN);     			
 	if(*rec < 0){
 		printf("problema\n");

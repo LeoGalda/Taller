@@ -20,7 +20,7 @@
 #define REQUEST_MAX_LEN 64
 #define RESPONSE_MAX_LEN 50
 
-void ejecutarDesencriptador(char *clave,int *buf,Encriptador *desencriptador,
+void ejecutarDesencriptador(char *clave,unsigned char *buf,Encriptador *desencriptador,
 							int *prgaI,int *prgaJ,int recibidos){		
 	FILE *salida = fopen("./out", "w+");
 	encriptador_crear(desencriptador, clave);	
@@ -37,8 +37,8 @@ int ejecutarServidor(char *puerto,char *key){
 	int status,peerskt;
 	bool corriendo = true;	
 	Servidor servidor;
-	int *buf;
-	buf = (int*) malloc(sizeof(int) * RESPONSE_MAX_LEN);	
+	unsigned char *buf;
+	buf = (unsigned char*) malloc(sizeof(unsigned char) * RESPONSE_MAX_LEN);	
 	int recibidos = 0;
 	servidor_create(&servidor, puerto, key);
 	status = servidor_configurar(&servidor);	
@@ -101,7 +101,7 @@ int ejecutarCliente(int cantidad,char *ip, char* puerto,
 		ejecutarEncriptador(clave, input,&prgaI,&prgaJ,control,&encriptador);
 		status = cliente_enviar_datos(&cliente, &encriptador);
 		if(status){
-			printf("idiota estas muerto\n");
+			printf("Maldita Sea\n");
 			return 1;	
 		} 
 		encriptador_destroy(&encriptador);

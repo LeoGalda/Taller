@@ -64,7 +64,7 @@ int cliente_conectar(Cliente *this){
 
 int cliente_enviar_datos(Cliente *this, Encriptador *encriptador){   
    	int bytesEnviados = 0;
-   	int informacion[REQUEST_MAX_LEN];   	
+   	unsigned char informacion[REQUEST_MAX_LEN];   	
    	int cantidad = 0;
    	bool errorDelSocket = false, socketCerrado = false;
    	int status;
@@ -74,10 +74,11 @@ int cliente_enviar_datos(Cliente *this, Encriptador *encriptador){
 		informacion[cantidad] = unElemento->dato;
 		cantidad++;
 		unElemento = unElemento->siguiente;
-	}   	    	
-	printf("cantidad:%i\n",cantidad );
-
+	}   	    			
    	while (bytesEnviados < cantidad && errorDelSocket == false && socketCerrado == false) {
+   		for(int w = 0; w < cantidad; w++){
+   			printf("info:%i", informacion[bytesEnviados]);
+   		}
     	status = send(this->socket, &informacion[bytesEnviados], cantidad - bytesEnviados, MSG_NOSIGNAL);
 
     	if (status < 0) {  // ups,  hubo un error

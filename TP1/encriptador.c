@@ -8,10 +8,10 @@
 #define SUCCESS 0
 #define ERROR 1
 
-int encriptarDato(unsigned char key_stream,unsigned char unCaracter);
+unsigned char encriptarDato(unsigned char key_stream,unsigned char unCaracter);
 
 void agregarDatoEncriptadoAlEncriptador(Encriptador *this, 
-										int datoEncriptado, int key_stream);
+										unsigned char datoEncriptado, unsigned char key_stream);
 
 unsigned char fasePRGA(Encriptador *this,int *prgaI, int *prgaJ);
 
@@ -26,7 +26,7 @@ void encriptador_encriptar(Encriptador *this, FILE *datosAEncriptar,
 							int cantidad,int *prgaI, int *prgaJ){
 	char unCaracter;
 	unsigned char key_stream;
-	int datoEncriptado;
+	unsigned char datoEncriptado;
 //	faseKSA(this);		
 	for(int c = 0;(c < cantidad) && (!feof(datosAEncriptar));c++){
 	//while (unCaracter != EOF) {
@@ -37,14 +37,12 @@ void encriptador_encriptar(Encriptador *this, FILE *datosAEncriptar,
 	}
 }
 
-void encriptador_desencriptar(Encriptador *this, int *datosAEncriptar,
+void encriptador_desencriptar(Encriptador *this, unsigned char *datosAEncriptar,
 							int cantidad,int *prgaI, int *prgaJ){
-	unsigned int unCaracter;
-	unsigned int key_stream;
-	int datoEncriptado;
-//	faseKSA(this);		
-	for(int c = 0; c < cantidad;c++){
-	//while (unCaracter != EOF) {
+	unsigned char unCaracter;
+	unsigned char key_stream;
+	unsigned char datoEncriptado;
+	for(int c = 0; c < cantidad;c++){	
 		unCaracter = *datosAEncriptar;
 		key_stream = fasePRGA(this, prgaI, prgaJ);		
 		datoEncriptado = encriptarDato(key_stream,unCaracter);
@@ -92,12 +90,12 @@ void encriptador_destroy(Encriptador *this){
 	}
 }
 
-int encriptarDato(unsigned char key_stream, unsigned char unCaracter){	
+unsigned char encriptarDato(unsigned char key_stream, unsigned char unCaracter){	
     return key_stream ^ unCaracter;
 }    
 
 void agregarDatoEncriptadoAlEncriptador(Encriptador *this, 
-										int datoEncriptado, int key_stream){
+										unsigned char datoEncriptado, unsigned char key_stream){
     Elemento *unElemento;
     unElemento = (Elemento *) malloc(sizeof(Elemento));
     unElemento->dato = datoEncriptado;

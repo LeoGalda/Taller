@@ -5,8 +5,8 @@
 #include <stdio.h>
 
 typedef struct ElementoEncriptador{
-	int dato;
-	int keyStream;
+	unsigned char dato;
+	unsigned char keyStream;
 	struct ElementoEncriptador *siguiente;
 } Elemento;
 
@@ -26,7 +26,7 @@ void encriptador_crear(Encriptador *this,char *key);
 void encriptador_encriptar(Encriptador *this, FILE *datosAEncriptar, int cantidad,
 							int *prgaI, int *prgaJ);
 
-void encriptador_desencriptar(Encriptador *this, int *datosAEncriptar, int cantidad,
+void encriptador_desencriptar(Encriptador *this, unsigned char *datosAEncriptar, int cantidad,
 							int *prgaI, int *prgaJ);
 
 void encriptador_guardar_en_salida(Encriptador *this, FILE *archivoSalida);
