@@ -23,10 +23,13 @@ typedef struct EncriptadorLista{
 // Pre: this apunta un sector valido de memoria
 void encriptador_crear(Encriptador *this,char *key);
 
-void encriptador_encriptar(Encriptador *this, FILE *datos_a_encriptar, int cantidad,
+void encriptador_encriptar(Encriptador *this, FILE *datosAEncriptar, int cantidad,
 							int *prgaI, int *prgaJ);
 
-void encriptador_desencriptar(Encriptador *this, FILE *archivoSalida);
+void encriptador_desencriptar(Encriptador *this, int *datosAEncriptar, int cantidad,
+							int *prgaI, int *prgaJ);
+
+void encriptador_guardar_en_salida(Encriptador *this, FILE *archivoSalida);
 
 void encriptador_salida_estandar(Encriptador *this);
 

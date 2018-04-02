@@ -18,14 +18,33 @@
 #define ERROR 1
 
 #define REQUEST_MAX_LEN 64
+#define RESPONSE_MAX_LEN 50
+
+void ejecutarDesencriptador(char *clave,int *buf,Encriptador *desencriptador,
+							int *prgaI,int *prgaJ,int recibidos){		
+	FILE *salida = fopen("./out", "w+");
+	encriptador_crear(desencriptador, clave);	
+	encriptador_fase_KSA(desencriptador);			
+	encriptador_desencriptar(desencriptador,buf,recibidos,prgaI,prgaJ);	
+	encriptador_guardar_en_salida(desencriptador,salida);
+	encriptador_salida_estandar(desencriptador);
+	encriptador_salida_errores(desencriptador);		
+}
+
 
 int ejecutarServidor(char *puerto,char *key){
 	int status,peerskt;
 	bool corriendo = true;	
 	Servidor servidor;
+	int *buf = 0;
+	int recibidos = 0;
 	servidor_create(&servidor, puerto, key);
 	status = servidor_configurar(&servidor);	
 	if(status) return 1;	
+	Encriptador desencriptador;
+	int prgaI = 0;
+	int prgaJ = 0;
+//	int control = 0;
 	while (corriendo) {
 	    printf("esperando un cliente\n");
 	    peerskt = servidor_conectar(&servidor);	    
@@ -34,53 +53,30 @@ int ejecutarServidor(char *puerto,char *key){
 	        printf("Error: %s\n", strerror(errno));
 	         corriendo = false;
 	    }	    
-/*	    else{
-	        printf("New client\n");
-	        memset(small_buf, 0, 3);
-	        recv_message(peerskt, small_buf, 2); 	         
-	        len = atoi(small_buf);
-	        printf("Echo %i bytes\n", len);
-	        if (len == 0) {
-	        	printf("Zero bytes. Bye!\n");
-	            continue_running = false;
-	        }
-	        else{
-	        	tmp = (char*) malloc(sizeof(char) * len);
-	        	printf("hacer algo");
-	            free(tmp);
-	        }
-	        shutdown(peerskt, SHUT_RDWR);
-	        close(peerskt);
-	    }*/
+	    else{
+	        printf("NuevoCliente\n");
+	        servidor_recibir_datos(&servidor,peerskt,buf,&recibidos);	        	        
+	        ejecutarDesencriptador(key,buf,&desencriptador,&prgaI,&prgaJ,recibidos);
+	    }
 	}
+	encriptador_destroy(&desencriptador);
+	printf("terminando\n");
+   	shutdown(servidor.socket, SHUT_RDWR);
+   	close(servidor.socket);
 		//despues del accept
-		printf("aca esta mi logica");
-		Encriptador encriptador;
-		FILE * salida = fopen("./out", "w+");
-		Encriptador desencriptador;		
-		desencriptador = encriptador;
-		encriptador_desencriptar(&desencriptador,salida);
-		fclose(salida);
-		encriptador_destroy(&encriptador);
 		return SUCCESS;
 }
 
-Encriptador ejecutarEncriptador(char *clave,FILE *input,
-								int *prgaI,int *prgaJ, int mierda,
+void ejecutarEncriptador(char *clave,FILE *input,
+								int *prgaI,int *prgaJ, int control,
 								Encriptador *encriptador){	
 	encriptador_crear(encriptador, clave);	
-	if(mierda == 0){
+	if(control == 0){
 		encriptador_fase_KSA(encriptador);		
 	}	
 	encriptador_encriptar(encriptador,input,REQUEST_MAX_LEN,prgaI,prgaJ);	
 	encriptador_salida_estandar(encriptador);
 	encriptador_salida_errores(encriptador);
-/*	FILE * salida = fopen("./out", "w+");
-	Encriptador desencriptador;		
-	desencriptador = *encriptador;
-	encriptador_desencriptar(&desencriptador,salida);
-	encriptador_salida_errores(&encriptador);	*/
-	return *encriptador;
 }
 
 int ejecutarCliente(int cantidad,char *ip, char* puerto, 
@@ -96,14 +92,17 @@ int ejecutarCliente(int cantidad,char *ip, char* puerto,
 	input = fopen(arch,"r"); 					
 	int prgaI = 0;
 	int prgaJ = 0;
-	int mierda = 0;
-	Encriptador encriptador,encriptadorCliente;
-	while(!feof(input)){	
-		encriptadorCliente = ejecutarEncriptador(clave, input,&prgaI,&prgaJ,mierda,&encriptador);
-		status = cliente_enviar_datos(&cliente, &encriptadorCliente);		
-		if(status) return 1;
-		encriptador_destroy(&encriptadorCliente);
-		mierda++;
+	int control = 0;
+	Encriptador encriptador;
+	while(!feof(input)){			
+		ejecutarEncriptador(clave, input,&prgaI,&prgaJ,control,&encriptador);
+		status = cliente_enviar_datos(&cliente, &encriptador);
+		if(status){
+			printf("idiota estas muerto\n");
+			return 1;	
+		} 
+		encriptador_destroy(&encriptador);
+		control++;
 	}
 	fclose(input);		
 	return SUCCESS;
@@ -118,7 +117,7 @@ int main(int argc, char* argv[]){
 	}else{
 		printf("ingresaste cualquier cosa\n");
 		return ERROR;
-	}
+	}	
 }
 
 

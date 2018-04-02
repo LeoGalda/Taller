@@ -12,10 +12,12 @@
 
 #include "servidor.h"
 
+#define RESPONSE_MAX_LEN 50
+
 void servidor_create(Servidor *this,char *puerto, char *key){
 	this->key = key;
 	this->puerto = puerto;	
-	this->skt = 0;
+	this->socket = 0;
 }
 
 int servidor_configurar(Servidor *this){	
@@ -29,29 +31,105 @@ int servidor_configurar(Servidor *this){
       	printf("Error in getaddrinfo: %s\n", gai_strerror(status));
       	return 1;
    	}
-	this->skt = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-	if (this->skt == -1) {
+	this->socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+	if (this->socket == -1) {
 	    printf("Error: %s\n", strerror(errno));
 	    freeaddrinfo(ptr);
 	    return 1;
 	}
-	status = bind(this->skt, ptr->ai_addr, ptr->ai_addrlen);
+	status = bind(this->socket, ptr->ai_addr, ptr->ai_addrlen);
    	if (status == -1) {
         printf("Error: %s\n", strerror(errno));
-      	close(this->skt);
+      	close(this->socket);
       	freeaddrinfo(ptr);
     	return 1;
    	}
 	freeaddrinfo(ptr);
-	status = listen(this->skt, 1);
+	status = listen(this->socket, 1);
 	if (status == -1) {
 		printf("Error: %s\n", strerror(errno));
-		close(this->skt);
+		close(this->socket);
 		return 1;
 	}
 	return 0;
 }
 
 int servidor_conectar(Servidor *this){
-	 return accept(this->skt, NULL, NULL);   // aceptamos un cliente	      	
+	 return accept(this->socket, NULL, NULL);   // aceptamos un cliente	      	
+}
+
+int recv_message(int skt, int *buf, int size) {
+   	int received = 0;
+   	int s = 0;
+   	bool socketValido = true;
+   	while (received < size && socketValido) {
+      	printf("recibiendo\n");
+      	s = recv(skt, &buf[received], size - received, MSG_NOSIGNAL);
+
+      	if(s > 0){
+      		received += s;
+      	}
+      	else{
+      		socketValido = false;
+      	}
+   	}   	
+   	printf("tamaño:%i\n", size);
+   	printf("recibido:%i\n", received);
+   	printf("esto tiene buf?:");   	 
+   	for(int l = 0; l < received; l++){
+		printf("%02x\n", *buf);
+		buf++;
+	}
+    if (socketValido || s == 0) {
+    	return received;
+   	}
+   	else {   		
+   		printf("nooo");
+      	return -1;
+   	}   	
+}
+
+
+int send_message(int skt, int *buf, int size) {
+   int sent = 0;
+   int s = 0;
+   bool is_the_socket_valid = true;
+
+   while (sent < size && is_the_socket_valid) {
+      printf("escribiendo\n");
+      s = send(skt, &buf[sent], size-sent, MSG_NOSIGNAL);
+      
+      if (s == 0) {
+         is_the_socket_valid = false;
+      }
+      else if (s < 0) {
+         is_the_socket_valid = false;
+      }
+      else {
+         sent += s;
+      }
+   }
+
+   if (is_the_socket_valid) {
+      return sent;
+   }
+   else {
+      return -1;
+   }
+}
+
+
+
+
+
+int servidor_recibir_datos(Servidor *this, int peerskt,int *buf, int *rec){	
+	buf = (int*) malloc(sizeof(int) * RESPONSE_MAX_LEN);	
+	*rec = recv_message(peerskt, buf, RESPONSE_MAX_LEN);     			
+	if(*rec < 0){
+		printf("problema\n");
+		return 1;
+	}
+    shutdown(peerskt, SHUT_RDWR);
+    close(peerskt);    
+    return 0;
 }

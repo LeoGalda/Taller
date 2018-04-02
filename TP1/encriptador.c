@@ -37,13 +37,28 @@ void encriptador_encriptar(Encriptador *this, FILE *datosAEncriptar,
 	}
 }
 
-void encriptador_desencriptar(Encriptador *this, FILE *archivoSalida){	
+void encriptador_desencriptar(Encriptador *this, int *datosAEncriptar,
+							int cantidad,int *prgaI, int *prgaJ){
+	char unCaracter;
+	unsigned char key_stream;
+	int datoEncriptado;
+//	faseKSA(this);		
+	for(int c = 0;c < cantidad;c++){
+	//while (unCaracter != EOF) {
+		unCaracter = *datosAEncriptar;
+		key_stream = fasePRGA(this, prgaI, prgaJ);		
+		datoEncriptado = encriptarDato(key_stream,unCaracter);
+		agregarDatoEncriptadoAlEncriptador(this, datoEncriptado, key_stream);
+		datosAEncriptar++;
+	}
+}
+
+void encriptador_guardar_en_salida(Encriptador *this, FILE *archivoSalida){	
 	int datoEncriptado;
 	Elemento *elemento = this->inicio;
 	printf("dato desencriptado:\n");
 	while (elemento != NULL){		
-		datoEncriptado = encriptarDato(elemento->keyStream, elemento->dato);
-		printf("%02x", datoEncriptado);
+		datoEncriptado = elemento->dato;		
 		putc(datoEncriptado,archivoSalida);
 		elemento = elemento->siguiente;
 	}
@@ -52,23 +67,20 @@ void encriptador_desencriptar(Encriptador *this, FILE *archivoSalida){
 
 
 void encriptador_salida_estandar(Encriptador *this){
-	Elemento *unElemento = this->inicio;
-	printf("Salida estandar: \n");
+	Elemento *unElemento = this->inicio;	
 	while (unElemento != NULL){
-		printf("%02x",unElemento->dato);		
-		unElemento = unElemento->siguiente;
+		fprintf(stdout,"%02x",unElemento->dato);		
+		unElemento = unElemento->siguiente;		
 	}
 	printf("\n");
 }
 
 void encriptador_salida_errores(Encriptador *this){
-	Elemento *unElemento = this->inicio;
-	printf("Salida errores: \n");
+	Elemento *unElemento = this->inicio;		
 	while (unElemento != NULL){
-		printf("%02X",unElemento->keyStream);
+		fprintf(stderr,"%02X",unElemento->keyStream);
 		unElemento = unElemento->siguiente;
 	}
-	printf("\n");
 }
 
 void encriptador_destroy(Encriptador *this){

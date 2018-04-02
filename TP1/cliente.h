@@ -7,7 +7,7 @@ typedef struct Clientet{
 	char *key;
 	char *puerto;
 	char *ip;
-	int skt;
+	int socket;
 } Cliente;
 
 struct addrinfo hints,*ptr;   	
@@ -18,6 +18,6 @@ int cliente_configurar(Cliente *this);
 
 int cliente_conectar(Cliente *this);
 
-int cliente_enviar_datos(Cliente *this, Encriptador *encriptadorCliente);
+int cliente_enviar_datos(Cliente *this, Encriptador *encriptador);
 
 #endif
