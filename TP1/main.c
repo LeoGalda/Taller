@@ -29,6 +29,7 @@ void ejecutarDesencriptador(char *clave,int *buf,Encriptador *desencriptador,
 	encriptador_guardar_en_salida(desencriptador,salida);
 	encriptador_salida_estandar(desencriptador);
 	encriptador_salida_errores(desencriptador);		
+	fclose(salida);
 }
 
 
@@ -36,7 +37,8 @@ int ejecutarServidor(char *puerto,char *key){
 	int status,peerskt;
 	bool corriendo = true;	
 	Servidor servidor;
-	int *buf = 0;
+	int *buf;
+	buf = (int*) malloc(sizeof(int) * RESPONSE_MAX_LEN);	
 	int recibidos = 0;
 	servidor_create(&servidor, puerto, key);
 	status = servidor_configurar(&servidor);	
@@ -57,6 +59,7 @@ int ejecutarServidor(char *puerto,char *key){
 	        printf("NuevoCliente\n");
 	        servidor_recibir_datos(&servidor,peerskt,buf,&recibidos);	        	        
 	        ejecutarDesencriptador(key,buf,&desencriptador,&prgaI,&prgaJ,recibidos);
+	        corriendo = false;
 	    }
 	}
 	encriptador_destroy(&desencriptador);

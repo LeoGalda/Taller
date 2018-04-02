@@ -39,11 +39,11 @@ void encriptador_encriptar(Encriptador *this, FILE *datosAEncriptar,
 
 void encriptador_desencriptar(Encriptador *this, int *datosAEncriptar,
 							int cantidad,int *prgaI, int *prgaJ){
-	char unCaracter;
-	unsigned char key_stream;
+	unsigned int unCaracter;
+	unsigned int key_stream;
 	int datoEncriptado;
 //	faseKSA(this);		
-	for(int c = 0;c < cantidad;c++){
+	for(int c = 0; c < cantidad;c++){
 	//while (unCaracter != EOF) {
 		unCaracter = *datosAEncriptar;
 		key_stream = fasePRGA(this, prgaI, prgaJ);		

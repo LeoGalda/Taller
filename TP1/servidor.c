@@ -89,41 +89,7 @@ int recv_message(int skt, int *buf, int size) {
    	}   	
 }
 
-
-int send_message(int skt, int *buf, int size) {
-   int sent = 0;
-   int s = 0;
-   bool is_the_socket_valid = true;
-
-   while (sent < size && is_the_socket_valid) {
-      printf("escribiendo\n");
-      s = send(skt, &buf[sent], size-sent, MSG_NOSIGNAL);
-      
-      if (s == 0) {
-         is_the_socket_valid = false;
-      }
-      else if (s < 0) {
-         is_the_socket_valid = false;
-      }
-      else {
-         sent += s;
-      }
-   }
-
-   if (is_the_socket_valid) {
-      return sent;
-   }
-   else {
-      return -1;
-   }
-}
-
-
-
-
-
-int servidor_recibir_datos(Servidor *this, int peerskt,int *buf, int *rec){	
-	buf = (int*) malloc(sizeof(int) * RESPONSE_MAX_LEN);	
+int servidor_recibir_datos(Servidor *this, int peerskt,int *buf, int *rec){		
 	*rec = recv_message(peerskt, buf, RESPONSE_MAX_LEN);     			
 	if(*rec < 0){
 		printf("problema\n");
