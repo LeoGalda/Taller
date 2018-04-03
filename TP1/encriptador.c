@@ -68,7 +68,6 @@ void encriptador_salida_estandar(Encriptador *this){
 		fprintf(stdout,"%02x",unElemento->dato);		
 		unElemento = unElemento->siguiente;		
 	}
-	printf("\n");
 }
 
 void encriptador_salida_errores(Encriptador *this){

@@ -62,8 +62,7 @@ int recv_message(int skt, unsigned char *buf, int size,bool *corriendo) {
    	int received = 0;
    	int s = 0;
    	bool socketValido = true;
-   	while (received < size && socketValido) {
-      	printf("recibiendo\n");
+   	while (received < size && socketValido) {      	
       	s = recv(skt, &buf[received], size - received, MSG_NOSIGNAL);
 
       	if(s > 0){
@@ -95,8 +94,7 @@ int servidor_recibir_datos(Servidor *this, int peerskt,unsigned char *buf,
 	*rec = recv_message(peerskt, buf, RESPONSE_MAX_LEN,corriendo);     			
 	if (!*corriendo){
 		shutdown(peerskt, SHUT_RDWR);
-    	close(peerskt);    
-    	printf("cierro socket\n");
+    	close(peerskt);        	
     	return 1;
 	}
 	if(*rec < 0){

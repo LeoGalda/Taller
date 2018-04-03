@@ -47,16 +47,13 @@ int ejecutarServidor(char *puerto,char *key){
 	FILE *salida = fopen("./out", "w+");
 	int prgaI = 0;
 	int prgaJ = 0;
-	int control = 0;
-	printf("esperando un cliente\n");
-	peerskt = servidor_conectar(&servidor);	    
-	printf("--- conectando ---\n");
+	int control = 0;	
+	peerskt = servidor_conectar(&servidor);	    	
 	while (corriendo) {
 	    if (peerskt == -1) {
 	        printf("Error: %s\n", strerror(errno));
 	         corriendo = false;
-	    }else{
-	      printf("NuevoCliente\n");
+	    }else{	      
 	      servidor_recibir_datos(&servidor,peerskt,buf,&recibidos,&corriendo);
 	      ejecutarDesencriptador(key,buf,&desencriptador,&prgaI,&prgaJ,
 	       						  recibidos,control);
@@ -66,7 +63,6 @@ int ejecutarServidor(char *puerto,char *key){
 	}
 	fclose(salida);
 	encriptador_destroy(&desencriptador);
-	printf("terminando\n");
    	shutdown(servidor.socket, SHUT_RDWR);
    	close(servidor.socket);
 		//despues del accept
