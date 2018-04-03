@@ -37,8 +37,7 @@ int ejecutarServidor(char *puerto,char *key){
 	int status,peerskt;
 	bool corriendo = true;	
 	Servidor servidor;
-	unsigned char *buf;
-	buf = (unsigned char*) malloc(sizeof(unsigned char) * RESPONSE_MAX_LEN);	
+	unsigned char *buf;	
 	int recibidos = 0;
 	servidor_create(&servidor, puerto, key);
 	status = servidor_configurar(&servidor);	
@@ -49,20 +48,22 @@ int ejecutarServidor(char *puerto,char *key){
 	int prgaJ = 0;
 	int control = 0;	
 	peerskt = servidor_conectar(&servidor);	    	
-	while (corriendo) {
+	while (corriendo) {		
 	    if (peerskt == -1) {
 	        printf("Error: %s\n", strerror(errno));
 	         corriendo = false;
 	    }else{	      
+	  buf = (unsigned char*) malloc(sizeof(unsigned char) * RESPONSE_MAX_LEN);
 	      servidor_recibir_datos(&servidor,peerskt,buf,&recibidos,&corriendo);
 	      ejecutarDesencriptador(key,buf,&desencriptador,&prgaI,&prgaJ,
 	       						  recibidos,control);
 	      encriptador_guardar_en_salida(&desencriptador,salida);	        
 	      control++;
+	      encriptador_destroy(&desencriptador);
+	      free(buf);
 	    }
-	}
-	fclose(salida);
-	encriptador_destroy(&desencriptador);
+	}	
+	fclose(salida);	
    	shutdown(servidor.socket, SHUT_RDWR);
    	close(servidor.socket);
 		//despues del accept
