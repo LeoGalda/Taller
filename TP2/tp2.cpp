@@ -1,14 +1,14 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
-#include "ConfigPaquete.h"
+#include "Paquete.h"
 #include "Empaquetador.h"
 
 using namespace std;
 
-ConfigPaquete* procesarLinea(string linea){
-	ConfigPaquete *config;
-	config = new ConfigPaquete();
+Paquete* procesarLinea(string linea){
+	Paquete *config;
+	config = new Paquete();
 	string substring;
 	size_t inicio = 0;
 	size_t siguiente = linea.find("=");
@@ -27,7 +27,7 @@ ConfigPaquete* procesarLinea(string linea){
 	return config;
 }
 
-void leerConfiguracion(char *arch,vector<ConfigPaquete*> *empaquetador){
+void leerConfiguracion(char *arch,vector<Paquete*> *empaquetador){
 	ifstream archivo(arch); 
 	char input[128];	
 	while(!archivo.eof()){			
@@ -40,19 +40,37 @@ void leerConfiguracion(char *arch,vector<ConfigPaquete*> *empaquetador){
 	archivo.close();
 }
 
+void limpiarEmpaquetador(vector<Paquete*> *empaquetador){
+	for (size_t i = 0; i < empaquetador->size(); ++i) {		
+    	delete (*empaquetador)[i]; 	
+	}
+	empaquetador->clear();
+}
+
+void parsearArchivo(char *arch,vector<Paquete*> *empaquetador){
+	ifstream ifs;
+	ifs.open(arch, std::ifstream::binary);
+	unsigned char dato;
+	char input[4];	
+	while(!archivo.eof()){			
+		archivo.getline(input,sizeof(input));
+		string linea = input;
+		if(!linea.empty()){		
+			empaquetador->push_back(procesarLinea(linea));
+		}
+	}
+}
 
 int main (int argc,char *argv[]){		
-	if (argc < 2){
+	if (argc < 3){
 		printf("Pelotudo");
 		return 1;
 	}
-	vector<ConfigPaquete*> empaquetador;
-	leerConfiguracion(argv[1],&empaquetador);
-	ConfigPaquete *paquete;
-	for (size_t i = 0; i < empaquetador.size(); ++i) {
-    	delete empaquetador[i]; 	
+	vector<Paquete*> empaquetador;
+	leerConfiguracion(argv[1],&empaquetador);	
+	for(int j = 2; j < argc; j++){
+		parsearArchivo(argv[2],&empaquetador);
 	}
-	empaquetador.clear();
+	limpiarEmpaquetador(&empaquetador);
 	return 0;
 }
-

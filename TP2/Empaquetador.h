@@ -2,19 +2,19 @@
 #define EMPAQUETADOR_H
 
 #include <vector>
-#include "ConfigPaquete.h"
+#include "Paquete.h"
 
 
 class Empaquetador {
 private:	
-	std::vector<ConfigPaquete*> empaquetador;	
+	std::vector<Paquete*> empaquetador;	
 
 public:
 	Empaquetador();
 	~Empaquetador();
-	void agregarPaquete(ConfigPaquete *paquete);
+	void agregarPaquete(Paquete *paquete);
 	size_t	getTamanio();	
-	ConfigPaquete* getPaquete(int posicion);
+	Paquete* getPaquete(int posicion);
 	void destruir();
 };
 

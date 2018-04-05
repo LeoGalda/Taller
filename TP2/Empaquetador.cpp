@@ -2,6 +2,7 @@
 #include <cstdio>
 
 Empaquetador::Empaquetador(){
+	empaquetador.clear();
 }
 
 Empaquetador::~Empaquetador(){
@@ -11,11 +12,11 @@ Empaquetador::~Empaquetador(){
 	empaquetador.clear();
 }
 
-void Empaquetador::agregarPaquete(ConfigPaquete *unPaquete){	
+void Empaquetador::agregarPaquete(Paquete *unPaquete){	
 	this->empaquetador.push_back(unPaquete);			
 }
 
-ConfigPaquete* Empaquetador::getPaquete(int posicion){	
+Paquete* Empaquetador::getPaquete(int posicion){	
 		return this->empaquetador[posicion];	
 }
 

@@ -7,10 +7,12 @@
 using namespace std;
 
 class Paquete {
-private:	
+protected:	
 	unsigned short id;
 	string nombre;
 	unsigned int limite;
+	unsigned int cantidad;
+	unsigned int ancho;
 
 public:
 	Paquete();
@@ -19,7 +21,11 @@ public:
 	string getNombre();
 	void setNombre(string nombre);
 	unsigned int getLimite();
-	void setLimite(unsigned int limite);
+	void setLimite(unsigned int limite);	
+	unsigned int getCantidad();
+	void setCantidad(unsigned int cantidad);
+	unsigned int getAncho();
+	void setAncho(unsigned int ancho);
 	~Paquete();
 };
 

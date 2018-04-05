@@ -5,6 +5,8 @@ Paquete::Paquete(){
 	this->id = 0;
 	this->nombre = "";
 	this->limite = 0;
+	this->cantidad = 0;
+	this->ancho = 0;	
 }
 
 unsigned short Paquete::getId(){
@@ -29,6 +31,22 @@ unsigned int Paquete::getLimite(){
 
 void Paquete::setLimite(unsigned int limite){
 	this->limite = limite;
+}
+
+unsigned int Paquete::getCantidad(){
+	return this->cantidad;
+}
+
+void Paquete::setCantidad(unsigned int cantidad){
+	this->cantidad = cantidad;
+}
+
+unsigned int Paquete::getAncho(){
+	return this->ancho;
+}
+
+void Paquete::setAncho(unsigned int ancho){
+	this->ancho = ancho;
 }
 
 Paquete::~Paquete(){
