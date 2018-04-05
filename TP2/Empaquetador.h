@@ -1,17 +1,20 @@
 #ifndef EMPAQUETADOR_H
 #define EMPAQUETADOR_H
+
+#include <vector>
 #include "Paquete.h"
+
 
 class Empaquetador {
 private:	
-	Paquete empaquetador;
-	int cantidad;
+	std::vector<Paquete*> empaquetador;	
 
 public:
 	Empaquetador();
 	~Empaquetador();
-	void agregarPaquete(Paquete paquete);		
-	Paquete getPaquete(int posicion);
+	void agregarPaquete(Paquete *paquete);
+	size_t	getTamanio();	
+	Paquete* getPaquete(int posicion);
 };
 
 #endif

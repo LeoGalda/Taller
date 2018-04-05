@@ -2,23 +2,24 @@
 #include <cstdio>
 
 Empaquetador::Empaquetador(){
-	this->empaquetador = NULL;
-	this->cantidad = 0;
 }
 
 Empaquetador::~Empaquetador(){
-	delete[] this->empaquetador;
+	for(auto unPaquete : empaquetador){
+		 delete unPaquete;
+	}	
+	this->empaquetador.clear();
 }
 
-Empaquetador::agregarPaquete(Paquete unPaquete){	
-	this->paquete[cantidad] = unPaquete;
-	this->cantidad++; 
+void Empaquetador::agregarPaquete(Paquete *unPaquete){	
+	this->empaquetador.push_back(unPaquete);			
 }
 
-Empaquetador::getPaquete(int posicion){
-	if (posicion < cantidad){
-		return this->paquete[posicion];
-	}
-	return NULL;
+Paquete* Empaquetador::getPaquete(int posicion){	
+		return this->empaquetador[posicion];	
+}
+
+size_t Empaquetador::getTamanio(){
+	return this->empaquetador.size();
 }
 
