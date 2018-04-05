@@ -5,10 +5,10 @@ Empaquetador::Empaquetador(){
 }
 
 Empaquetador::~Empaquetador(){
-	for(auto unPaquete : empaquetador){
-		 delete unPaquete;
-	}	
-	this->empaquetador.clear();
+	for (size_t i = 0; i < empaquetador.size(); ++i) {
+    	delete empaquetador[i];
+	}
+	empaquetador.clear();
 }
 
 void Empaquetador::agregarPaquete(Paquete *unPaquete){	
@@ -21,5 +21,12 @@ Paquete* Empaquetador::getPaquete(int posicion){
 
 size_t Empaquetador::getTamanio(){
 	return this->empaquetador.size();
+}
+
+void Empaquetador::destruir(){
+    for (size_t i = 0; i < empaquetador.size(); ++i) {
+    	delete empaquetador[i];
+	}
+	empaquetador.clear();
 }
 
