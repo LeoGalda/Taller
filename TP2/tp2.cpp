@@ -1,29 +1,58 @@
+#include <fstream>
 #include <iostream>
-#include "Paquete.h"
+#include <cstdlib>
+#include "ConfigPaquete.h"
 #include "Empaquetador.h"
 
-int main (int argc,char *argv[]){	
-/*	Empaquetador *empaquetador;
-	empaquetador = new Empaquetador();*/	
-	std::vector<Paquete*> empaquetador;
-	Paquete *paquete;
-	for(int i = 1; i < 4; i++){				
-		paquete = new Paquete();
-		paquete->setId(i);
-		paquete->setNombre("hola");
-		paquete->setLimite(i*3);				
-		empaquetador.push_back(paquete);			
-//		empaquetador->agregarPaquete(paquete);	
-	}	
-		for (size_t i = 0; i < empaquetador.size(); ++i) {
-    	delete empaquetador[i];
+using namespace std;
+
+ConfigPaquete* procesarLinea(string linea){
+	ConfigPaquete *config;
+	config = new ConfigPaquete();
+	string substring;
+	size_t inicio = 0;
+	size_t siguiente = linea.find("=");
+	substring = linea.substr(inicio,siguiente-inicio);
+	int id = atoi(substring.c_str());	
+	if(id != 0){
+		config->setId(id);	
+		inicio = siguiente + 1;	
+		siguiente = linea.find(",");
+		string nombre = linea.substr(inicio,siguiente-inicio);
+		config->setNombre(nombre);
+		inicio = siguiente + 1;	
+		int limite = atoi(linea.substr(inicio).c_str());
+		config->setLimite(limite);
+	}
+	return config;
+}
+
+void leerConfiguracion(char *arch,vector<ConfigPaquete*> *empaquetador){
+	ifstream archivo(arch); 
+	char input[128];	
+	while(!archivo.eof()){			
+		archivo.getline(input,sizeof(input));
+		string linea = input;
+		if(!linea.empty()){		
+			empaquetador->push_back(procesarLinea(linea));
+		}
+	}
+	archivo.close();
+}
+
+
+int main (int argc,char *argv[]){		
+	if (argc < 2){
+		printf("Pelotudo");
+		return 1;
+	}
+	vector<ConfigPaquete*> empaquetador;
+	leerConfiguracion(argv[1],&empaquetador);
+	ConfigPaquete *paquete;
+	for (size_t i = 0; i < empaquetador.size(); ++i) {
+    	delete empaquetador[i]; 	
 	}
 	empaquetador.clear();
-/*	for(size_t j = 0; j < empaquetador->getTamanio(); j++){
-		paquete = empaquetador->getPaquete(j);
-		printf("id: %X y limite: %i\n", paquete->getId(), paquete->getLimite());
-	}
-	empaquetador->destruir();*/
 	return 0;
 }
 

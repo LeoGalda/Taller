@@ -11,11 +11,11 @@ Empaquetador::~Empaquetador(){
 	empaquetador.clear();
 }
 
-void Empaquetador::agregarPaquete(Paquete *unPaquete){	
+void Empaquetador::agregarPaquete(ConfigPaquete *unPaquete){	
 	this->empaquetador.push_back(unPaquete);			
 }
 
-Paquete* Empaquetador::getPaquete(int posicion){	
+ConfigPaquete* Empaquetador::getPaquete(int posicion){	
 		return this->empaquetador[posicion];	
 }
 
