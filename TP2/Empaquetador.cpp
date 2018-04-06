@@ -2,14 +2,12 @@
 #include <cstdio>
 
 Empaquetador::Empaquetador(){
-	empaquetador.clear();
 }
 
 Empaquetador::~Empaquetador(){
 	for (size_t i = 0; i < empaquetador.size(); ++i) {
     	delete empaquetador[i];
 	}
-	empaquetador.clear();
 }
 
 void Empaquetador::agregarPaquete(Paquete *unPaquete){	
@@ -24,10 +22,10 @@ size_t Empaquetador::getTamanio(){
 	return this->empaquetador.size();
 }
 
-void Empaquetador::destruir(){
+/*void Empaquetador::destruir(){
     for (size_t i = 0; i < empaquetador.size(); ++i) {
     	delete empaquetador[i];
 	}
 	empaquetador.clear();
-}
+}*/
 

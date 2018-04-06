@@ -15,11 +15,11 @@ protected:
 	unsigned int ancho;
 
 public:
-	Paquete();
+	Paquete(unsigned short id, const string &nombre, unsigned int limite);
 	unsigned short getId();
 	void setId(unsigned short id);
 	string getNombre();
-	void setNombre(string nombre);
+	void setNombre(const string &nombre);
 	unsigned int getLimite();
 	void setLimite(unsigned int limite);	
 	unsigned int getCantidad();
