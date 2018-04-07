@@ -1,8 +1,9 @@
 #include "Paquete.h"
 #include <cstdio>
 
-Paquete::Paquete(unsigned short id,const string& nombre,unsigned int limite) : id(id),nombre(nombre),
-				limite(limite),cantidad(0),ancho(0){
+Paquete::Paquete(unsigned short id,const string& nombre,
+				 unsigned int limite) : id(id),nombre(nombre),
+				 limite(limite),cantidad(0),ancho(0){
 }
 
 unsigned short Paquete::getId(){

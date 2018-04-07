@@ -48,58 +48,46 @@ bool getEndiannes(){
    	return true;
 }
 
-void ejecutarLogicaBig(){
+void ejecutarLogica(){
 	cout <<"logica big\n";
 }
 
 
-void leerNombre(ifstream &arch){
-	char input[2];	
-	char nombre[128];	
-	char remanente = 0x00;
-	int i = 0;
-	do{
-		arch.getline(input,sizeof(input) * 2);		
-		printf("%X\n",input[0]);
-		printf("%X\n",input[1]);
-		if(input[1] == 0x00){
-			nombre[i] = input[1];
-			remanente = input[0];
-			i++;
-		}else{
-			nombre[i] = input[1];
-			i++;
-			nombre[i] = input[0];
-			i++;
-		}		
-	} while((input[0] != 0x00) && (input[1] != 0x00));
-	printf("aca termine");
-	for(int j=0; j < i; j++){
-		printf("%X",nombre[j]);
+string leerNombre(ifstream &arch){
+	char input[128];
+	for(int i = 0;i < 128;i++)	{
+		input[i] = 00;
 	}
-	printf("\n");
-	printf("remanente: %0X\n",remanente);
+	string nombreClasificador;
+	arch.getline(input,sizeof(input),'\0');		
+	nombreClasificador = input;
+	return nombreClasificador;
 }
 
 void parsearArchivo(char *ruta){
 	ifstream arch;
+/*	int magicus;*/
 	arch.open(ruta, std::ifstream::binary);
-//	bool soyBigEndian = getEndiannes();	
-	leerNombre(arch);		
-	cout<< ruta <<":se estable conexion con el dispositivo";
-/*	while(!arch.eof()){			
-		arch.getline(input,sizeof(input) * 4);		
-		memcpy(&magicus,&input,sizeof(magicus));
-		printf("%X\n", magicus);
+	string nombreClasificador = leerNombre(arch);		
+	cout<< ruta <<" :se estable conexion con el dispositivo "<< nombreClasificador <<"\n";
+	char input[4];
+	while(!arch.eof()){
+		arch.get(input,sizeof(input)+1);		
+		printf("%X\n", input[0]);
+		printf("%X\n", input[1]);
+		printf("%X\n", input[2]);
+		printf("%X\n", input[3]);
+		printf("PENSA\n");
+/*		memcpy(&magicus,&input,sizeof(magicus));		
 		if(magicus == -1){
 			cout <<"ATASCADO MAN\n";
 		}else if(soyBigEndian){
 			ejecutarLogica();			
 		}else{
-			htonl(magicus);
-			ejecutarLogicaBig();
+			cout<<"little!\n";
+			ejecutarLogica();*/
 		}	
-	}*/
+/*	}*/
 	arch.close();
 }
 
