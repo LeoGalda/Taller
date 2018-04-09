@@ -3,7 +3,11 @@
 
 Paquete::Paquete(unsigned short id,const string& nombre,
 				 unsigned int limite) : id(id),nombre(nombre),
-				 limite(limite),cantidad(0),ancho(0){
+				 limite(limite),cantidad(0){
+}
+
+Paquete::Paquete(){
+
 }
 
 unsigned short Paquete::getId(){
@@ -38,12 +42,20 @@ void Paquete::setCantidad(unsigned int cantidad){
 	this->cantidad = cantidad;
 }
 
-unsigned int Paquete::getAncho(){
+/*unsigned int Paquete::getAncho(){
 	return this->ancho;
+}*/
+
+void Paquete::addAncho(int ancho){
+	this->ancho.push_back(ancho);			
 }
 
-void Paquete::setAncho(unsigned int ancho){
-	this->ancho = ancho;
+std::vector<int> Paquete::getAnchos(){
+	return ancho;
+}
+
+void Paquete::limpiarAnchos(){
+	this->ancho.clear();
 }
 
 Paquete::~Paquete(){

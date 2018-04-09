@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -12,9 +13,10 @@ protected:
 	string nombre;
 	unsigned int limite;
 	unsigned int cantidad;
-	unsigned int ancho;
+	std::vector<int> ancho;	
 
 public:
+	Paquete();
 	Paquete(unsigned short id, const string &nombre, unsigned int limite);
 	unsigned short getId();
 	void setId(unsigned short id);
@@ -24,8 +26,9 @@ public:
 	void setLimite(unsigned int limite);	
 	unsigned int getCantidad();
 	void setCantidad(unsigned int cantidad);
-	unsigned int getAncho();
-	void setAncho(unsigned int ancho);
+	void addAncho(int ancho);
+	void limpiarAnchos();
+	std::vector<int> getAnchos();
 	~Paquete();
 };
 

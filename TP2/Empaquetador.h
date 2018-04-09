@@ -15,7 +15,8 @@ public:
 	void agregarPaquete(Paquete *paquete);
 	size_t	getTamanio();	
 	Paquete* getPaquete(int posicion);
-//	void destruir();
+	Paquete* getPaquetePorTipo(int tipo);
+	void mostrarRemanentes();
 };
 
 #endif
