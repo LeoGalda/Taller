@@ -30,10 +30,14 @@ static void servidor_ejecutar_desencriptador(char *clave,unsigned char *buf,
 int servidor_ejecutar_servidor(char *puerto,char *key){
 	int status,peerskt;
 	bool corriendo = true;	
+        
 	Servidor servidor;
 	int recibidos = 0;
-	servidor_create(&servidor, puerto, key);
-	status = servidor_configurar(&servidor);	
+        
+	servidor_create(&servidor, puerto, key);        
+        
+	status = servidor_configurar(&servidor);
+	
 	if(status) return 1;	
 	Encriptador desencriptador;
 	FILE *salida = fopen("./out", "wg");
@@ -72,16 +76,7 @@ void servidor_create(Servidor *this,char *puerto, char *key){
 }
 
 int servidor_configurar(Servidor *this){		
-	int status;
-	memset(&this->hints, 0, sizeof(struct addrinfo));	
-	this->hints.ai_family = AF_INET;       /* IPv4 */
-	this->hints.ai_socktype = SOCK_STREAM; /* TCP */
-	this->hints.ai_flags = AI_PASSIVE;     /* AI_PASSIVE for server*/		
-	status = getaddrinfo(NULL, this->puerto, &this->hints, &this->ptr);
-	if (status != 0) { 
-      	printf("Error in getaddrinfo: %s\n", gai_strerror(status));
-      	return 1;
-   	}
+
 	this->socket = socket(this->ptr->ai_family, this->ptr->ai_socktype,
 						  this->ptr->ai_protocol);
 	if (this->socket == -1) {
@@ -97,6 +92,8 @@ int servidor_configurar(Servidor *this){
       	freeaddrinfo(this->ptr);
     	return 1;
    	}
+
+   	
 	freeaddrinfo(this->ptr);
 	status = listen(this->socket, 1);
 	if (status == -1) {

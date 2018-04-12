@@ -3,14 +3,12 @@
 
 #include <netdb.h>
 #include <stdbool.h>
-
+#include "buffer.h"
+#include "socket.h"
 
 typedef struct{
-	char *key;
-	char *puerto;
-	int socket;
-	struct addrinfo hints;
-	struct addrinfo *ptr;	
+    Socket socket;
+    Buffer buffer;
 } Servidor;
 
 // Inicializa la instancia this para ser utilizada
