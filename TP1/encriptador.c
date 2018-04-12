@@ -5,9 +5,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#define SUCCESS 0
-#define ERROR 1
-
 unsigned char encriptarDato(unsigned char key_stream,unsigned char unCaracter);
 
 void agregarDatoEncriptadoAlEncriptador(Encriptador *this, 

@@ -6,13 +6,64 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 #include <unistd.h>
 
 #include "servidor.h"
+#include "encriptador.h"
 
 #define RESPONSE_MAX_LEN 50
+
+
+static void servidor_ejecutar_desencriptador(char *clave,unsigned char *buf,
+							Encriptador *desencriptador,int *prgaI,int *prgaJ,
+							int recibidos, int control){			
+	encriptador_crear(desencriptador, clave);	
+	if (control == 0){
+		encriptador_fase_KSA(desencriptador);			
+	}	
+	encriptador_desencriptar(desencriptador,buf,recibidos,prgaI,prgaJ);	
+	encriptador_salida_estandar(desencriptador);
+	encriptador_salida_errores(desencriptador);		
+}
+
+
+int servidor_ejecutar_servidor(char *puerto,char *key){
+	int status,peerskt;
+	bool corriendo = true;	
+	Servidor servidor;
+	int recibidos = 0;
+	servidor_create(&servidor, puerto, key);
+	status = servidor_configurar(&servidor);	
+	if(status) return 1;	
+	Encriptador desencriptador;
+	FILE *salida = fopen("./out", "wg");
+	int prgaI = 0;
+	int prgaJ = 0;
+	int control = 0;	
+	peerskt = servidor_conectar(&servidor);	    	
+	while (corriendo) {		
+	    if (peerskt == -1) {
+	        printf("Error: %s\n", strerror(errno));
+	         corriendo = false;
+	    }else{	      
+	  unsigned char *buf;	
+	  buf = (unsigned char*) malloc(sizeof(unsigned char) * RESPONSE_MAX_LEN);
+	      servidor_recibir_datos(&servidor,peerskt,buf,&recibidos,&corriendo);
+
+	      servidor_ejecutar_desencriptador(key,buf,&desencriptador,&prgaI,&prgaJ,
+	       						  recibidos,control);
+
+	      encriptador_guardar_en_salida(&desencriptador,salida);	        
+	      control++;
+	      encriptador_destroy(&desencriptador);
+	      free(buf);
+	    }
+	}	
+	fclose(salida);	
+	servidor_destroy(&servidor);
+	return 0;	
+}
+
 
 void servidor_create(Servidor *this,char *puerto, char *key){
 	this->key = key;
@@ -20,31 +71,33 @@ void servidor_create(Servidor *this,char *puerto, char *key){
 	this->socket = 0;
 }
 
-int servidor_configurar(Servidor *this){	
+int servidor_configurar(Servidor *this){		
 	int status;
-	memset(&hints, 0, sizeof(struct addrinfo));	
-	hints.ai_family = AF_INET;       /* IPv4 */
-	hints.ai_socktype = SOCK_STREAM; /* TCP */
-	hints.ai_flags = AI_PASSIVE;     /* AI_PASSIVE for server*/		
-	status = getaddrinfo(NULL, this->puerto, &hints, &ptr);
+	memset(&this->hints, 0, sizeof(struct addrinfo));	
+	this->hints.ai_family = AF_INET;       /* IPv4 */
+	this->hints.ai_socktype = SOCK_STREAM; /* TCP */
+	this->hints.ai_flags = AI_PASSIVE;     /* AI_PASSIVE for server*/		
+	status = getaddrinfo(NULL, this->puerto, &this->hints, &this->ptr);
 	if (status != 0) { 
       	printf("Error in getaddrinfo: %s\n", gai_strerror(status));
       	return 1;
    	}
-	this->socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+	this->socket = socket(this->ptr->ai_family, this->ptr->ai_socktype,
+						  this->ptr->ai_protocol);
 	if (this->socket == -1) {
 	    printf("Error: %s\n", strerror(errno));
-	    freeaddrinfo(ptr);
+	    freeaddrinfo(this->ptr);
 	    return 1;
 	}
-	status = bind(this->socket, ptr->ai_addr, ptr->ai_addrlen);
+	status = bind(this->socket, this->ptr->ai_addr,
+				  this->ptr->ai_addrlen);
    	if (status == -1) {
         printf("Error: %s\n", strerror(errno));
       	close(this->socket);
-      	freeaddrinfo(ptr);
+      	freeaddrinfo(this->ptr);
     	return 1;
    	}
-	freeaddrinfo(ptr);
+	freeaddrinfo(this->ptr);
 	status = listen(this->socket, 1);
 	if (status == -1) {
 		printf("Error: %s\n", strerror(errno));
@@ -71,20 +124,13 @@ int recv_message(int skt, unsigned char *buf, int size,bool *corriendo) {
       		socketValido = false;
       	}
    	}   	
-/*   	printf("tamaño:%i\n", size);
-   	printf("recibido:%i\n", received);
-   	printf("esto tiene buf?:");   	 
-   	for(int l = 0; l < received; l++){
-		printf("%02x\n", *buf);
-		buf++;
-	}*/
     if (socketValido){ 
     	return received;
    	}else if (s == 0){
    		*corriendo = false;
    		return received;
    	}else {   		
-   		printf("nooo");
+   		printf("Error al recibir los datos\n");
       	return -1;
    	}   	
 }
@@ -93,8 +139,7 @@ int servidor_recibir_datos(Servidor *this, int peerskt,unsigned char *buf,
 							 int *rec,bool *corriendo){		
 	*rec = recv_message(peerskt, buf, RESPONSE_MAX_LEN,corriendo);     			
 	if (!*corriendo){
-		shutdown(peerskt, SHUT_RDWR);
-    	close(peerskt);        	
+		servidor_destroy(this);        	
     	return 1;
 	}
 	if(*rec < 0){
@@ -103,3 +148,10 @@ int servidor_recibir_datos(Servidor *this, int peerskt,unsigned char *buf,
 	}
     return 0;
 }
+
+void servidor_destroy(Servidor *this){
+   	shutdown(this->socket, SHUT_RDWR);
+   	close(this->socket);
+}
+
+
