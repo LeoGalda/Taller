@@ -30,12 +30,11 @@ int main(int argc, char* argv[]) {
         if (argc != 6) {
             return errorParametros();
         }
-//        Cliente cliente;
-//        cliente_create(&cliente, argv[2], argv[3], argv[4], argv[5]);
-//        cliente_enviar_datos(&cliente);
-//        cliente_destroy(&cliente);
-//        return SUCCESS;
-        return cliente_ejecutar_cliente(argc, argv[2], argv[3], argv[4], argv[5]);
+        Cliente cliente;
+        cliente_create(&cliente, argv[2], argv[3], argv[4], argv[5]);
+        cliente_enviar_datos(&cliente);
+        cliente_destroy(&cliente);
+        return SUCCESS;
     } else {
         return errorParametros();
     }

@@ -26,7 +26,7 @@ void socket_aceptar(Socket *this);
 
 
 // Envia datos a traves del socket
-//int socket_enviar_datos(Socket *this,char *buffer, int tamanio);
+int socket_enviar_datos(Socket *this,char *buffer, int tamanio);
 
 // recibe los datos del socket
 int socket_recibir_datos(Socket *this,Buffer *buffer);
