@@ -1,10 +1,10 @@
-#ifndef __BUFFER_H__
-#define __BUFFER_H__
+#ifndef __COMMON_BUFFER_H__
+#define __COMMON_BUFFER_H__
 
 typedef struct {
-    size_t tamanio;
-    size_t usado;
-    char *data;
+    int tamanio;
+    int usado;
+    unsigned char *data;
 } Buffer;
 
 //crea un buffer

@@ -12,46 +12,86 @@
 
 #include "socket.h"
 
-
-
-void socket_crear(Socket *this,char *puerto, char *ip){
-	this->puerto = puerto;
-	this->ip = ip;
+void socket_crear(Socket *this, char *puerto, char *ip) {
+    this->puerto = puerto;
+    this->ip = ip;
 }
 
-
-int socket_configurar(Socket *this,bool soyServidor){
-	int status;
-	memset(&this->hints, 0, sizeof(struct addrinfo));	
-	this->hints.ai_family = AF_INET;       /* IPv4 */
-	this->hints.ai_socktype = SOCK_STREAM; /* TCP */	
-	this->hints.ai_flags = soyServidor ? AI_PASSIVE : 0;
-	status = getaddrinfo(this->ip, this->puerto, &this->hints, &this->ptr);
-	if (status != 0) { 
-      	printf("Error in getaddrinfo: %s\n", gai_strerror(status));
-      	return 1;
- 	}
-	return 0;
+int socket_configurar(Socket *this, bool soyServidor) {
+    int status;
+    memset(&this->hints, 0, sizeof (struct addrinfo));
+    this->hints.ai_family = AF_INET; /* IPv4 */
+    this->hints.ai_socktype = SOCK_STREAM; /* TCP */
+    this->hints.ai_flags = soyServidor ? 0 : AI_PASSIVE;
+    status = getaddrinfo(this->ip, this->puerto, &this->hints, &this->ptr);
+    if (status != 0) {
+        printf("Error in getaddrinfo: %s\n", gai_strerror(status));
+        return 1;
+    }
+    return 0;
 }
 
-
-int socket_conectar(Socket *this){
-
+int socket_conectar(Socket *this, bool soyServidor) {
+    bool conectado = false;
+    struct addrinfo *aux;
+    int status;
+    for (aux = this->ptr; aux != NULL && conectado == false;
+            aux = aux->ai_next) {
+        this->sock = socket(aux->ai_family, aux->ai_socktype, aux->ai_protocol);
+        if (this->sock == -1) {
+            printf("Error: %s\n", strerror(errno));
+            return 1;
+        } else {
+            status = soyServidor
+                    ? bind(this->sock, aux->ai_addr, aux->ai_addrlen)
+                    : connect(this->sock, aux->ai_addr, aux->ai_addrlen);
+            if (status == -1) {
+                printf("Error: %s\n", strerror(errno));
+                return 1;
+            }
+            conectado = (status != -1);
+        }
+    }
+    if (!conectado) return 1;
+    if (soyServidor) {
+        status = listen(this->sock, 1);
+        if (status == -1) {
+            printf("Error: %s\n", strerror(errno));
+            return 1;
+        }
+    }
+    return 0;
 }
 
-
-int socket_enviar(Socket *this,char *buffer, int tamanio){
-
+void socket_aceptar(Socket *this) {
+    this->peerskt = accept(this->sock, NULL, NULL);
 }
 
+//int socket_enviar_datos(Socket *this, char *buffer, int tamanio) {
+//    return 0;
+//}
 
-int socket_recibir(Socket *this,char *buffer, int tamanio){
-
+int socket_recibir_datos(Socket *this, Buffer *buffer) {
+    buffer->usado = 0;
+    int s = 0;
+    bool socketValido = true;
+    while (buffer->usado < buffer->tamanio && socketValido) {
+        s = recv(this->peerskt, &buffer->data[buffer->usado],
+                buffer->tamanio - buffer->usado, MSG_NOSIGNAL);
+        if (s > 0) {
+            buffer->usado += s;
+        } else {
+            socketValido = false;
+        }
+    }
+    if (socketValido) {
+        return 1;
+    }
+    return 0;
 }
 
-
-void socket_destroy(Socket *this){
-	freeaddrinfo(this->ptr);
-	shutdown(this->sock, SHUT_RDWR);
+void socket_destroy(Socket *this) {
+    freeaddrinfo(this->ptr);
+    shutdown(this->sock, SHUT_RDWR);
     close(this->sock);
 }

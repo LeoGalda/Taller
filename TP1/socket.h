@@ -1,12 +1,14 @@
-#ifndef __SOCKET_H__
-#define __SOCKET_H__
+#ifndef __COMMON_SOCKET_H__
+#define __COMMON_SOCKET_H__
+
+#include "buffer.h"
 
 typedef struct{
 	char *puerto;
 	char *ip;
 	struct addrinfo hints;
 	struct addrinfo *ptr;
-	int sock;
+	int sock,peerskt;
 } Socket;
 
 
@@ -17,13 +19,17 @@ void socket_crear(Socket *this,char *puerto, char *ip);
 int socket_configurar(Socket *this, bool soyServidor);
 
 //conecta el socket
-int socket_conectar(Socket *this);
+int socket_conectar(Socket *this, bool soyServidor);
+
+//acepta un cliente
+void socket_aceptar(Socket *this);
+
 
 // Envia datos a traves del socket
-int socket_enviar(Socket *this,char *buffer, int tamanio);
+//int socket_enviar_datos(Socket *this,char *buffer, int tamanio);
 
-// recibe los datos del socket y retorna la cantidad que se recibio
-int socket_recibir(Socket *this,char *buffer, int tamanio);
+// recibe los datos del socket
+int socket_recibir_datos(Socket *this,Buffer *buffer);
 
 // Destruyo la instancia this para liberar sus recursos
 void socket_destroy(Socket *this);

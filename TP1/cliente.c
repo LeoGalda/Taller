@@ -22,7 +22,19 @@ void cliente_create(Cliente *this,char *puerto, char *key, char *ip){
 }
 
 int cliente_configurar(Cliente *this){	
-    return 0;
+	int status;
+	memset(&this->hints, 0, sizeof(struct addrinfo));	
+	this->hints.ai_family = AF_INET;       /* IPv4 */
+	this->hints.ai_socktype = SOCK_STREAM; /* TCP */
+	this->hints.ai_flags = 0;			     /* NONE*/
+
+	status = getaddrinfo(this->ip, this->puerto, &this->hints, &this->ptr);
+
+	if (status != 0) { 
+      	printf("Error in getaddrinfo: %s\n", gai_strerror(status));
+      	return 1;
+  }
+	return 0;
 }
 
 int cliente_conectar(Cliente *this){

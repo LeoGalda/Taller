@@ -5,29 +5,40 @@
 #include "servidor.h"
 #include "cliente.h"
 
+#define SUCCESS 0
 #define ERROR 1
 
-static int errorParametros(){
-	fprintf(stderr,"Parámetros incorrectos.");
-	return ERROR;
+static int errorParametros() {
+    fprintf(stderr, "Parámetros incorrectos.");
+    return ERROR;
 }
 
-int main(int argc, char* argv[]){	
-	if(argc < 4){
-		return errorParametros();
-	}
-	if(strcmp(argv[1],"server") == 0){		
-		if (argc != 4){
-		}
-		return servidor_ejecutar_servidor(argv[2],argv[3]);
-	}else if (strcmp(argv[1],"client") == 0){
-		if (argc != 6){
-			return errorParametros();
-		}			
-		return cliente_ejecutar_cliente(argc,argv[2],argv[3],argv[4],argv[5]);
-	}else{
-		 return errorParametros();
-	}	
+int main(int argc, char* argv[]) {
+    if (argc < 4) {
+        return errorParametros();
+    }
+    if (strcmp(argv[1], "server") == 0) {
+        if (argc != 4) {
+            return errorParametros();
+        } 
+        Servidor servidor;
+        servidor_create(&servidor, argv[2], argv[3]);
+        servidor_recibir_datos(&servidor);
+        servidor_destroy(&servidor);        
+        return SUCCESS;
+    } else if (strcmp(argv[1], "client") == 0) {
+        if (argc != 6) {
+            return errorParametros();
+        }
+//        Cliente cliente;
+//        cliente_create(&cliente, argv[2], argv[3], argv[4], argv[5]);
+//        cliente_enviar_datos(&cliente);
+//        cliente_destroy(&cliente);
+//        return SUCCESS;
+        return cliente_ejecutar_cliente(argc, argv[2], argv[3], argv[4], argv[5]);
+    } else {
+        return errorParametros();
+    }
 }
 
 
