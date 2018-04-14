@@ -5,23 +5,21 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 class Paquete {
 protected:	
 	unsigned short id;
-	string nombre;
+	std::string nombre;
 	unsigned int limite;
 	unsigned int cantidad;
 	std::vector<int> ancho;	
 
 public:
 	Paquete();
-	Paquete(unsigned short id, const string &nombre, unsigned int limite);
+	Paquete(unsigned short id, const std::string &nombre, unsigned int limite);
 	unsigned short getId();
 	void setId(unsigned short id);
-	string getNombre();
-	void setNombre(const string &nombre);
+	std::string getNombre();
+	void setNombre(const std::string &nombre);
 	unsigned int getLimite();
 	void setLimite(unsigned int limite);	
 	unsigned int getCantidad();

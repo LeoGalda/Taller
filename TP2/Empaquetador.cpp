@@ -35,9 +35,9 @@ Paquete* Empaquetador::getPaquetePorTipo(int tipo){
 }
 
 void Empaquetador::mostrarRemanentes(){
-	cout<<"# Informe de remanentes\n";
+	fprintf(stdout,"# Informe de remanentes\n");
 	for(size_t i = 0; i < this->getTamanio(); i++){		
-		printf("* %i tornillos de tipo %s\n",
+		fprintf(stdout,"* %i tornillos de tipo %s\n",
 				this->getPaquete(i)->getCantidad(),
 				this->getPaquete(i)->getNombre().c_str());
 	}

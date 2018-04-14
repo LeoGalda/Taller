@@ -6,10 +6,12 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <string>
+#include <vector>
 #include "Paquete.h"
 #include "Empaquetador.h"
-
-using namespace std;
+using std::string;
+using std::cout;
 
 Paquete* procesarLinea(const string &linea){
 	string substring;
@@ -19,19 +21,19 @@ Paquete* procesarLinea(const string &linea){
 	int id = atoi(substring.c_str());	
 	inicio = siguiente + 1;	
 	siguiente = linea.find(",");
-	string nombre = linea.substr(inicio,siguiente-inicio);
+	std::string nombre = linea.substr(inicio,siguiente-inicio);
 	inicio = siguiente + 1;	
 	int limite = atoi(linea.substr(inicio).c_str());
 	Paquete* paquete = new Paquete(id,nombre,limite);
 	return paquete;
 }
 
-void leerConfiguracion(char *arch,Empaquetador &empaquetador){
-	ifstream archivo(arch); 
+void leerConfiguracion(char *arch,Empaquetador &empaquetador){		
+	std::ifstream archivo(arch); 
 	char input[128];	
 	while(!archivo.eof()){			
 		archivo.getline(input,sizeof(input));
-		string linea = input;
+		std::string linea = input;
 		if(!linea.empty()){		
 			empaquetador.agregarPaquete(procesarLinea(linea));
 		}		
@@ -74,12 +76,12 @@ void procesarBinarios(int &info, Empaquetador &empaquetador){
 	ancho <<= 27;
 	ancho >>= 27;
 	Paquete *paquete;
-	paquete = empaquetador.getPaquetePorTipo(tipoTornillo);;
+	paquete = empaquetador.getPaquetePorTipo(tipoTornillo);
 	paquete->setCantidad(paquete->getCantidad() + cantidad);
 	paquete->addAncho(ancho);
 	if(paquete->getCantidad() >= paquete->getLimite()){
 		int mediana = calcularMediana(paquete->getAnchos());
-		printf("Paquete listo: %i tornillos de tipo %s (mediana: %i)\n",
+		fprintf(stdout,"Paquete listo: %i tornillos de tipo %s (mediana: %i)\n",
 			   paquete->getLimite(),paquete->getNombre().c_str(),mediana);
 		paquete->limpiarAnchos();
 		paquete->setCantidad(paquete->getCantidad() - paquete->getLimite());
@@ -87,30 +89,31 @@ void procesarBinarios(int &info, Empaquetador &empaquetador){
 }
 
 
-string leerNombre(ifstream &arch){
+std::string leerNombre(std::ifstream &arch){
 	char input[128];
-	for(int i = 0;i < 128;i++)	{
+	for(int i = 0; i < 128; i++){
 		input[i] = 00;
 	}
-	string nombreClasificador;
+	std::string nombreClasificador;
 	arch.getline(input,sizeof(input),'\0');		
 	nombreClasificador = input;
 	return nombreClasificador;
 }
 
-void parsearArchivo(char *ruta,Empaquetador &empaquetador){
-	ifstream arch;
+void parsearArchivo(char *ruta,Empaquetador &empaquetador){			
+	std::ifstream arch;
 	bool soyBigEndian = getEndiannes();
 	int magicus;
 	arch.open(ruta, std::ifstream::binary);
-	string nombreClasificador = leerNombre(arch);		
-	cout<< ruta <<" :se estable conexion con el dispositivo "<< nombreClasificador <<"\n";
+	std::string nombreClasificador = leerNombre(arch);	
+	fprintf(stdout,"%s: se establece conexion con el dispositivo %s\n", 
+			ruta, nombreClasificador.c_str());
 	char input[4];
 	while(!arch.eof()){
 		arch.get(input,sizeof(input)+1);			
 		memcpy(&magicus,&input,sizeof(magicus));		
 		if(magicus == -1){
-			cout <<"ATASCADO MAN\n";
+			fprintf(stderr, "%s atascado\n",nombreClasificador.c_str());			
 		}else if (soyBigEndian){
 			procesarBinarios(magicus,empaquetador);
 		}else{			
@@ -121,9 +124,9 @@ void parsearArchivo(char *ruta,Empaquetador &empaquetador){
 	arch.close();
 }
 
-int main (int argc,char *argv[]){		
+int main(int argc,char *argv[]){	
 	if (argc < 3){
-		cout<< "pelotudo\n";
+		std::cout<< "pelotudo\n";
 		return 1;
 	}
 	Empaquetador empaquetador;

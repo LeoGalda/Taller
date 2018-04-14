@@ -1,13 +1,14 @@
 #include "Paquete.h"
 #include <cstdio>
+#include <string>
+#include <vector>
 
-Paquete::Paquete(unsigned short id,const string& nombre,
+Paquete::Paquete(unsigned short id,const std::string& nombre,
 				 unsigned int limite) : id(id),nombre(nombre),
 				 limite(limite),cantidad(0){
 }
 
 Paquete::Paquete(){
-
 }
 
 unsigned short Paquete::getId(){
@@ -18,11 +19,11 @@ void Paquete::setId(unsigned short id){
 	this->id = id;
 }
 
-string Paquete::getNombre(){
+std::string Paquete::getNombre(){
 	return this->nombre;
 }
 
-void Paquete::setNombre(const string & nombre){
+void Paquete::setNombre(const std::string &nombre){
 	this->nombre = nombre;
 }
 
@@ -41,10 +42,6 @@ unsigned int Paquete::getCantidad(){
 void Paquete::setCantidad(unsigned int cantidad){
 	this->cantidad = cantidad;
 }
-
-/*unsigned int Paquete::getAncho(){
-	return this->ancho;
-}*/
 
 void Paquete::addAncho(int ancho){
 	this->ancho.push_back(ancho);			

@@ -4,7 +4,6 @@
 #include <vector>
 #include "Paquete.h"
 
-
 class Empaquetador {
 private:	
 	std::vector<Paquete*> empaquetador;	
