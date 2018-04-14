@@ -3,7 +3,7 @@
 
 #include "buffer.h"
 
-void buffer_crear(Buffer *this,size_t tamanio) {    
+void buffer_crear(Buffer *this,int tamanio) {    
     this->tamanio = tamanio;
     this->usado = 0;
     this->data = (unsigned char*) malloc(sizeof (unsigned char) * tamanio);     

@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "buffer.h"
+#include "cliente.h"
 
 typedef struct ElementoEncriptador {
     unsigned char dato;
@@ -26,14 +27,14 @@ void encriptador_crear(Encriptador * this, char *key);
 // Encripta los datos que se encuentran en el archivo datosAEncriptar
 // o hasta el limite pasado en la variable cantidad y los guarda en la 
 // instancia this (usado por el cliente)
-void encriptador_encriptar(Encriptador * this, FILE *datosAEncriptar,
-        int cantidad, int *prgaI, int *prgaJ);
+void encriptador_encriptar(Encriptador * this, Cliente *cliente, int *prgaI,
+        int *prgaJ);
 
 // Encripta los datos que se encuentran en el archivo datosAEncriptar
 // o hasta la cantidad  usada del buffer y los guarda en la 
 // instancia this (usado por el servidor)
-void encriptador_desencriptar(Encriptador * this,Buffer *buffer,
-                              int *prgaI, int *prgaJ);
+void encriptador_desencriptar(Encriptador * this, Buffer *buffer,
+        int *prgaI, int *prgaJ);
 
 //guarda en el archivo de salida los datos que se encuentran en la 
 //instancia this

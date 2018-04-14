@@ -1,14 +1,8 @@
 #define _POSIX_C_SOURCE 200112L
 
-#include <errno.h>
-#include <netdb.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <unistd.h>
 
 #include "socket.h"
 
@@ -19,11 +13,12 @@ void socket_crear(Socket *this, char *puerto, char *ip) {
 
 int socket_configurar(Socket *this, bool soyServidor) {
     int status;
-    memset(&this->hints, 0, sizeof (struct addrinfo));
-    this->hints.ai_family = AF_INET; /* IPv4 */
-    this->hints.ai_socktype = SOCK_STREAM; /* TCP */
-    this->hints.ai_flags = soyServidor ? 0 : AI_PASSIVE;
-    status = getaddrinfo(this->ip, this->puerto, &this->hints, &this->ptr);
+    struct addrinfo hints;
+    memset(&hints, 0, sizeof (struct addrinfo));
+    hints.ai_family = AF_INET; /* IPv4 */
+    hints.ai_socktype = SOCK_STREAM; /* TCP */
+    hints.ai_flags = soyServidor ? 0 : AI_PASSIVE;
+    status = getaddrinfo(this->ip, this->puerto, &hints, &this->ptr);
     if (status != 0) {
         printf("Error in getaddrinfo: %s\n", gai_strerror(status));
         return 1;
@@ -67,9 +62,28 @@ void socket_aceptar(Socket *this) {
     this->peerskt = accept(this->sock, NULL, NULL);
 }
 
-//int socket_enviar_datos(Socket *this, char *buffer, int tamanio) {
-//    return 0;
-//}
+int socket_enviar_datos(Socket *this, Buffer *buffer) {
+    int bytesEnviados = 0;
+    bool errorDelSocket = false, socketCerrado = false;
+    int status;
+    while (bytesEnviados < buffer->usado && errorDelSocket == false &&
+            socketCerrado == false) {
+        status = send(this->sock, &buffer->data[bytesEnviados],
+                buffer->usado - bytesEnviados, MSG_NOSIGNAL);
+        if (status < 0) {
+            printf("Error enviar cliente datos: %s\n", strerror(errno));
+            errorDelSocket = true;
+        } else if (status == 0) {
+            socketCerrado = true;
+        } else {
+            bytesEnviados += status;
+        }
+    }
+    if (socketCerrado || errorDelSocket) {
+        return 1;
+    }
+    return 0;
+}
 
 int socket_recibir_datos(Socket *this, Buffer *buffer) {
     buffer->usado = 0;

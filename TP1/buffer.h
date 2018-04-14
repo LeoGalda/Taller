@@ -1,5 +1,5 @@
-#ifndef __COMMON_BUFFER_H__
-#define __COMMON_BUFFER_H__
+#ifndef __BUFFER_H__
+#define __BUFFER_H__
 
 typedef struct {
     int tamanio;
@@ -8,7 +8,7 @@ typedef struct {
 } Buffer;
 
 //crea un buffer
-void buffer_crear(Buffer *this,size_t tamanio);
+void buffer_crear(Buffer *this,int tamanio);
 
 //destruye un buffer
 void buffer_destroy(Buffer * this);

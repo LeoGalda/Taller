@@ -1,8 +1,9 @@
 #ifndef __CLIENTE_H__
 #define __CLIENTE_H__
 
-#include "encriptador.h"
 #include <netdb.h>
+#include "buffer.h"
+#include "socket.h"
 #include <stdbool.h>
 
 typedef struct {

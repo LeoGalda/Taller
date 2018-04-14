@@ -1,4 +1,5 @@
 #include "encriptador.h"
+#include "cliente.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -19,31 +20,34 @@ void encriptador_crear(Encriptador *this, char *clave) {
     this->key = clave;
 }
 
-void encriptador_encriptar(Encriptador *this, FILE *datosAEncriptar,
-        int cantidad, int *prgaI, int *prgaJ) {
+void encriptador_encriptar(Encriptador *this, Cliente *cliente,
+                int *prgaI, int *prgaJ) {
     char unCaracter;
+    cliente->buffer.usado = 0;
     unsigned char key_stream;
     unsigned char datoEncriptado;
-    for (int c = 0; (c < cantidad) &&
-            ((unCaracter = getc(datosAEncriptar)) != EOF); c++) {
+    for (int c = 0; (c < cliente->buffer.tamanio) &&
+            ((unCaracter = getc(cliente->entrada)) != EOF); c++) {
         key_stream = fasePRGA(this, prgaI, prgaJ);
         datoEncriptado = encriptarDato(key_stream, unCaracter);
         agregarDatoEncriptadoAlEncriptador(this, datoEncriptado,
                 key_stream);
+        cliente->buffer.data[c] = datoEncriptado;
+        cliente->buffer.usado++;
     }
 }
 
-void encriptador_desencriptar(Encriptador *this, Buffer *buffer, 
-                              int *prgaI, int *prgaJ) {
+void encriptador_desencriptar(Encriptador *this, Buffer *buffer,
+                               int *prgaI, int *prgaJ) {
     unsigned char unCaracter;
     unsigned char key_stream;
-    unsigned char datoEncriptado;    
-    for (int c = 0; c < buffer->usado; c++) {        
+    unsigned char datoEncriptado;
+    for (int c = 0; c < buffer->usado; c++) {
         unCaracter = buffer->data[c];
         key_stream = fasePRGA(this, prgaI, prgaJ);
         datoEncriptado = encriptarDato(key_stream, unCaracter);
-        agregarDatoEncriptadoAlEncriptador(this, datoEncriptado, key_stream);        
-    }    
+        agregarDatoEncriptadoAlEncriptador(this, datoEncriptado, key_stream);
+    }
 }
 
 void encriptador_guardar_en_salida(Encriptador *this, FILE *archivoSalida) {
@@ -81,7 +85,7 @@ void encriptador_destroy(Encriptador *this) {
     }
 }
 
-unsigned char encriptarDato(unsigned char key_stream, unsigned char unCaracter){
+unsigned char encriptarDato(unsigned char key_stream, unsigned char unCaracter) {
     return key_stream ^ unCaracter;
 }
 
