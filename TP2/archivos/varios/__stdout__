@@ -1,0 +1,10 @@
+dev0.bin: se establece conexion con el dispositivo DEV00
+dev1.bin: se establece conexion con el dispositivo DEV01
+dev2.bin: se establece conexion con el dispositivo DEV02
+dev3.bin: se establece conexion con el dispositivo DEV03
+Paquete listo: 1000 tornillos de tipo Cabeza plana (mediana: 5)
+Paquete listo: 800 tornillos de tipo Cabeza puntiaguda (mediana: 5)
+# Informe de remanentes
+* 400 tornillos de tipo Cabeza plana
+* 300 tornillos de tipo Cabeza puntiaguda
+* 100 tornillos de tipo Cabeza redondeada

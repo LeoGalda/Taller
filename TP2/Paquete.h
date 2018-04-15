@@ -7,26 +7,27 @@
 
 class Paquete {
 protected:	
-	unsigned short id;
+	unsigned int id;
 	std::string nombre;
 	unsigned int limite;
 	unsigned int cantidad;
-	std::vector<int> ancho;	
+	std::vector<unsigned int> ancho;	
 
 public:
 	Paquete();
-	Paquete(unsigned short id, const std::string &nombre, unsigned int limite);
-	unsigned short getId();
-	void setId(unsigned short id);
+	Paquete(unsigned int id, const std::string &nombre, unsigned int limite);
+	unsigned int getId();
+	void setId(unsigned int id);
 	std::string getNombre();
 	void setNombre(const std::string &nombre);
 	unsigned int getLimite();
 	void setLimite(unsigned int limite);	
 	unsigned int getCantidad();
 	void setCantidad(unsigned int cantidad);
-	void addAncho(int ancho);
+	void addAncho(unsigned int ancho);
+        void addAnchos(unsigned int ancho,unsigned int cantidad);
 	void limpiarAnchos();
-	std::vector<int> getAnchos();
+	std::vector<unsigned int> getAnchos();
 	~Paquete();
 };
 

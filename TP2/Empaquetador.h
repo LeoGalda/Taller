@@ -13,9 +13,9 @@ public:
     ~Empaquetador();
     void agregarPaquete(Paquete *paquete);
     size_t getTamanio();
-    Paquete* getPaquete(int posicion);
-    Paquete* getPaquetePorTipo(int tipo);
-//    int existeTornillo(int tipo);
+    Paquete* getPaquete(unsigned int posicion);
+    Paquete* getPaquetePorTipo(unsigned int tipo);
+    int existeTornillo(unsigned int tipo);
     void mostrarRemanentes();
 };
 

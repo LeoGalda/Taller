@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-Paquete::Paquete(unsigned short id,const std::string& nombre,
+Paquete::Paquete(unsigned int id,const std::string& nombre,
 				 unsigned int limite) : id(id),nombre(nombre),
 				 limite(limite),cantidad(0){
 }
@@ -11,11 +11,11 @@ Paquete::Paquete(unsigned short id,const std::string& nombre,
 Paquete::Paquete(){
 }
 
-unsigned short Paquete::getId(){
+unsigned int Paquete::getId(){
 	return this->id;
 }
 
-void Paquete::setId(unsigned short id){
+void Paquete::setId(unsigned int id){
 	this->id = id;
 }
 
@@ -43,11 +43,15 @@ void Paquete::setCantidad(unsigned int cantidad){
 	this->cantidad = cantidad;
 }
 
-void Paquete::addAncho(int ancho){
+void Paquete::addAncho(unsigned int ancho){
 	this->ancho.push_back(ancho);			
 }
 
-std::vector<int> Paquete::getAnchos(){
+void Paquete::addAnchos(unsigned int ancho,unsigned int cantidad){
+    for(int i = 0;i < (int)cantidad; ++i) addAncho(ancho);
+}
+
+std::vector<unsigned int> Paquete::getAnchos(){
 	return ancho;
 }
 

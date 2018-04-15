@@ -16,7 +16,7 @@ void Empaquetador::agregarPaquete(Paquete *unPaquete) {
     this->empaquetador.push_back(unPaquete);
 }
 
-Paquete* Empaquetador::getPaquete(int posicion) {
+Paquete* Empaquetador::getPaquete(unsigned int posicion) {
     return this->empaquetador[posicion];
 }
 
@@ -24,10 +24,10 @@ size_t Empaquetador::getTamanio() {
     return this->empaquetador.size();
 }
 
-Paquete* Empaquetador::getPaquetePorTipo(int tipo) {
+Paquete* Empaquetador::getPaquetePorTipo(unsigned int tipo) {
     Paquete *paquete;
     for (size_t i = 0; i < this->getTamanio(); i++) {
-        if ((int) (this->getPaquete(i)->getId()) == tipo) {
+        if ((this->getPaquete(i)->getId()) == tipo) {
             return this->getPaquete(i);
         }
     }
@@ -35,14 +35,14 @@ Paquete* Empaquetador::getPaquetePorTipo(int tipo) {
     return paquete;
 }
 
-//int Empaquetador::existeTornillo(int tipo) {    
-//    for (size_t i = 0; i < this->getTamanio(); i++) {
-//        if ((int) (this->getPaquete(i)->getId()) == tipo) {
-//            return 0;
-//        }
-//    }
-//    return 1;
-//}
+int Empaquetador::existeTornillo(unsigned int tipo) {    
+    for (size_t i = 0; i < this->getTamanio(); i++) {
+        if ((this->getPaquete(i)->getId()) == tipo) {
+            return 0;
+        }
+    }
+    return 1;
+}
 
 void Empaquetador::mostrarRemanentes() {
     fprintf(stdout, "# Informe de remanentes\n");
