@@ -68,7 +68,7 @@ void ManejadorArch::run() {
     if (!this->archivo.fail()) {
         char input[4];
         while (!estaFin()) {
-            int magicus;
+            int magicus;            
 //            this->archivo.get(input, sizeof (input) + 1);
             this->archivo.get(input[0]);
             this->archivo.get(input[1]);
@@ -77,7 +77,8 @@ void ManejadorArch::run() {
             if (estaFin()) return;
             memcpy(&magicus, &input, sizeof (magicus));
             if (magicus == -1) {
-                fprintf(stderr, "%s atascado\n", this->nombreClasificador.c_str());
+                fprintf(stderr, "%s atascado\n",
+                        this->nombreClasificador.c_str());
             } else if (getEndiannes()) {
                 procesarBinarios(magicus, this->emp);
             } else {

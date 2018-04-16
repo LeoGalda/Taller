@@ -8,35 +8,31 @@
 class Thread {
 private:
     std::thread thread;
-public:
+    
+public: 
+    
+//constructor del thread    
+    Thread();    
+    
+//metodo que da comienzo a la ejecucion de los thread y llama a run    
+    void start();
 
-    Thread() {
-    }
-
-    void start() {
-        thread = std::thread(&Thread::run, this);
-    }
-
-    void join() {
-        thread.join();
-    }
-
+// hace el join de los thread,     
+    void join();    
+    
+//corre el run de las hijas derivadas    
     virtual void run() = 0;
 
-    virtual ~Thread() {
-    }
-
+//destructor del thread    
+    virtual ~Thread();
+    
+//de esta manera evitamos que se copien los hilos
     Thread(const Thread&) = delete;
     Thread& operator=(const Thread&) = delete;
-
-    Thread(Thread&& other) {
-        this->thread = std::move(other.thread);
-    }
-
-    Thread& operator=(Thread&& other) {
-        this->thread = std::move(other.thread);
-        return *this;
-    }
+    
+//de esta manera permitimos que se muevan los hilos    
+    Thread(Thread&& other);
+    Thread& operator=(Thread&& other);
 };
 
 #endif

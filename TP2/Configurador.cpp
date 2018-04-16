@@ -12,9 +12,10 @@
 
 using std::string;
 
+Configurador::Configurador(){    
+}
 
-
-Configurador::Configurador() {
+Configurador::Configurador(char *entrada) : entrada(entrada) {
 }
 
 Paquete* procesarLinea(const std::string linea) {
@@ -28,7 +29,7 @@ Paquete* procesarLinea(const std::string linea) {
     std::string nombre = linea.substr(inicio, siguiente - inicio);
     inicio = siguiente + 1;
     int limite = atoi(linea.substr(inicio).c_str());
-    Paquete* paquete = new Paquete((unsigned int)id, nombre, limite);
+    Paquete* paquete = new Paquete((unsigned int) id, nombre, limite);
     return paquete;
 }
 
@@ -36,8 +37,8 @@ bool Configurador::estaFin() {
     return this->archivo.eof();
 }
 
-void Configurador::leerConfiguracion(Empaquetador *empaquetador, char *entrada) {
-    this->archivo.open(entrada);
+void Configurador::leerConfiguracion(Empaquetador *empaquetador) {
+    this->archivo.open(this->entrada);
     char input[128];
     while (!estaFin()) {
         this->archivo.getline(input, sizeof (input));

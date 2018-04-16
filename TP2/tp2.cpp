@@ -14,8 +14,8 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     Empaquetador empaquetador;
-    Configurador configurador;
-    configurador.leerConfiguracion(&empaquetador, argv[1]);
+    Configurador configurador(argv[1]);
+    configurador.leerConfiguracion(&empaquetador);
     std::vector<Thread*> threads;
     for (int j = 2; j < argc; ++j) {
         threads.push_back(new ManejadorArch(&empaquetador, argv[j] ));
