@@ -2,6 +2,7 @@
 #include "Empaquetador.h"
 #include <cstdio>
 #include <string.h>
+#include "Lock.h"
 
 Empaquetador::Empaquetador() {
 }
@@ -20,12 +21,12 @@ Paquete* Empaquetador::getPaquete(unsigned int posicion) {
     return this->empaquetador[posicion];
 }
 
-size_t Empaquetador::getTamanio() {
+size_t Empaquetador::getTamanio() {    
     return this->empaquetador.size();
 }
 
 Paquete* Empaquetador::getPaquetePorTipo(unsigned int tipo) {
-    Paquete *paquete;
+    Paquete *paquete;    
     for (size_t i = 0; i < this->getTamanio(); i++) {
         if ((this->getPaquete(i)->getId()) == tipo) {
             return this->getPaquete(i);
@@ -35,7 +36,7 @@ Paquete* Empaquetador::getPaquetePorTipo(unsigned int tipo) {
     return paquete;
 }
 
-int Empaquetador::existeTornillo(unsigned int tipo) {
+int Empaquetador::existeTornillo(unsigned int tipo) {    
     for (size_t i = 0; i < this->getTamanio(); i++) {
         if ((this->getPaquete(i)->getId()) == tipo) {
             return 0;
@@ -58,6 +59,7 @@ void Empaquetador::mostrarRemanentes() {
 
 void Empaquetador::actualizarDatos(unsigned int tipo, unsigned int cant,
         unsigned int ancho) {
+    Lock l(mute);
     if (this->existeTornillo(tipo)) {
         fprintf(stderr, "Tipo de tornillo invalido: %i\n", tipo);
     } else {
@@ -70,7 +72,7 @@ void Empaquetador::actualizarDatos(unsigned int tipo, unsigned int cant,
                 cant -= agregar;
                 paquete->setCantidad(paquete->getCantidad() + agregar);
                 paquete->addAnchos(ancho, agregar);
-                int mediana = paquete->calcularMediana();                
+                int mediana = paquete->calcularMediana();                 
                 fprintf(stdout, "Paquete listo: %i tornillos de tipo %s "
                         "(mediana: %i)\n", paquete->getLimite(),
                         paquete->getNombre().c_str(), mediana);

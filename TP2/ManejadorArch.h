@@ -13,6 +13,7 @@ private:
     std::ifstream archivo;
     char *ruta;
     Empaquetador *emp;
+    std::string nombreClasificador;
     
 public:
     ManejadorArch();   

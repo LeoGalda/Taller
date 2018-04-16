@@ -3,11 +3,13 @@
 
 #include <vector>
 #include "Paquete.h"
+#include <mutex>
 
 class Empaquetador {
 private:
     std::vector<Paquete*> empaquetador;
-
+    std::mutex mute;
+    
 public:
     Empaquetador();
     ~Empaquetador();

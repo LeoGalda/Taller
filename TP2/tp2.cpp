@@ -17,10 +17,9 @@ int main(int argc, char *argv[]) {
     Configurador configurador;
     configurador.leerConfiguracion(&empaquetador, argv[1]);
     std::vector<Thread*> threads;
-    for (int j = 2; j < argc; j++) {
-        threads.push_back(new ManejadorArch(&empaquetador, argv[j]));
+    for (int j = 2; j < argc; ++j) {
+        threads.push_back(new ManejadorArch(&empaquetador, argv[j] ));
     }
-    
     size_t cantidad = threads.size();
     for (size_t i = 0; i < cantidad; ++i) {
         threads[i]->start();
@@ -30,7 +29,6 @@ int main(int argc, char *argv[]) {
         threads[i]->join();
         delete threads[i];
     }
-
     empaquetador.mostrarRemanentes();
     return 0;
 }
