@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Empaquetador.h"
 #include <cstdio>
 #include <string.h>
@@ -45,6 +46,9 @@ int Empaquetador::existeTornillo(unsigned int tipo) {
 
 void Empaquetador::mostrarRemanentes() {
     fprintf(stdout, "# Informe de remanentes\n");
+    std::sort(this->empaquetador.begin(),this->empaquetador.end(), 
+               [](Paquete *p1, Paquete *p2) {  
+                    return (p1->getId() < p2->getId());});    
     for (size_t i = 0; i < this->getTamanio(); i++) {
         fprintf(stdout, "* %i tornillos de tipo %s\n",
                 this->getPaquete(i)->getCantidad(),
@@ -55,7 +59,7 @@ void Empaquetador::mostrarRemanentes() {
 void Empaquetador::actualizarDatos(unsigned int tipo, unsigned int cant,
         unsigned int ancho) {
     if (this->existeTornillo(tipo)) {
-        fprintf(stderr, "Tipo de tornillo invalido: <%i>\n", tipo);
+        fprintf(stderr, "Tipo de tornillo invalido: %i\n", tipo);
     } else {
         Paquete *paquete;
         paquete = this->getPaquetePorTipo(tipo);
@@ -83,5 +87,4 @@ void Empaquetador::actualizarDatos(unsigned int tipo, unsigned int cant,
             paquete->addAnchos(ancho, cant);
         }
     }
-
 }
