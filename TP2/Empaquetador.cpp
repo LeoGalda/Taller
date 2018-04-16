@@ -1,7 +1,6 @@
 #include "Empaquetador.h"
 #include <cstdio>
 #include <string.h>
-#include "ManejadorArch.h"
 
 Empaquetador::Empaquetador() {
 }
@@ -35,7 +34,7 @@ Paquete* Empaquetador::getPaquetePorTipo(unsigned int tipo) {
     return paquete;
 }
 
-int Empaquetador::existeTornillo(unsigned int tipo) {    
+int Empaquetador::existeTornillo(unsigned int tipo) {
     for (size_t i = 0; i < this->getTamanio(); i++) {
         if ((this->getPaquete(i)->getId()) == tipo) {
             return 0;
@@ -53,3 +52,36 @@ void Empaquetador::mostrarRemanentes() {
     }
 }
 
+void Empaquetador::actualizarDatos(unsigned int tipo, unsigned int cant,
+        unsigned int ancho) {
+    if (this->existeTornillo(tipo)) {
+        fprintf(stderr, "Tipo de tornillo invalido: <%i>\n", tipo);
+    } else {
+        Paquete *paquete;
+        paquete = this->getPaquetePorTipo(tipo);
+        if ((paquete->getCantidad() + cant) >= paquete->getLimite()) {
+            while ((paquete->getCantidad() + cant) >= paquete->getLimite()) {
+                unsigned int agregar = paquete->getLimite() -
+                        paquete->getCantidad();
+                cant -= agregar;
+                paquete->setCantidad(paquete->getCantidad() + agregar);
+                paquete->addAnchos(ancho, agregar);
+                int mediana = paquete->calcularMediana();                
+                fprintf(stdout, "Paquete listo: %i tornillos de tipo %s "
+                        "(mediana: %i)\n", paquete->getLimite(),
+                        paquete->getNombre().c_str(), mediana);
+                paquete->limpiarAnchos();
+                paquete->setCantidad(0);
+                if (cant > 0 && cant < paquete->getLimite()) {
+                    paquete->setCantidad(paquete->getCantidad() + cant);
+                    paquete->addAnchos(ancho, cant);
+                    cant = 0;
+                }
+            }
+        } else {
+            paquete->setCantidad(paquete->getCantidad() + cant);
+            paquete->addAnchos(ancho, cant);
+        }
+    }
+
+}

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Paquete.h"
 #include <cstdio>
 #include <string>
@@ -57,6 +58,20 @@ std::vector<unsigned int> Paquete::getAnchos(){
 
 void Paquete::limpiarAnchos(){
 	this->ancho.clear();
+}
+
+int Paquete::calcularMediana(){    
+    std::vector<unsigned int> aux = this->getAnchos();
+    std::sort(aux.begin(), aux.end());
+    int cantidad = aux.size();
+    if ((cantidad % 2) == 0) {        
+        int mitad = cantidad / 2;        
+        int dato = ceil(((float) aux[mitad] + 
+                                 aux[mitad - 1]) / 2);
+        return dato;
+    } else {
+        return aux[(int) floor(cantidad / 2)];
+    }
 }
 
 Paquete::~Paquete(){

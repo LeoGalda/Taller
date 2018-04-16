@@ -17,6 +17,8 @@ public:
     Paquete* getPaquetePorTipo(unsigned int tipo);
     int existeTornillo(unsigned int tipo);
     void mostrarRemanentes();
+    void actualizarDatos(unsigned int tipo, unsigned int cant, 
+        unsigned int ancho);
 };
 
 #endif

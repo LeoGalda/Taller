@@ -20,10 +20,8 @@ public:
     ManejadorArch(Empaquetador *emp,char *arch);
     void run();
     bool estaFin();    
-//    void leerConfiguracion(Empaquetador *empaquetador,char *entrada);
     Paquete* procesarLinea(const std::string linea);
     std::ifstream getArchivo();
-    void parsearArchivo(Empaquetador *empaquetador,char *entrada);
     ~ManejadorArch();
 };
 

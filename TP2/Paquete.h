@@ -28,9 +28,8 @@ public:
         void addAnchos(unsigned int ancho,unsigned int cantidad);
 	void limpiarAnchos();
 	std::vector<unsigned int> getAnchos();
+        int calcularMediana();
 	~Paquete();
 };
-
-
 
 #endif

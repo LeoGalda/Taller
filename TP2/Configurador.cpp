@@ -49,5 +49,6 @@ void Configurador::leerConfiguracion(Empaquetador *empaquetador, char *entrada) 
 }
 
 Configurador::~Configurador() {
+    this->archivo.close();
 }
 

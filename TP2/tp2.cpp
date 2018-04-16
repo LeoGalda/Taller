@@ -19,8 +19,6 @@ int main(int argc, char *argv[]) {
     std::vector<Thread*> threads;
     for (int j = 2; j < argc; j++) {
         threads.push_back(new ManejadorArch(&empaquetador, argv[j]));
-//        ManejadorArch manejador;
-//        manejador.parsearArchivo(&empaquetador, argv[j]);
     }
     
     size_t cantidad = threads.size();
