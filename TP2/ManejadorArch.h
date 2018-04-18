@@ -15,13 +15,13 @@ private:
     Empaquetador *emp;
     std::string nombreClasificador;
     
-public:
-    
+public:    
 //constructor del manejador    
     ManejadorArch();   
     
 //constructor del manejador recibe un puntero a empaquetador y el archivo
-//ademas abre los archivos y los conecta imprimiendo el resultado por pantalla    
+//ademas abre los archivos y los conecta imprimiendo 
+//el resultado por pantalla    
     ManejadorArch(Empaquetador *emp,char *arch);
     
 //cada thread va a ejecutar este metodo, el cual lee de a 4 bytes el archivo

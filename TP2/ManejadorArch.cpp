@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
+#include <string>
 #include <vector>
 #include "Paquete.h"
 #include "Empaquetador.h"
@@ -20,15 +21,17 @@ std::string leerNombre(std::ifstream &arch) {
         input[i] = 00;
     }
     std::string nombreClasificador;
-    arch.getline(input, sizeof (input), '\0');
+    arch.getline(input, sizeof(input), '\0');
     nombreClasificador = input;
     return nombreClasificador;
 }
 
-ManejadorArch::ManejadorArch(Empaquetador *emp, char *arch) : ruta(arch), emp(emp) {
+ManejadorArch::ManejadorArch(Empaquetador *emp, char *arch) 
+                                : ruta(arch), emp(emp) {
     this->archivo.open(arch);
     if (this->archivo.fail()) {
-        fprintf(stderr, "%s: no se pudo conectar con el dispositivo\n", this->ruta);
+        fprintf(stderr, "%s: no se pudo conectar con el dispositivo\n", 
+                        this->ruta);
     } else {
         std::string nombreClasificador = leerNombre(this->archivo);
         this->nombreClasificador = nombreClasificador;
@@ -75,7 +78,7 @@ void ManejadorArch::run() {
             this->archivo.get(input[2]);
             this->archivo.get(input[3]);
             if (estaFin()) return;
-            memcpy(&magicus, &input, sizeof (magicus));
+            memcpy(&magicus, &input, sizeof(magicus));
             if (magicus == -1) {
                 fprintf(stderr, "%s atascado\n",
                         this->nombreClasificador.c_str());

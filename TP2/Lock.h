@@ -11,11 +11,10 @@ private:
     Lock& operator=(Lock&&) = delete;
 
 public:
-    
-//constructor del Lock el cual recibe un mutex por parametro    
-    Lock(std::mutex &mute);
-    
-//destructor del Lock    
+    //constructor del Lock el cual recibe un mutex por parametro    
+    explicit Lock(std::mutex &mute);
+
+    //destructor del Lock    
     ~Lock();
 };
 

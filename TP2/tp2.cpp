@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     configurador.leerConfiguracion(&empaquetador);
     std::vector<Thread*> threads;
     for (int j = 2; j < argc; ++j) {
-        threads.push_back(new ManejadorArch(&empaquetador, argv[j] ));
+        threads.push_back(new ManejadorArch(&empaquetador, argv[j]));
     }
     size_t cantidad = threads.size();
     for (size_t i = 0; i < cantidad; ++i) {

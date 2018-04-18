@@ -9,8 +9,7 @@ class Thread {
 private:
     std::thread thread;
     
-public: 
-    
+public:     
 //constructor del thread    
     Thread();    
     

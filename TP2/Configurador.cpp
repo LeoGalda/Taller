@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
-#include <string.h>
+#include <string>
 #include <vector>
 #include "Paquete.h"
 #include "Empaquetador.h"
@@ -15,7 +15,7 @@ using std::string;
 Configurador::Configurador(){    
 }
 
-Configurador::Configurador(char *entrada) : entrada(entrada) {
+Configurador::Configurador(char *ent) : entrada(ent) {
 }
 
 Paquete* procesarLinea(const std::string linea) {
@@ -41,7 +41,7 @@ void Configurador::leerConfiguracion(Empaquetador *empaquetador) {
     this->archivo.open(this->entrada);
     char input[128];
     while (!estaFin()) {
-        this->archivo.getline(input, sizeof (input));
+        this->archivo.getline(input, sizeof(input));
         std::string linea = input;
         if (!linea.empty()) {
             empaquetador->agregarPaquete(procesarLinea(linea));
