@@ -1,0 +1,4 @@
+No hay archivos de entrada en el directorio actual para el cliente. Recuerde que los archivos deben respetar la forma 'client*.cpp' y que no se aceptan directorios anidados.
+Directorios encontrados: ./nbproject ./nbproject/private
+Makefile:144: fallo en las instrucciones para el objetivo 'client'
+make: *** [client] Error 1
