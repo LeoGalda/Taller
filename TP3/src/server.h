@@ -1,6 +1,5 @@
 #ifndef SERVIDOR_H
 #define SERVIDOR_H
-#include <netdb.h>
 #include <stdbool.h>
 #include <fstream>
 #include "common_Buffer.h"

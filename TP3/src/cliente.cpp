@@ -3,7 +3,8 @@
 Cliente::Cliente() {
 }
 
-Cliente::Cliente(const Cliente& orig) {
+Cliente::Cliente(char *ip, char *puerto):socket(ip,puerto) {
+    
 }
 
 Cliente::~Cliente() {
