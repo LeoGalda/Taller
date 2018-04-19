@@ -7,10 +7,10 @@
 ################
 
 # Nombre del ejecutable.
-target = tp
+target = tp3
 
 # Extensión de los archivos a compilar (c para C, cpp o cc o cxx para C++).
-extension = c
+extension = cpp
 
 # Archivos con el código fuente que componen el ejecutable. Si no se especifica,
 # toma todos los archivos con la extensión mencionada. Para especificar hay que
@@ -19,10 +19,10 @@ extension = c
 #fuentes = entrada.cpp
 
 # Si usa funciones de math.h, descomentar (quitar el '#' a) la siguiente línea.
-math = si
+#math = si
 
 # Si usa threads, descomentar (quitar el '#' a) la siguiente línea.
-#threads = si
+threads = si
 
 # Si es un programa GTK+, descomentar (quitar el '#' a) la siguiente línea.
 #gtk = si
