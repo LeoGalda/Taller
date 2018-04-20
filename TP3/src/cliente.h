@@ -10,5 +10,8 @@ private:
 public:
     Cliente();
     Cliente(char *ip, char *puerto);
+    
     virtual ~Cliente();
 };
+
+#endif

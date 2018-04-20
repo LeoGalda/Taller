@@ -2,14 +2,17 @@
 #define ACCIONPULL_H
 
 #include "client_Accion.h"
+#include <string>
 
 class AccionPull : public Accion {
 private:    
+    std::string hash;
 public:
-    AccionPull();
-    AccionPull(const AccionPull& orig);
+    AccionPull(char *hash);
+    void ejecutar();
+    int getValorNumerico();
     virtual ~AccionPull();
 };
 
-#endif /* ACCIONPULL_H */
+#endif 
 

@@ -5,7 +5,7 @@
 #include <typeinfo>
 #include <string>
 
-class ExcpError : std::exception {
+class ExcpError : public std::exception {
 private:
     std::string mensaje;
 public:

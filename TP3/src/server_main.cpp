@@ -11,8 +11,9 @@ using std::cout;
 
 int main(int argc, char** argv) {
     try{
-        Server server(argv[0],argv[1]);    
-    } catch(const std::exception &exc){
+        Server server(argv[1],argv[2]);    
+        server.recibirDatos();
+    } catch(std::exception &exc){
         syslog(LOG_ERR,"Error: %s", exc.what());   
         return 1;
     } catch(...){

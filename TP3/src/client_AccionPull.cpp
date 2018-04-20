@@ -1,22 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   AccionPull.cpp
- * Author: leogalda
- * 
- * Created on 18 de abril de 2018, 17:35
- */
-
 #include "client_AccionPull.h"
+#include <iostream>
 
-AccionPull::AccionPull() {
+AccionPull::AccionPull(char *hash) : hash(hash) {
 }
 
-AccionPull::AccionPull(const AccionPull& orig) {
+void AccionPull::ejecutar(){
+    std::cout<<"ejecutando puuuuull"<<std::endl;
+}
+
+int AccionPull::getValorNumerico(){
+    return 2;
 }
 
 AccionPull::~AccionPull() {

@@ -2,14 +2,19 @@
 #define ACCIONPUSH_H
 
 #include "client_Accion.h"
+#include <fstream>
+#include <string>
 
 class AccionPush : public Accion {
 private:
-    
+    std::ifstream archivo;
+    std::string hash;
+    std::string nombreArchivo;
 public:
-    AccionPush();
-    AccionPush(const AccionPush& orig);
-    virtual ~AccionPush();
+    AccionPush(char *arch, char *hash);
+    void ejecutar();
+    int getValorNumerico();
+    ~AccionPush();
 };
 
 #endif 

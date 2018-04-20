@@ -5,14 +5,18 @@
 #include "common_Buffer.h"
 #include "common_Socket.h"
 
+#define RESPONSE_MAX_LEN 50
+
 class Server {
 private:
     Socket socket;
-    std::fstream indice;
-    char *ruta;    
+    char *ruta;  
+    Buffer buffer;
+    std::fstream indice;  
 public:
     Server();
     Server(char *puerto, char *ruta);
+    void recibirDatos();
     virtual ~Server();
 };
 

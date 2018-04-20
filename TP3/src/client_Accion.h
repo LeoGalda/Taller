@@ -6,9 +6,9 @@ private:
 public:
     Accion();
     Accion(const Accion& orig);
-    virtual ~Accion();
+    virtual ~Accion();    
     virtual void ejecutar() = 0;
-
+    virtual int getValorNumerico() = 0;
 };
 
 #endif /* ACCION_H */
