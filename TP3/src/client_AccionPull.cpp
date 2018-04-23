@@ -4,11 +4,12 @@
 AccionPull::AccionPull(char *hash) : hash(hash) {
 }
 
-void AccionPull::ejecutar(){
+int AccionPull::ejecutar(){
     std::cout<<"ejecutando puuuuull"<<std::endl;
+    return 0;
 }
 
-int AccionPull::getValorNumerico(){
+unsigned int AccionPull::getValorNumerico(){
     return 2;
 }
 

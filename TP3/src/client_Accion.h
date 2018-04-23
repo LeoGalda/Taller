@@ -7,9 +7,10 @@ public:
     Accion();
     Accion(const Accion& orig);
     virtual ~Accion();    
-    virtual void ejecutar() = 0;
-    virtual int getValorNumerico() = 0;
-};
-
-#endif /* ACCION_H */
+    virtual int ejecutar() = 0;
+    virtual unsigned int getValorNumerico() = 0;
+protected:
+        bool getEndiannes();
+};        
+#endif
 

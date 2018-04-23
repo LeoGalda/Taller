@@ -59,7 +59,7 @@ int Socket::conectar(bool soyServidor) {
 }
 
 void Socket::aceptar() {
-    std::cout<<"por aceptar" <<std::endl;
+    std::cout<<"Esperando un cliente" <<std::endl;
     this->peerskt = accept(this->sock, NULL, NULL);
     std::cout<<"aceptado" <<std::endl;
 }
@@ -88,6 +88,7 @@ int Socket::enviarDatos(Buffer *buffer) {
 }
 
 int Socket::recibirDatos(Buffer *buffer) {
+    std::cout<<"recibo un dato"<<std::endl;
 //    buffer->usado = 0;
 //    int s = 0;
 //    bool socketValido = true;
@@ -113,7 +114,7 @@ int Socket::getPeerskt(){
 
 
 Socket::~Socket() {
-    freeaddrinfo(this->ptr);
-    shutdown(this->sock, SHUT_RDWR);
-    close(this->sock);
+//    freeaddrinfo(this->ptr);
+//    shutdown(this->sock, SHUT_RDWR);
+//    close(this->sock);
 }

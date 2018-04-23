@@ -11,9 +11,9 @@ private:
     std::vector<std::string> hashes;
 public:    
     AccionTag(char *version);
-    void ejecutar();
+    int ejecutar();
     void agregarHash(char *hash);
-    int getValorNumerico();
+    unsigned int getValorNumerico();
     virtual ~AccionTag();
 };
 

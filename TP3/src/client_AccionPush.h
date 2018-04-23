@@ -6,14 +6,15 @@
 #include <string>
 
 class AccionPush : public Accion {
-private:
-    std::ifstream archivo;
-    std::string hash;
+private:    
     std::string nombreArchivo;
+    std::string hash;
+    std::ifstream archivo;
+    unsigned char *data;
 public:
     AccionPush(char *arch, char *hash);
-    void ejecutar();
-    int getValorNumerico();
+    int ejecutar();
+    unsigned int getValorNumerico();
     ~AccionPush();
 };
 

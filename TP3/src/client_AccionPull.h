@@ -9,8 +9,8 @@ private:
     std::string hash;
 public:
     AccionPull(char *hash);
-    void ejecutar();
-    int getValorNumerico();
+    int ejecutar();
+    unsigned int getValorNumerico();
     virtual ~AccionPull();
 };
 

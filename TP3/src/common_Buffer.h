@@ -8,8 +8,10 @@ private:
     unsigned int *data;
     
 public:
-    Buffer();
     explicit Buffer(int tamanio);
+    void setData();
+    void setUsado(int usado);
+//    int almacenarDatos();
     virtual ~Buffer();
 
 

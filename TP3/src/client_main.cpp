@@ -28,8 +28,8 @@ int main(int argc, char* argv[]) {
             accion = &tag;
         } else {
             throw -1;
-        }            
-        accion->ejecutar();
+        }    
+        cliente.ejecutar(accion);
     } catch (const std::exception &exc) {
         syslog(LOG_ERR, "Error: %s", exc.what());
         return 1;

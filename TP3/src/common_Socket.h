@@ -16,7 +16,7 @@ private:
     struct addrinfo *ptr;
     int sock, peerskt;
 public:
-    Socket();
+
     Socket(char *puerto, char *ip);
     
     // Configura la forma en la que se va a conectar con el socket

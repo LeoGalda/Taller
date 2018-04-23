@@ -5,7 +5,7 @@
 #include "common_Buffer.h"
 #include "common_Socket.h"
 
-#define RESPONSE_MAX_LEN 50
+#define RESPONSE_MAX_LEN 128
 
 class Server {
 private:

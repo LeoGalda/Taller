@@ -23,7 +23,7 @@ void Server::recibirDatos() {
     while (corriendo) {
         if (this->socket.getPeerskt() == -1) {
             throw -1;            
-            corriendo = false;
+//            corriendo = false;
         } else {
             corriendo = this->socket.recibirDatos(&this->buffer);                    
         }
