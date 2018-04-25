@@ -1,7 +1,5 @@
 #include "encriptador.h"
 #include "cliente.h"
-#include <string.h>
-#include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -15,41 +13,43 @@ void encriptador_crear(Encriptador *this) {
     this->prgaJ = 0;
 }
 
-void ejecutarSalidas(unsigned char dato, unsigned char ks) {
+void imprimirSalidaEstandar(unsigned char dato){
     fprintf(stdout, "%02x", dato);
-    fprintf(stderr, "%02X", ks);
 }
 
-void encriptador_encriptar(Encriptador *this, Cliente *cliente) {
-    char unCaracter;
-    cliente->buffer.usado = 0;
-    unsigned char key_stream;
-    unsigned char datoEncriptado;
-    for (int c = 0; (c < cliente->buffer.tamanio) &&
-            ((unCaracter = getc(cliente->entrada)) != EOF); c++) {
-        key_stream = fasePRGA(this);
-        datoEncriptado = encriptarDato(key_stream, unCaracter);
-        cliente->buffer.data[c] = datoEncriptado;
-        cliente->buffer.usado++;
-        ejecutarSalidas(datoEncriptado, key_stream);
-    }
+void imprimirSalidaErrores(unsigned char ks){
+    fprintf(stderr, "%02X", ks);    
 }
 
-void encriptador_desencriptar(Servidor *servidor) {
+void encriptador_encriptar(Encriptador *this, Buffer *buffer){
     unsigned char unCaracter;
     unsigned char key_stream;
     unsigned char datoEncriptado;
-    for (int c = 0; c < servidor->buffer.usado; c++) {
-        unCaracter = servidor->buffer.data[c];
-        key_stream = fasePRGA(&(servidor->desencriptador));
+    for (int c = 0; c < buffer_get_usado(buffer); c++) {
+        unCaracter = buffer_get_data_pos(buffer,c);
+        key_stream = fasePRGA(this);
+        datoEncriptado = encriptarDato(key_stream,unCaracter);
+        buffer_set_data_pos(buffer,datoEncriptado,c);        
+        imprimirSalidaEstandar(datoEncriptado);
+        imprimirSalidaErrores(key_stream);
+    }
+}
+
+void encriptador_desencriptar(Encriptador *this, FILE *salida,Buffer *buffer){
+    unsigned char unCaracter;
+    unsigned char key_stream;
+    unsigned char datoEncriptado;
+    for (int c = 0; c < buffer_get_usado(buffer); c++) {
+        unCaracter = buffer_get_data_pos(buffer,c);
+        key_stream = fasePRGA(this);
         datoEncriptado = encriptarDato(key_stream, unCaracter);
-        ejecutarSalidas(datoEncriptado, key_stream);
-        putc(datoEncriptado, servidor->salida);
+        imprimirSalidaEstandar(datoEncriptado);
+        imprimirSalidaErrores(key_stream);
+        buffer_set_data_pos(buffer,datoEncriptado,c); 
     }
 }
 
 void encriptador_destroy(Encriptador *this) {
-    // nothing
 }
 
 unsigned char encriptarDato(unsigned char key_stream, unsigned char unCaracter){

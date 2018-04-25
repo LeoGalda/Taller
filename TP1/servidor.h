@@ -13,7 +13,6 @@ typedef struct {
     Buffer buffer;
     Encriptador desencriptador;
     FILE *salida;
-
 } Servidor;
 
 // Inicializa la instancia this para ser utilizada

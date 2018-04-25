@@ -7,7 +7,7 @@
 #include "socket.h"
 
 void socket_crear(Socket *this) {
-
+// nothing to do
 }
 
 int socket_bind(Socket *this, char *puerto) {
@@ -15,7 +15,7 @@ int socket_bind(Socket *this, char *puerto) {
     bool conectado = false;
     struct addrinfo hints;
     struct addrinfo *ptr, *aux;
-    memset(&hints, 0, sizeof (struct addrinfo));
+    memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_INET; /* IPv4 */
     hints.ai_socktype = SOCK_STREAM; /* TCP */
     hints.ai_flags = 0;
@@ -61,12 +61,13 @@ int socket_conectar(Socket *this, char *puerto, char *ip) {
     struct addrinfo *aux, *ptr;      
     struct addrinfo hints;
     int status;  
-    memset(&hints, 0, sizeof (struct addrinfo));
+    memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_INET; /* IPv4 */
     hints.ai_socktype = SOCK_STREAM; /* TCP */
     hints.ai_flags = AI_PASSIVE;
     status = getaddrinfo(ip, puerto, &hints, &ptr);
     if (status != 0) {
+        freeaddrinfo(ptr);
         printf("Error in getaddrinfo: %s\n", gai_strerror(status));
         return 1;
     }
@@ -74,17 +75,20 @@ int socket_conectar(Socket *this, char *puerto, char *ip) {
             aux = aux->ai_next) {
         this->fd = socket(aux->ai_family, aux->ai_socktype, aux->ai_protocol);
         if (this->fd == -1) {
+            freeaddrinfo(ptr);
             printf("Error: %s\n", strerror(errno));
             return 1;
         } else {
             status = connect(this->fd, aux->ai_addr, aux->ai_addrlen);
             if (status == -1) {
+                freeaddrinfo(ptr);
                 printf("Error: %s\n", strerror(errno));
                 return 1;
             }
             conectado = (status != -1);
         }
     }
+    freeaddrinfo(ptr);
     if (!conectado) return 1;
     return 0;
 }
@@ -133,6 +137,10 @@ int socket_recibir_datos(Socket *this, Buffer *buffer) {
         return 1;
     }
     return 0;
+}
+
+int socket_get_FD(Socket *this){
+    return this->fd;
 }
 
 void socket_destroy(Socket *this) {
