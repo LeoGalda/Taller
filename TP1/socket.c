@@ -7,7 +7,7 @@
 #include "socket.h"
 
 void socket_crear(Socket *this) {
-// nothing to do
+    // nothing to do
 }
 
 int socket_bind(Socket *this, char *puerto) {
@@ -58,9 +58,9 @@ int socket_listen(Socket *this) {
 
 int socket_conectar(Socket *this, char *puerto, char *ip) {
     bool conectado = false;
-    struct addrinfo *aux, *ptr;      
+    struct addrinfo *aux, *ptr;
     struct addrinfo hints;
-    int status;  
+    int status;
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_INET; /* IPv4 */
     hints.ai_socktype = SOCK_STREAM; /* TCP */
@@ -139,7 +139,7 @@ int socket_recibir_datos(Socket *this, Buffer *buffer) {
     return 0;
 }
 
-int socket_get_FD(Socket *this){
+int socket_get_FD(Socket *this) {
     return this->fd;
 }
 

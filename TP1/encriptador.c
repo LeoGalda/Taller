@@ -13,39 +13,39 @@ void encriptador_crear(Encriptador *this) {
     this->prgaJ = 0;
 }
 
-void imprimirSalidaEstandar(unsigned char dato){
+void imprimirSalidaEstandar(unsigned char dato) {
     fprintf(stdout, "%02x", dato);
 }
 
-void imprimirSalidaErrores(unsigned char ks){
-    fprintf(stderr, "%02X", ks);    
+void imprimirSalidaErrores(unsigned char ks) {
+    fprintf(stderr, "%02X", ks);
 }
 
-void encriptador_encriptar(Encriptador *this, Buffer *buffer){
+void encriptador_encriptar(Encriptador *this, Buffer *buffer) {
     unsigned char unCaracter;
     unsigned char key_stream;
     unsigned char datoEncriptado;
     for (int c = 0; c < buffer_get_usado(buffer); c++) {
-        unCaracter = buffer_get_data_pos(buffer,c);
+        unCaracter = buffer_get_data_pos(buffer, c);
         key_stream = fasePRGA(this);
-        datoEncriptado = encriptarDato(key_stream,unCaracter);
-        buffer_set_data_pos(buffer,datoEncriptado,c);        
+        datoEncriptado = encriptarDato(key_stream, unCaracter);
+        buffer_set_data_pos(buffer, datoEncriptado, c);
         imprimirSalidaEstandar(datoEncriptado);
         imprimirSalidaErrores(key_stream);
     }
 }
 
-void encriptador_desencriptar(Encriptador *this, FILE *salida,Buffer *buffer){
+void encriptador_desencriptar(Encriptador *this, FILE *salida, Buffer *buffer){
     unsigned char unCaracter;
     unsigned char key_stream;
     unsigned char datoEncriptado;
     for (int c = 0; c < buffer_get_usado(buffer); c++) {
-        unCaracter = buffer_get_data_pos(buffer,c);
+        unCaracter = buffer_get_data_pos(buffer, c);
         key_stream = fasePRGA(this);
         datoEncriptado = encriptarDato(key_stream, unCaracter);
         imprimirSalidaEstandar(datoEncriptado);
         imprimirSalidaErrores(key_stream);
-        buffer_set_data_pos(buffer,datoEncriptado,c); 
+        buffer_set_data_pos(buffer, datoEncriptado, c);
     }
 }
 
@@ -62,7 +62,7 @@ void intercambiar(char *s, int i, int j) {
     s[j] = auxiliar;
 }
 
-void encriptador_fase_KSA(Encriptador *this,char *key) {
+void encriptador_fase_KSA(Encriptador *this, char *key) {
     int tamanio = strlen((char*) key);
     int i, j;
     for (i = 0; i < 256; i++) {

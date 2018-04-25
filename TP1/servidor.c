@@ -10,19 +10,18 @@
 #define RESPONSE_MAX_LEN 50
 
 void servidor_create(Servidor *this, char *puerto, char *key) {
-    buffer_crear(&this->buffer, RESPONSE_MAX_LEN);    
+    buffer_crear(&this->buffer, RESPONSE_MAX_LEN);
     socket_crear(&this->socket);
     socket_bind(&this->socket, puerto);
     socket_listen(&this->socket);
     encriptador_crear(&this->desencriptador);
-    encriptador_fase_KSA(&this->desencriptador,key);
+    encriptador_fase_KSA(&this->desencriptador, key);
     this->salida = fopen("./out", "wb");
 }
 
-
 int servidor_aceptar_clientes(Servidor *this) {
     Socket peerskt;
-    socket_aceptar(&this->socket, &peerskt);    
+    socket_aceptar(&this->socket, &peerskt);
     int corriendo = 1;
     while (corriendo) {
         if (socket_get_FD(&this->socket) == -1) {
@@ -30,11 +29,11 @@ int servidor_aceptar_clientes(Servidor *this) {
             corriendo = 0;
         } else {
             corriendo = socket_recibir_datos(&peerskt, &this->buffer);
-            encriptador_desencriptar(&this->desencriptador,this->salida,
-                                     &this->buffer);
-            fwrite(buffer_get_data(&this->buffer),sizeof(unsigned char),
-                                         buffer_get_usado(&this->buffer),
-                                         this->salida);            
+            encriptador_desencriptar(&this->desencriptador, this->salida,
+                    &this->buffer);
+            fwrite(buffer_get_data(&this->buffer), sizeof(unsigned char),
+                    buffer_get_usado(&this->buffer),
+                    this->salida);
         }
     }
     socket_destroy(&peerskt);
