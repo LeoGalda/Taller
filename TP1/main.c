@@ -15,20 +15,22 @@ static int errorParametros() {
 }
 
 int main(int argc, char* argv[]) {
-    if (argc < 4) {
+    int cantidadMinimaParametrosCliente = 6;
+    int cantidadMinimaParametrosServidor = 4;
+    if (argc < cantidadMinimaParametrosServidor) {
         return errorParametros();
     }
     if (strcmp(argv[1], "server") == 0) {
-        if (argc != 4) {
+        if (argc != cantidadMinimaParametrosServidor) {
             return errorParametros();
-        } 
+        }
         Servidor servidor;
         servidor_create(&servidor, argv[2], argv[3]);
-        servidor_recibir_datos(&servidor);
-        servidor_destroy(&servidor);        
+        servidor_aceptar_clientes(&servidor);
+        servidor_destroy(&servidor);
         return SUCCESS;
     } else if (strcmp(argv[1], "client") == 0) {
-        if (argc != 6) {
+        if (argc != cantidadMinimaParametrosCliente) {
             return errorParametros();
         }
         Cliente cliente;

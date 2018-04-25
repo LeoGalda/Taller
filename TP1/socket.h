@@ -10,24 +10,21 @@
 #include <unistd.h>
 
 typedef struct{
-	char *puerto;
-	char *ip;
-	struct addrinfo *ptr;
-	int sock,peerskt;
+	int fd;
 } Socket;
 
 
 //Inicializa la instancia this para ser utilizada
-void socket_crear(Socket *this,char *puerto, char *ip);
+void socket_crear(Socket *this);
 
-// Configura la forma en la que se va a conectar con el socket
-int socket_configurar(Socket *this, bool soyServidor);
+int socket_bind(Socket *this, char *puerto);
 
-//conecta el socket
-int socket_conectar(Socket *this, bool soyServidor);
+int socket_listen(Socket *this);
 
+int socket_conectar(Socket *this, char *puerto, char *ip);
+    
 //acepta un cliente
-void socket_aceptar(Socket *this);
+void socket_aceptar(Socket *this,Socket *peer);
 
 // Envia datos a traves del socket
 int socket_enviar_datos(Socket *this,Buffer *buffer);

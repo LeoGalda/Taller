@@ -10,8 +10,7 @@ unsigned char encriptarDato(unsigned char key_stream, unsigned char unCaracter);
 
 unsigned char fasePRGA(Encriptador *this);
 
-void encriptador_crear(Encriptador *this, char *clave) {
-    this->key = clave;
+void encriptador_crear(Encriptador *this) {
     this->prgaI = 0;
     this->prgaJ = 0;
 }
@@ -36,13 +35,13 @@ void encriptador_encriptar(Encriptador *this, Cliente *cliente) {
     }
 }
 
-void encriptador_desencriptar(Encriptador *this, Servidor *servidor) {
+void encriptador_desencriptar(Servidor *servidor) {
     unsigned char unCaracter;
     unsigned char key_stream;
     unsigned char datoEncriptado;
     for (int c = 0; c < servidor->buffer.usado; c++) {
         unCaracter = servidor->buffer.data[c];
-        key_stream = fasePRGA(this);
+        key_stream = fasePRGA(&(servidor->desencriptador));
         datoEncriptado = encriptarDato(key_stream, unCaracter);
         ejecutarSalidas(datoEncriptado, key_stream);
         putc(datoEncriptado, servidor->salida);
@@ -63,15 +62,15 @@ void intercambiar(char *s, int i, int j) {
     s[j] = auxiliar;
 }
 
-void encriptador_fase_KSA(Encriptador *this) {
-    int tamanio = strlen((char*) this->key);
+void encriptador_fase_KSA(Encriptador *this,char *key) {
+    int tamanio = strlen((char*) key);
     int i, j;
     for (i = 0; i < 256; i++) {
         this->arrayDeEstados[i] = i;
     }
     j = 0;
     for (i = 0; i < 256; i++) {
-        j = (j + this->arrayDeEstados[i] + this->key[i % tamanio]) & 255;
+        j = (j + this->arrayDeEstados[i] + key[i % tamanio]) & 255;
         intercambiar(this->arrayDeEstados, i, j);
     }
 }

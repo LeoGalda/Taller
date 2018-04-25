@@ -10,39 +10,36 @@
 #define RESPONSE_MAX_LEN 50
 
 void servidor_create(Servidor *this, char *puerto, char *key) {
-    Buffer buffer;
-    Socket socket;
-    socket_crear(&socket, puerto, NULL);
-    buffer_crear(&buffer, RESPONSE_MAX_LEN);
-    this->socket = socket;
-    this->buffer = buffer;
-    this->key = key;
-    this->salida = fopen("./out", "wg");
+    buffer_crear(&this->buffer, RESPONSE_MAX_LEN);    
+    socket_crear(&this->socket);
+    socket_bind(&this->socket, puerto);
+    socket_listen(&this->socket);
+    encriptador_crear(&this->desencriptador, key);
+    encriptador_fase_KSA(&this->desencriptador);
+    this->salida = fopen("./out", "wb");
 }
 
-int servidor_recibir_datos(Servidor *this) {
-    bool corriendo = true;
-    if (socket_configurar(&this->socket, 1)) return 1;
-    if (socket_conectar(&this->socket, 1)) return 1;
-    socket_aceptar(&this->socket);
-    Encriptador desencriptador;
-    encriptador_crear(&desencriptador, this->key);
-    encriptador_fase_KSA(&desencriptador);
+
+int servidor_aceptar_clientes(Servidor *this) {
+    Socket peerskt;
+    socket_aceptar(&this->socket, &peerskt);
+    int corriendo = 1;
     while (corriendo) {
-        if (this->socket.peerskt == -1) {
+        if (peerskt == -1) {
             printf("Error: %s\n", strerror(errno));
-            corriendo = false;
+            corriendo = 0;
         } else {
-            corriendo = socket_recibir_datos(&this->socket, &this->buffer);
-            encriptador_desencriptar(&desencriptador, this);
+            corriendo = socket_recibir_datos(&peerskt, &this->buffer);
+            encriptador_desencriptar(this);
         }
     }
-    encriptador_destroy(&desencriptador);
+    socket_destroy(&peerskt);
     return 0;
 }
 
 void servidor_destroy(Servidor *this) {
     socket_destroy(&this->socket);
     buffer_destroy(&this->buffer);
+    encriptador_destroy(&this->desencriptador);
     fclose(this->salida);
 }

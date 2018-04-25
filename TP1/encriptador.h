@@ -7,7 +7,6 @@
 #include "cliente.h"
 
 typedef struct {
-    char *key;
     char arrayDeEstados[256];
     int prgaI;
     int prgaJ;
@@ -15,7 +14,7 @@ typedef struct {
 
 
 // inicializa la instancia this para ser utilizada
-void encriptador_crear(Encriptador * this, char *key);
+void encriptador_crear(Encriptador * this);
 
 // Encripta los datos que se encuentran en el buffer del cliente
 // y realiza las salidas (usado por el cliente)
@@ -23,12 +22,12 @@ void encriptador_encriptar(Encriptador * this, Cliente *cliente);
 
 // Encripta los datos que se encuentran en el buffer del servidor
 // y realiza las salidas (usado por el servidor)
-void encriptador_desencriptar(Encriptador * this, Servidor *servidor);
+void encriptador_desencriptar(Servidor *servidor);
 
 // Destruyo la instancia this para liberar sus recursos
 void encriptador_destroy(Encriptador * this);
 
 //realiza la fase KSA y modifica el arrayDeEstado de la instancia this
-void encriptador_fase_KSA(Encriptador * this);
+void encriptador_fase_KSA(Encriptador * this, char *key);
 
 #endif

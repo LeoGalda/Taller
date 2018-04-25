@@ -4,13 +4,14 @@
 #include <netdb.h>
 #include "buffer.h"
 #include "socket.h"
+#include "encriptador.h"
 #include <stdbool.h>
 
 typedef struct {
     Socket socket;
     Buffer buffer;
-    char *key;
     FILE *entrada;
+    Encriptador encriptador;
 } Cliente;
 
 
