@@ -6,18 +6,23 @@
 #include <vector>
 #include <thread>
 
+#define SUCCESS 0;
+#define ERROR 1;
+
 using std::cout;
 
 int main(int argc, char *argv[]) {
-    if (argc < 3) {
+    int cantidadMinimaDeParametros = 3;
+    if (argc < cantidadMinimaDeParametros) {
         cout << "faltan archivos" << std::endl;
-        return 1;
+        return ERROR;
     }
     Empaquetador empaquetador;
     Configurador configurador(argv[1]);
     configurador.leerConfiguracion(&empaquetador);
     std::vector<Thread*> threads;
-    for (int j = 2; j < argc; ++j) {
+    int inicioDeParametrosALeer = 2;
+    for (int j = inicioDeParametrosALeer; j < argc; ++j) {
         threads.push_back(new ManejadorArch(&empaquetador, argv[j]));
     }
     size_t cantidad = threads.size();
@@ -30,5 +35,5 @@ int main(int argc, char *argv[]) {
         delete threads[i];
     }
     empaquetador.mostrarRemanentes();
-    return 0;
+    return SUCCESS;
 }

@@ -14,21 +14,50 @@ protected:
     std::vector<unsigned int> ancho;
 
 public:
-    Paquete();
+//inicializa un Paquete con los valores del id, su nombre y el limite de anchos
+//que puede guardar un paquete    
     Paquete(unsigned int id, const std::string &nombre, unsigned int limite);
+    
+//obtiene el ID    
     unsigned int getId();
+    
+//setea el valor del id    
     void setId(unsigned int id);
-    std::string getNombre();
+    
+//devuelve el valor del atributo nombre    
+    std::string getNombre() const;
+    
+//setea el valor del atributo nombre    
     void setNombre(const std::string &nombre);
-    unsigned int getLimite();
+    
+//devuelve el valor del atributo limite    
+    unsigned int getLimite() const;
+    
+//setea el valor del atributo limite    
     void setLimite(unsigned int limite);
-    unsigned int getCantidad();
+    
+//devuelve el valor del atributo cantidad    
+    unsigned int getCantidad() const;
+    
+//setea el valor del atributo cantidad    
     void setCantidad(unsigned int cantidad);
+    
+//agrega un ancho al vector de ancho    
     void addAncho(unsigned int ancho);
+    
+//agrega una cantidad pasado por parametro al vector de anchos    
     void addAnchos(unsigned int ancho, unsigned int cantidad);
+    
+//Elimina todos los valores del vector ancho
     void limpiarAnchos();
-    std::vector<unsigned int> getAnchos();
+    
+//devuelve el vector del atributo ancho    
+    std::vector<unsigned int> getAnchos() const;
+    
+//calcula la mediana del atributo vector ancho    
     int calcularMediana();
+    
+//destructor del paquete el cual elimina todos los anchos y libera sus recursos    
     ~Paquete();
 };
 

@@ -9,9 +9,6 @@ Paquete::Paquete(unsigned int id, const std::string& nombre,
 limite(limite), cantidad(0) {
 }
 
-Paquete::Paquete() {
-}
-
 unsigned int Paquete::getId() {
     return this->id;
 }
@@ -20,7 +17,7 @@ void Paquete::setId(unsigned int id) {
     this->id = id;
 }
 
-std::string Paquete::getNombre() {
+std::string Paquete::getNombre() const{
     return this->nombre;
 }
 
@@ -28,7 +25,7 @@ void Paquete::setNombre(const std::string &nombre) {
     this->nombre = nombre;
 }
 
-unsigned int Paquete::getLimite() {
+unsigned int Paquete::getLimite() const{
     return this->limite;
 }
 
@@ -36,7 +33,7 @@ void Paquete::setLimite(unsigned int limite) {
     this->limite = limite;
 }
 
-unsigned int Paquete::getCantidad() {
+unsigned int Paquete::getCantidad() const{
     return this->cantidad;
 }
 
@@ -52,7 +49,7 @@ void Paquete::addAnchos(unsigned int ancho, unsigned int cantidad) {
     for (int i = 0; i < (int) cantidad; ++i) addAncho(ancho);
 }
 
-std::vector<unsigned int> Paquete::getAnchos() {
+std::vector<unsigned int> Paquete::getAnchos() const{
     return ancho;
 }
 

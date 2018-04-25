@@ -44,46 +44,35 @@ bool ManejadorArch::estaFin() {
     return this->archivo.eof();
 }
 
-bool getEndiannes() {
-    int16_t i = 1;
-    int8_t *p = (int8_t *) & i;
-
-    if (p[0] == 1) {
-        return false;
-    }
-    return true;
-}
-
 void procesarBinarios(int &info, Empaquetador *empaquetador) {
     unsigned int tipoTornillo;
     unsigned int cantidad;
     unsigned int ancho;
+    int cantidadDeBitAMoverTornillos = 27;
+    int cantidadDeBitAMoverAncho = 27;
+    int cantidadDeBitAMoverIzquierdaCantidad = 5;
+    int cantidadDeBitAMoverDerechaCantidad = 10;
     tipoTornillo = cantidad = ancho = info;
-    tipoTornillo >>= 27;
-    cantidad <<= 5;
-    cantidad >>= 10;
-    ancho <<= 27;
-    ancho >>= 27;
+    tipoTornillo >>= cantidadDeBitAMoverTornillos;
+    cantidad <<= cantidadDeBitAMoverIzquierdaCantidad;
+    cantidad >>= cantidadDeBitAMoverDerechaCantidad;
+    ancho <<= cantidadDeBitAMoverAncho;
+    ancho >>= cantidadDeBitAMoverAncho;
     empaquetador->actualizarDatos(tipoTornillo, cantidad, ancho);
 }
 
 void ManejadorArch::run() {
-    if (!this->archivo.fail()) {
+    if (!this->archivo.fail()) {        
         char input[4];
         while (!estaFin()) {
-            int magicus;            
-//            this->archivo.get(input, sizeof (input) + 1);
-            this->archivo.get(input[0]);
-            this->archivo.get(input[1]);
-            this->archivo.get(input[2]);
-            this->archivo.get(input[3]);
+            int magicus;   
+            int cantidadBytesALeer = 4;
+            this->archivo.read(input,cantidadBytesALeer);
             if (estaFin()) return;
             memcpy(&magicus, &input, sizeof(magicus));
             if (magicus == -1) {
                 fprintf(stderr, "%s atascado\n",
                         this->nombreClasificador.c_str());
-            } else if (getEndiannes()) {
-                procesarBinarios(magicus, this->emp);
             } else {
                 magicus = htonl(magicus);
                 procesarBinarios(magicus, this->emp);
