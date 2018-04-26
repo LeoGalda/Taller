@@ -4,17 +4,11 @@
 #include <string>
 #include <vector>
 
-Paquete::Paquete(unsigned int id, const std::string& nombre,
-        unsigned int limite) : id(id), nombre(nombre),
-limite(limite), cantidad(0) {
+Paquete::Paquete(){    
 }
 
-unsigned int Paquete::getId() {
-    return this->id;
-}
-
-void Paquete::setId(unsigned int id) {
-    this->id = id;
+Paquete::Paquete(const std::string& nombre, unsigned int limite) :  
+                                nombre(nombre),limite(limite), cantidad(0) {
 }
 
 std::string Paquete::getNombre() const{
@@ -70,6 +64,13 @@ int Paquete::calcularMediana() {
         return aux[(int) floor(cantidad / 2)];
     }
 }
+
+void Paquete::swap(Paquete& b){
+    Paquete t = *this; 
+    *this = b; 
+    b = t;
+}
+
 
 Paquete::~Paquete() {
 }

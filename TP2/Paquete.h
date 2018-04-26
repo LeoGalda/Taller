@@ -7,57 +7,55 @@
 
 class Paquete {
 protected:
-    unsigned int id;
     std::string nombre;
     unsigned int limite;
     unsigned int cantidad;
     std::vector<unsigned int> ancho;
 
 public:
-//inicializa un Paquete con los valores del id, su nombre y el limite de anchos
-//que puede guardar un paquete    
-    Paquete(unsigned int id, const std::string &nombre, unsigned int limite);
-    
-//obtiene el ID    
-    unsigned int getId();
-    
-//setea el valor del id    
-    void setId(unsigned int id);
-    
-//devuelve el valor del atributo nombre    
+    //constructor de paquete
+    Paquete();
+    //inicializa un Paquete con sus valores     
+    Paquete(const std::string &nombre, unsigned int limite);
+
+    //devuelve el valor del atributo nombre    
     std::string getNombre() const;
-    
-//setea el valor del atributo nombre    
+
+    //setea el valor del atributo nombre    
     void setNombre(const std::string &nombre);
-    
-//devuelve el valor del atributo limite    
+
+    //devuelve el valor del atributo limite    
     unsigned int getLimite() const;
-    
-//setea el valor del atributo limite    
+
+    //setea el valor del atributo limite    
     void setLimite(unsigned int limite);
-    
-//devuelve el valor del atributo cantidad    
+
+    //devuelve el valor del atributo cantidad    
     unsigned int getCantidad() const;
-    
-//setea el valor del atributo cantidad    
+
+    //setea el valor del atributo cantidad    
     void setCantidad(unsigned int cantidad);
-    
-//agrega un ancho al vector de ancho    
+
+    //agrega un ancho al vector de ancho    
     void addAncho(unsigned int ancho);
-    
-//agrega una cantidad pasado por parametro al vector de anchos    
+
+    //agrega una cantidad pasado por parametro al vector de anchos    
     void addAnchos(unsigned int ancho, unsigned int cantidad);
-    
-//Elimina todos los valores del vector ancho
+
+    //Elimina todos los valores del vector ancho
     void limpiarAnchos();
-    
-//devuelve el vector del atributo ancho    
+
+    //devuelve el vector del atributo ancho    
     std::vector<unsigned int> getAnchos() const;
-    
-//calcula la mediana del atributo vector ancho    
+
+    //calcula la mediana del atributo vector ancho    
     int calcularMediana();
     
-//destructor del paquete el cual elimina todos los anchos y libera sus recursos    
+    //asignacion por movimiento 
+    void swap(Paquete& b);     
+
+    //destructor del paquete el cual elimina todos los anchos
+    //y libera sus recursos    
     ~Paquete();
 };
 

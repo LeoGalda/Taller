@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
     int inicioDeParametrosALeer = 2;
     for (int j = inicioDeParametrosALeer; j < argc; ++j) {
         threads.push_back(new ManejadorArch(&empaquetador, argv[j]));
-    }
+    }    
     size_t cantidad = threads.size();
     for (size_t i = 0; i < cantidad; ++i) {
         threads[i]->start();
