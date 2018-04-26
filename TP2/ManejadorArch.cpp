@@ -16,14 +16,9 @@ ManejadorArch::ManejadorArch() {
 }
 
 std::string leerNombre(std::ifstream &arch) {
-    char input[128];
-    for (int i = 0; i < 128; i++) {
-        input[i] = 00;
-    }
-    std::string nombreClasificador;
-    arch.getline(input, sizeof(input), '\0');
-    nombreClasificador = input;
-    return nombreClasificador;
+    std::string input;
+    getline(arch,input,'\0');
+    return input;
 }
 
 ManejadorArch::ManejadorArch(Empaquetador *emp, char *arch) 

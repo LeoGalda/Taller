@@ -4,20 +4,12 @@
 #include <string>
 #include <vector>
 
-Paquete::Paquete(unsigned int id, const std::string& nombre,
-        unsigned int limite) : id(id), nombre(nombre),
-limite(limite), cantidad(0) {
+Paquete::Paquete(const std::string& nombre, unsigned int limite) :  
+                                nombre(nombre),limite(limite), cantidad(0) {
 }
+
 
 Paquete::Paquete() {
-}
-
-unsigned int Paquete::getId() {
-    return this->id;
-}
-
-void Paquete::setId(unsigned int id) {
-    this->id = id;
 }
 
 std::string Paquete::getNombre() {

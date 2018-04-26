@@ -7,7 +7,7 @@
 
 class Paquete {
 protected:
-    unsigned int id;
+//    unsigned int id;
     std::string nombre;
     unsigned int limite;
     unsigned int cantidad;
@@ -15,9 +15,10 @@ protected:
 
 public:
     Paquete();
-    Paquete(unsigned int id, const std::string &nombre, unsigned int limite);
-    unsigned int getId();
-    void setId(unsigned int id);
+//    Paquete(unsigned int id, const std::string &nombre, unsigned int limite);
+//    unsigned int getId();
+//    void setId(unsigned int id);
+    Paquete(const std::string &nombre, unsigned int limite);
     std::string getNombre();
     void setNombre(const std::string &nombre);
     unsigned int getLimite();
