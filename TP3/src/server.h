@@ -16,7 +16,7 @@ private:
 public:
     Server();
     Server(char *puerto, char *ruta);
-    void recibirDatos();
+    void aceptarClientes();
     virtual ~Server();
 };
 

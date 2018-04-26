@@ -11,22 +11,23 @@
 
 class Socket {
 private:
-    char *puerto;
-    char *ip;
-    struct addrinfo *ptr;
-    int sock, peerskt;
+    int fd;
 public:
 
-    Socket(char *puerto, char *ip);
-    
-    // Configura la forma en la que se va a conectar con el socket
-    int configurar(bool soyServidor);
+    //Inicializa la instancia this para ser utilizada
+    Socket();
 
-    //conecta el socket
-    int conectar(bool soyServidor);
+    //hace el bind al puerto que se va a asociar al socket
+    int doBind(char *puerto);
+
+    //hace el listen del socket
+    int doListen();
+
+    //conecta el socket al puerto e ip pasado por parametro
+    int conectar(char *puerto, char *ip);
 
     //acepta un cliente
-    void aceptar();
+    void aceptar(Socket *peer);
 
     // Envia datos a traves del socket
     int enviarDatos(Buffer *buffer);
@@ -34,9 +35,11 @@ public:
     // recibe los datos del socket
     int recibirDatos(Buffer *buffer);
     
-    int getPeerskt();
+    // devuelve el File Descriptor
+    int getFD();
 
-    virtual ~Socket();
+    // Destruyo la instancia this para liberar sus recursos
+    ~Socket();
 };
 
 #endif /* SOCKET_H */

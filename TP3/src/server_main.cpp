@@ -12,7 +12,7 @@ using std::cout;
 int main(int argc, char** argv) {
     try{
         Server server(argv[1],argv[2]);    
-        server.recibirDatos();
+        server.aceptarClientes();
     } catch(std::exception &exc){
         syslog(LOG_ERR,"Error: %s", exc.what());   
         return 1;

@@ -9,9 +9,12 @@ private:
     
 public:
     explicit Buffer(int tamanio);
-    void setData();
-    void setUsado(int usado);
-//    int almacenarDatos();
+    int setDataEnPosicion(unsigned int data, int pos);
+    unsigned char getDataEnPos(int pos);
+    unsigned int* getData();
+    void setUsado(int usado);    
+    int getUsado();
+    int buffer_get_tamanio();    
     virtual ~Buffer();
 
 

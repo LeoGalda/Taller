@@ -5,30 +5,29 @@
 #include "server.h"
 #include "common_ExcpError.h"
 
-Server::Server(char *puerto, char *arch) : socket(puerto, NULL), ruta(arch),
-                                           buffer(RESPONSE_MAX_LEN){
+Server::Server(char *puerto, char *arch) : ruta(arch), buffer(RESPONSE_MAX_LEN){
     this->indice.open(arch);
     if (this->indice.fail()) {
         int linea = 5;
         std::string error = "NOOOO!!!! LA PUTA QUE TE PARIO";
         throw new ExcpError(error, linea);
     }
+    this->socket.doBind(puerto);
+    this->socket.doListen();
 }
 
-void Server::recibirDatos() {
-    bool corriendo = true;
-    if (this->socket.configurar(1)) return;
-    if (this->socket.conectar(1)) return;
-    this->socket.aceptar();
+void Server::aceptarClientes() {
+    Socket peerskt;
+    this->socket.aceptar(&peerskt);    
+    int corriendo = 1;
     while (corriendo) {
-        if (this->socket.getPeerskt() == -1) {
-            throw -1;            
-//            corriendo = false;
+        if (this->socket.getFD() == -1) {
+            printf("Error: PUTO EN SOCKET\n");
+            corriendo = 0;
         } else {
-            corriendo = this->socket.recibirDatos(&this->buffer);                    
+            corriendo = peerskt.recibirDatos(&this->buffer);            
         }
-    }
-    return;
+    }        
 }
 
 Server::~Server() {
