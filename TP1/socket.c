@@ -101,10 +101,11 @@ int socket_enviar_datos(Socket *this, Buffer *buffer) {
     int bytesEnviados = 0;
     bool errorDelSocket = false, socketCerrado = false;
     int status;
-    while (bytesEnviados < buffer->usado && errorDelSocket == false &&
-            socketCerrado == false) {
-        status = send(this->fd, &buffer->data[bytesEnviados],
-                buffer->usado - bytesEnviados, MSG_NOSIGNAL);
+    int usado = buffer_get_usado(buffer);
+    while (bytesEnviados < usado &&  errorDelSocket == false &&
+                            socketCerrado == false) {
+        status = send(this->fd, &buffer_get_data(buffer)[bytesEnviados],
+                usado - bytesEnviados, MSG_NOSIGNAL);
         if (status < 0) {
             printf("Error enviar cliente datos: %s\n", strerror(errno));
             errorDelSocket = true;
@@ -121,14 +122,15 @@ int socket_enviar_datos(Socket *this, Buffer *buffer) {
 }
 
 int socket_recibir_datos(Socket *this, Buffer *buffer) {
-    buffer->usado = 0;
+    buffer_set_usado(buffer,0);
+    int tamanio = buffer_get_tamanio(buffer);
     int s = 0;
     bool socketValido = true;
-    while (buffer->usado < buffer->tamanio && socketValido) {
-        s = recv(this->fd, &buffer->data[buffer->usado],
-                buffer->tamanio - buffer->usado, 0);
+    while (buffer_get_usado(buffer) < tamanio &&  socketValido) {
+        s = recv(this->fd,&buffer_get_data(buffer)[buffer_get_usado(buffer)],
+                tamanio - buffer_get_usado(buffer), 0);
         if (s > 0) {
-            buffer->usado += s;
+            buffer_set_usado(buffer,buffer_get_usado(buffer) + s);
         } else {
             socketValido = false;
         }

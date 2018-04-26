@@ -33,6 +33,10 @@ void buffer_set_usado(Buffer *this, int cantidad) {
     this->usado = cantidad;
 }
 
+int buffer_get_tamanio(Buffer *this){
+    return this->tamanio;
+}
+
 void buffer_destroy(Buffer *this) {
     free(this->data);
 }

@@ -27,6 +27,9 @@ void buffer_set_usado(Buffer * this, int cantidad);
 //devuelve data
 unsigned char* buffer_get_data(Buffer * this);
 
+//devuelve el tamanio del buffer
+int buffer_get_tamanio(Buffer *this);
+
 //destruye un buffer
 void buffer_destroy(Buffer * this);
 
