@@ -1,6 +1,7 @@
 #ifndef PAQUETE_H
 #define PAQUETE_H
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>

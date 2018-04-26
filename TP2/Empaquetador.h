@@ -4,6 +4,7 @@
 #include "Paquete.h"
 #include <mutex>
 #include <map>
+#include <string>
 
 class Empaquetador {
 private:

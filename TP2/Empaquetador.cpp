@@ -3,6 +3,9 @@
 #include <cstdio>
 #include <string.h>
 #include "Lock.h"
+#include <utility>
+#include <map>
+#include <string>
 
 Empaquetador::Empaquetador() {
 }
