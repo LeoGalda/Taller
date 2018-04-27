@@ -5,7 +5,8 @@
 #include <string>
 #include "client_Accion.h"
 
-class AccionTag : public Accion {
+//class AccionTag : public Accion {
+class AccionTag{
 private:    
     std::string version;
     std::vector<std::string> hashes;
@@ -14,6 +15,8 @@ public:
     int ejecutar();
     void agregarHash(char *hash);
     unsigned int getValorNumerico();
+    int getTamanio();
+    std::string getNombreArchivo() const;
     virtual ~AccionTag();
 };
 

@@ -10,9 +10,15 @@
       <in>cliente.cpp</in>
       <in>common_Buffer.cpp</in>
       <in>common_ExcpError.cpp</in>
+      <in>common_FormatoComu.cpp</in>
+      <in>common_FormatoComu.h</in>
       <in>common_Lock.cpp</in>
       <in>common_Socket.cpp</in>
+      <in>common_Versionado.cpp</in>
+      <in>common_Versionado.h</in>
       <in>server.cpp</in>
+      <in>server_Indice.cpp</in>
+      <in>server_Indice.h</in>
       <in>server_main.cpp</in>
     </df>
     <logicalFolder name="ExternalFiles"
@@ -89,6 +95,10 @@
         <ccTool flags="0">
         </ccTool>
       </item>
+      <item path="common_FormatoComu.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="common_FormatoComu.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="common_Lock.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
         </ccTool>
@@ -97,9 +107,17 @@
         <ccTool flags="0">
         </ccTool>
       </item>
+      <item path="common_Versionado.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="common_Versionado.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="server.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
         </ccTool>
+      </item>
+      <item path="server_Indice.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="server_Indice.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="server_main.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">

@@ -97,14 +97,14 @@ void Socket::aceptar(Socket *peerskt) {
     peerskt->fd = accept(this->fd, NULL, NULL);
 }
 
-int Socket::enviarDatos(Buffer *buffer) {
+int Socket::enviarDatos(Accion *accion) {
 //    int bytesEnviados = 0;
 //    bool errorDelSocket = false, socketCerrado = false;
 //    int status;
-//    int usado = buffer_get_usado(buffer);
+//    int usado = accion->getTamanio();
 //    while (bytesEnviados < usado &&  errorDelSocket == false &&
 //                            socketCerrado == false) {
-//        status = send(this->fd, &buffer_get_data(buffer)[bytesEnviados],
+//        status = send(this->fd, &accion->getData(bytesEnviados),
 //                usado - bytesEnviados, MSG_NOSIGNAL);
 //        if (status < 0) {
 //            printf("Error enviar cliente datos: %s\n", strerror(errno));

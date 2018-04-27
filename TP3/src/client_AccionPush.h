@@ -2,6 +2,7 @@
 #define ACCIONPUSH_H
 
 #include "client_Accion.h"
+#include <vector>
 #include <fstream>
 #include <string>
 
@@ -10,11 +11,14 @@ private:
     std::string nombreArchivo;
     std::string hash;
     std::ifstream archivo;
-    unsigned char *data;
+    std::vector<unsigned char> data;
 public:
     AccionPush(char *arch, char *hash);
     int ejecutar();
-    unsigned int getValorNumerico();
+    unsigned int getValorNumerico();    
+    int getTamanio();
+    std::string getNombreArchivo() const;
+    std::vector<unsigned char> getData() const;
     ~AccionPush();
 };
 

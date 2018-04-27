@@ -9,7 +9,6 @@
 #include "client_AccionTag.h"
 #include <exception>
 
-
 int main(int argc, char* argv[]) {
     try {
         Cliente cliente(argv[1], argv[2]);        
@@ -18,14 +17,16 @@ int main(int argc, char* argv[]) {
            AccionPush push(argv[4],argv[5]);      
            accion = &push;
         } else if (strcmp(argv[3], "pull") == 0) {
-            AccionPull pull(argv[4]);
-            accion = &pull;
+            throw -1;
+//            AccionPull pull(argv[4]);
+//            accion = &pull;
         } else if (strcmp(argv[3], "tag") == 0) {
-            AccionTag tag(argv[4]);
-            for(int i = 4;i < argc;++i){
-                tag.agregarHash(argv[i]);
-            }
-            accion = &tag;
+//            AccionTag tag(argv[4]);
+//            for(int i = 4;i < argc;++i){
+//                tag.agregarHash(argv[i]);
+//            }
+//            accion = &tag;
+            throw -1;
         } else {
             throw -1;
         }    

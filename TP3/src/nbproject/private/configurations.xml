@@ -17,12 +17,18 @@
       <in>common_Buffer.h</in>
       <in>common_ExcpError.cpp</in>
       <in>common_ExcpError.h</in>
+      <in>common_FormatoComu.cpp</in>
+      <in>common_FormatoComu.h</in>
       <in>common_Lock.cpp</in>
       <in>common_Lock.h</in>
       <in>common_Socket.cpp</in>
       <in>common_Socket.h</in>
+      <in>common_Versionado.cpp</in>
+      <in>common_Versionado.h</in>
       <in>server.cpp</in>
       <in>server.h</in>
+      <in>server_Indice.cpp</in>
+      <in>server_Indice.h</in>
       <in>server_main.cpp</in>
     </df>
   </logicalFolder>
