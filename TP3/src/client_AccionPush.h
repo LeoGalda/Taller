@@ -18,7 +18,7 @@ public:
     unsigned int getValorNumerico();    
     int getTamanio();
     std::string getNombreArchivo() const;
-    std::vector<unsigned char> getData() const;
+    std::vector<unsigned char> getData();
     ~AccionPush();
 };
 

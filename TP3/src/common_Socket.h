@@ -9,6 +9,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include "common_Buffer.h"
+#include "common_FormatoComu.h"
 
 class Socket {
 private:
@@ -31,7 +32,7 @@ public:
     void aceptar(Socket *peer);
 
     // Envia datos a traves del socket
-    int enviarDatos(Accion *accion);
+    int enviarDatos(FormatoComu *formato);
 
     // recibe los datos del socket
     int recibirDatos(Buffer *buffer);

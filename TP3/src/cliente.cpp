@@ -11,8 +11,8 @@ int Cliente::ejecutar(Accion *accion) {
     accion->ejecutar();  
     FormatoComu formato;
     formato.parsear(accion->getData());
-    formato.mostrar();
-//    status = socket.enviarDatos(formato);
+//    formato.mostrar();
+    status = socket.enviarDatos(&formato);
     if (status) {
         printf("Error al enviar los datos\n");
         return 1;

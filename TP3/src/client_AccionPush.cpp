@@ -14,25 +14,25 @@ AccionPush::AccionPush(char *arch, char *hash) : nombreArchivo(arch), hash(hash)
 }
 
 int AccionPush::ejecutar() {
-    unsigned char aux[4];
+//    unsigned char aux[4];
     unsigned int tamanioHash = (unsigned int) this->hash.size();
     unsigned int tamanioNombre = (unsigned int) this->nombreArchivo.size();
     tamanioHash = htonl(tamanioHash);
     tamanioNombre = htonl(tamanioNombre);
-    this->data.push_back((unsigned char) this->getValorNumerico());    
-
-    memcpy(&aux, &tamanioNombre, 4);
-    for (unsigned int j = 0; j < 4; ++j) {
-        this->data.push_back(aux[j]);
-        aux[j] = 0;
-    }
-    for (unsigned int j = 0; j < (unsigned int) this->nombreArchivo.size(); ++j) {
-        this->data.push_back((unsigned char) this->nombreArchivo[j]);
-    }
-    memcpy(&aux, &tamanioHash, 4);
-    for (unsigned int j = 0; j < 4; ++j) {
-        this->data.push_back(aux[j]);
-    }
+//    this->data.push_back((unsigned char) this->getValorNumerico());    
+//
+//    memcpy(&aux, &tamanioNombre, 4);
+//    for (unsigned int j = 0; j < 4; ++j) {
+//        this->data.push_back(aux[j]);
+//        aux[j] = 0;
+//    }
+//    for (unsigned int j = 0; j < (unsigned int) this->nombreArchivo.size(); ++j) {
+//        this->data.push_back((unsigned char) this->nombreArchivo[j]);
+//    }
+//    memcpy(&aux, &tamanioHash, 4);
+//    for (unsigned int j = 0; j < 4; ++j) {
+//        this->data.push_back(aux[j]);
+//    }
     for (unsigned int j = 0; j < (unsigned int) this->hash.size(); ++j) {
         this->data.push_back((unsigned char) this->hash[j]);
     }
@@ -47,7 +47,7 @@ std::string AccionPush::getNombreArchivo() const{
     return this->nombreArchivo;
 }
 
-std::vector<unsigned char> AccionPush::getData() const{
+std::vector<unsigned char> AccionPush::getData(){
     return this->data;
 }
 

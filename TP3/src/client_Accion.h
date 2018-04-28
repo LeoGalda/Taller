@@ -13,7 +13,7 @@ public:
     virtual int ejecutar() = 0;
     virtual unsigned int getValorNumerico() = 0;
     virtual int getTamanio() = 0;
-    virtual std::vector<unsigned char> getData() const = 0;    
+    virtual std::vector<unsigned char> getData() = 0;    
     virtual std::string getNombreArchivo() const = 0;
 };        
 #endif

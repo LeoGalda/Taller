@@ -10,11 +10,11 @@ private:
 public:
     explicit Buffer(int tamanio);
     int setDataEnPosicion(unsigned int data, int pos);
-    unsigned char getDataEnPos(int pos);
-    unsigned int* getData();
+    unsigned char getDataEnPos(int pos) const;
+    unsigned int* getData(int pos);
     void setUsado(int usado);    
     int getUsado();
-    int buffer_get_tamanio();    
+    int getTamanio();    
     virtual ~Buffer();
 
 

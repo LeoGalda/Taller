@@ -7,7 +7,7 @@
 
 #include "common_Socket.h"
 
-Socket::Socket(){
+Socket::Socket() {
 }
 
 int Socket::doBind(char *puerto) {
@@ -97,47 +97,62 @@ void Socket::aceptar(Socket *peerskt) {
     peerskt->fd = accept(this->fd, NULL, NULL);
 }
 
-int Socket::enviarDatos(Accion *accion) {
-//    int bytesEnviados = 0;
-//    bool errorDelSocket = false, socketCerrado = false;
-//    int status;
-//    int usado = accion->getTamanio();
-//    while (bytesEnviados < usado &&  errorDelSocket == false &&
-//                            socketCerrado == false) {
-//        status = send(this->fd, &accion->getData(bytesEnviados),
-//                usado - bytesEnviados, MSG_NOSIGNAL);
-//        if (status < 0) {
-//            printf("Error enviar cliente datos: %s\n", strerror(errno));
-//            errorDelSocket = true;
-//        } else if (status == 0) {
-//            socketCerrado = true;
-//        } else {
-//            bytesEnviados += status;
-//        }
-//    }
-//    if (socketCerrado || errorDelSocket) {
-//        return 1;
-//    }
+int Socket::enviarDatos(FormatoComu *formato) {
+    int bytesEnviados = 0;
+    bool errorDelSocket = false, socketCerrado = false;
+    int status;
+    int usado = formato->getTamanio();
+    printf("usado: %i\n", usado);
+    printf("enviado:\n");
+    while (bytesEnviados < usado && errorDelSocket == false &&
+            socketCerrado == false) {
+        unsigned int *putazo = formato->getDataEnPos(bytesEnviados);
+        //        status = send(this->fd, putazo, usado - bytesEnviados, MSG_NOSIGNAL);
+        status = send(this->fd, putazo, 100, MSG_NOSIGNAL);
+        printf("putazo:\n");
+        for (int i = 0; i < usado - bytesEnviados; i++) {
+            printf("%02x-", putazo[i]);
+        }
+        if (status < 0) {
+            printf("Error enviar cliente datos: %s\n", strerror(errno));
+            errorDelSocket = true;
+        } else if (status == 0) {
+            socketCerrado = true;
+        } else {
+            //            bytesEnviados += status;
+            bytesEnviados += 100;
+        }
+    }
+    if (socketCerrado || errorDelSocket) {
+        return 1;
+    }
     return 0;
 }
 
 int Socket::recibirDatos(Buffer *buffer) {
-//    buffer_set_usado(buffer,0);
-//    int tamanio = buffer_get_tamanio(buffer);
-//    int s = 0;
-//    bool socketValido = true;
-//    while (buffer_get_usado(buffer) < tamanio &&  socketValido) {
-//        s = recv(this->fd,&buffer_get_data(buffer)[buffer_get_usado(buffer)],
-//                tamanio - buffer_get_usado(buffer), 0);
-//        if (s > 0) {
-//            buffer_set_usado(buffer,buffer_get_usado(buffer) + s);
-//        } else {
-//            socketValido = false;
-//        }
-//    }
-//    if (socketValido) {
-//        return 1;
-//    }
+    buffer->setUsado(0);
+    int tamanio = buffer->getTamanio();
+    int s = 0;
+    bool socketValido = true;
+    printf("puto tamanio: %i\n", tamanio);
+    while (buffer->getUsado() < tamanio && socketValido) {
+        printf("puto uso: %i\n", buffer->getUsado());
+        unsigned int *sarasa = buffer->getData(buffer->getUsado());
+        s = recv(this->fd, sarasa, tamanio - buffer->getUsado(), 0);
+        if (s > 0) {
+            buffer->setUsado(buffer->getUsado() + s);
+        } else {
+            socketValido = false;
+        }
+    }
+    printf("\nrecibido:\n");
+    for (int i = 0; i < buffer->getUsado(); i++) {
+        printf("%02x-", buffer->getDataEnPos(i));
+    }
+
+    if (socketValido) {
+        return 1;
+    }
     return 0;
 }
 

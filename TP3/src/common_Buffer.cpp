@@ -13,8 +13,8 @@ int Buffer::getUsado() {
     return this->usado;
 }
 
-unsigned int* Buffer::getData() {
-    return this->data;
+unsigned int* Buffer::getData(int pos) {
+    return &this->data[pos];
 }
 
 int Buffer::setDataEnPosicion(unsigned int data, int pos) {   
@@ -22,11 +22,11 @@ int Buffer::setDataEnPosicion(unsigned int data, int pos) {
     return 0;
 }
 
-int Buffer::buffer_get_tamanio(){
+int Buffer::getTamanio(){
     return this->tamanio;
 }
 
-unsigned char Buffer::getDataEnPos(int pos) {
+unsigned char Buffer::getDataEnPos(int pos) const{
     if (pos > this->tamanio) return 1;
     return this->data[pos];
 }
