@@ -1,24 +1,25 @@
-#ifndef ACCIONPUSH_H
-#define ACCIONPUSH_H
+#ifndef CLIENT_ACCIONPUSH_H
+#define CLIENT_ACCIONPUSH_H
 
 #include "client_Accion.h"
+#include "common_File.h"
 #include <vector>
 #include <fstream>
 #include <string>
 
 class AccionPush : public Accion {
-private:    
-    std::string nombreArchivo;
+private: 
+    File *file;
     std::string hash;
-    std::ifstream archivo;
     std::vector<unsigned char> data;
 public:
     AccionPush(char *arch, char *hash);
     int ejecutar();
     unsigned int getValorNumerico();    
-    int getTamanio();
-    std::string getNombreArchivo() const;
+    int getTamanio();    
     std::vector<unsigned char> getData();
+    unsigned char* getDataEnPos(int pos);
+    void procesarArch();
     ~AccionPush();
 };
 

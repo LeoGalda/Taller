@@ -6,12 +6,14 @@
 class FormatoComu {
 private:
     std::vector<unsigned int> vectorInt;
+    unsigned int dataLongitud;
 public:
     FormatoComu();
-    void parsear(std::vector<unsigned char> vector);
+    void parsear(std::vector<unsigned char> vec);
     void mostrar();
     int getTamanio();
-    unsigned int* getDataEnPos(int pos);
+    unsigned int getDataLongitud();
+    unsigned int* getDataEnPos(int pos);    
     virtual ~FormatoComu();
 };
 

@@ -1,5 +1,5 @@
-#ifndef EXCPERROR_H
-#define EXCPERROR_H
+#ifndef COMMON_EXCPERROR_H
+#define COMMON_EXCPERROR_H
 
 #include <exception>
 #include <typeinfo>

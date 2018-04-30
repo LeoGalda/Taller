@@ -1,17 +1,17 @@
-#ifndef BUFFER_H
-#define BUFFER_H
+#ifndef COMMON_BUFFER_H
+#define COMMON_BUFFER_H
 
 class Buffer {
 private:
     int tamanio;
     int usado;
-    unsigned int *data;
+    unsigned char *data;
     
 public:
     explicit Buffer(int tamanio);
     int setDataEnPosicion(unsigned int data, int pos);
     unsigned char getDataEnPos(int pos) const;
-    unsigned int* getData(int pos);
+    unsigned char* getData();
     void setUsado(int usado);    
     int getUsado();
     int getTamanio();    

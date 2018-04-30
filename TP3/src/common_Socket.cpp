@@ -48,7 +48,7 @@ int Socket::doBind(char *puerto) {
 }
 
 int Socket::doListen() {
-    int status = listen(this->fd, 1);
+    int status = listen(this->fd, 20);
     if (status == -1) {
         printf("Error: %s\n", strerror(errno));
         return 1;
@@ -97,30 +97,24 @@ void Socket::aceptar(Socket *peerskt) {
     peerskt->fd = accept(this->fd, NULL, NULL);
 }
 
-int Socket::enviarDatos(FormatoComu *formato) {
+int Socket::enviarDatos(unsigned char *buf, int tamanio) {
     int bytesEnviados = 0;
     bool errorDelSocket = false, socketCerrado = false;
-    int status;
-    int usado = formato->getTamanio();
-    printf("usado: %i\n", usado);
-    printf("enviado:\n");
-    while (bytesEnviados < usado && errorDelSocket == false &&
-            socketCerrado == false) {
-        unsigned int *putazo = formato->getDataEnPos(bytesEnviados);
-        //        status = send(this->fd, putazo, usado - bytesEnviados, MSG_NOSIGNAL);
-        status = send(this->fd, putazo, 100, MSG_NOSIGNAL);
-        printf("putazo:\n");
-        for (int i = 0; i < usado - bytesEnviados; i++) {
-            printf("%02x-", putazo[i]);
-        }
+    int status = 0;
+    for (int i = 0; i < tamanio; i++) {
+        printf("%02x-", buf[i]);
+    }
+    while (bytesEnviados < tamanio && errorDelSocket == false &&
+            socketCerrado == false) {       
+        status = send(this->fd, &buf[bytesEnviados], tamanio - bytesEnviados,
+                MSG_NOSIGNAL);              
         if (status < 0) {
             printf("Error enviar cliente datos: %s\n", strerror(errno));
             errorDelSocket = true;
         } else if (status == 0) {
             socketCerrado = true;
         } else {
-            //            bytesEnviados += status;
-            bytesEnviados += 100;
+            bytesEnviados += status;
         }
     }
     if (socketCerrado || errorDelSocket) {
@@ -129,30 +123,28 @@ int Socket::enviarDatos(FormatoComu *formato) {
     return 0;
 }
 
-int Socket::recibirDatos(Buffer *buffer) {
-    buffer->setUsado(0);
-    int tamanio = buffer->getTamanio();
+int Socket::recibirDatos(unsigned char *buf, int tamanio) {
+    int bytesRecibidos = 0;
     int s = 0;
     bool socketValido = true;
-    printf("puto tamanio: %i\n", tamanio);
-    while (buffer->getUsado() < tamanio && socketValido) {
-        printf("puto uso: %i\n", buffer->getUsado());
-        unsigned int *sarasa = buffer->getData(buffer->getUsado());
-        s = recv(this->fd, sarasa, tamanio - buffer->getUsado(), 0);
+    while (bytesRecibidos < tamanio && socketValido) {
+        s = recv(this->fd, &buf[bytesRecibidos], tamanio - bytesRecibidos, 0);
         if (s > 0) {
-            buffer->setUsado(buffer->getUsado() + s);
+            bytesRecibidos += s;
         } else {
             socketValido = false;
         }
     }
-    printf("\nrecibido:\n");
-    for (int i = 0; i < buffer->getUsado(); i++) {
-        printf("%02x-", buffer->getDataEnPos(i));
+    printf("recibido:\n");
+    for (int i = 0; i < tamanio; i++) {
+        printf("%02x-", buf[i]);
     }
-
-    if (socketValido) {
-        return 1;
-    }
+    //    //PARCHE DIVIDIENDO POR 4 xD  
+    //    printf("\nrecibido:\n");
+    //    for (int i = 0; i < (buffer->getUsado() / 4); i++) {
+    //        printf("%02x-", buffer->getDataEnPos(i));
+    //    }
+    if (socketValido) return bytesRecibidos;
     return 0;
 }
 
@@ -161,7 +153,6 @@ int Socket::getFD() {
 }
 
 Socket::~Socket() {
-    //    freeaddrinfo(this->ptr);
-    //    shutdown(this->sock, SHUT_RDWR);
-    //    close(this->sock);
+    shutdown(this->fd, SHUT_RDWR);
+    close(this->fd);
 }

@@ -1,5 +1,5 @@
-#ifndef SERVIDOR_H
-#define SERVIDOR_H
+#ifndef SERVER_H
+#define SERVER_H
 #include <stdbool.h>
 #include <fstream>
 #include "common_Buffer.h"

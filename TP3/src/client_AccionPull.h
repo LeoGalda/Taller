@@ -1,5 +1,5 @@
-#ifndef ACCIONPULL_H
-#define ACCIONPULL_H
+#ifndef CLIENT_ACCIONPULL_H
+#define CLIENT_ACCIONPULL_H
 
 #include "client_Accion.h"
 #include <string>

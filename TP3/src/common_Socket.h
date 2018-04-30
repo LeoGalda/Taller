@@ -1,5 +1,5 @@
-#ifndef SOCKET_H
-#define SOCKET_H
+#ifndef COMMON_SOCKET_H
+#define COMMON_SOCKET_H
 
 #include <errno.h>
 #include "client_Accion.h"
@@ -32,10 +32,10 @@ public:
     void aceptar(Socket *peer);
 
     // Envia datos a traves del socket
-    int enviarDatos(FormatoComu *formato);
+    int enviarDatos(unsigned char *buffer,int longitud);
 
     // recibe los datos del socket
-    int recibirDatos(Buffer *buffer);
+    int recibirDatos(unsigned char *buffer,int longitud);        
     
     // devuelve el File Descriptor
     int getFD();

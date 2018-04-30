@@ -1,23 +1,30 @@
-#include "cliente.h"
+#include "cliente.h"    
 #include "common_FormatoComu.h"
 
-Cliente::Cliente(char *ip, char *puerto) : buffer(REQUEST_MAX_LEN) {    
+Cliente::Cliente(char *ip, char *puerto) {
     this->socket.conectar(puerto, ip);
 }
 
 int Cliente::ejecutar(Accion *accion) {
-    int status;   
+    int status;
     status = 0;
-    accion->ejecutar();  
-    FormatoComu formato;
-    formato.parsear(accion->getData());
-//    formato.mostrar();
-    status = socket.enviarDatos(&formato);
+    accion->ejecutar();
+    status = socket.enviarDatos(accion->getDataEnPos(0), accion->getTamanio());
     if (status) {
         printf("Error al enviar los datos\n");
         return 1;
     }
-    return 0;
+    if (accion->getValorNumerico() != 2) {
+        unsigned char tipo = 0;
+        status = socket.recibirDatos(&tipo, 1);
+        if (status && tipo == 1) {            
+            accion->procesarArch();
+//          status = socket.enviarDatos(accion->getArchivo(),accion->getTamanioArch);
+        } else {
+            printf("error en status???");
+        }
+    }
+    return status;
 }
 
 Cliente::~Cliente() {

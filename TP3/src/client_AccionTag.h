@@ -1,5 +1,5 @@
-#ifndef ACCIONTAG_H
-#define ACCIONTAG_H
+#ifndef CLIENT_ACCIONTAG_H
+#define CLIENT_ACCIONTAG_H
 
 #include <vector>
 #include <string>

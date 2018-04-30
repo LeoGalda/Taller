@@ -2,7 +2,7 @@
 
 Buffer::Buffer(int tamanio) : tamanio(tamanio) {    
     this->usado = 0;
-    this->data = new unsigned int[tamanio];
+    this->data = new unsigned char[tamanio];
 }
 
 void Buffer::setUsado(int usado){
@@ -13,8 +13,8 @@ int Buffer::getUsado() {
     return this->usado;
 }
 
-unsigned int* Buffer::getData(int pos) {
-    return &this->data[pos];
+unsigned char* Buffer::getData() {
+    return this->data;
 }
 
 int Buffer::setDataEnPosicion(unsigned int data, int pos) {   
