@@ -4,17 +4,16 @@
 #include <fstream>
 #include "common_Buffer.h"
 #include "common_Socket.h"
+#include "server_Indice.h"
 
 #define RESPONSE_MAX_LEN 128
 
 class Server {
 private:
     Socket socket;
-    char *ruta;  
-    Buffer buffer;
-    std::fstream indice;  
+    Indice indice;  
+//    Buffer buffer;
 public:
-    Server();
     Server(char *puerto, char *ruta);
     void aceptarClientes();
     virtual ~Server();

@@ -1,11 +1,9 @@
 #include "server_Indice.h"
 
-Indice::Indice() {
+Indice::Indice(char *ruta): file(ruta,std::ios::in | std::ios::out){
+    
 }
 
-Indice::Indice(const Indice& orig) {
-}
-
-Indice::~Indice() {
+Indice::~Indice() {    
 }
 

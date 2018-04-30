@@ -6,14 +6,9 @@
 #include <string.h>
 #include "server.h"
 #include "common_ExcpError.h"
+#include "common_File.h"
 
-Server::Server(char *puerto, char *arch) : ruta(arch), buffer(RESPONSE_MAX_LEN) {
-    this->indice.open(arch);
-    if (this->indice.fail()) {
-        int linea = 5;
-        std::string error = "NOOOO!!!! LA PUTA QUE TE PARIO";
-        throw new ExcpError(error, linea);
-    }
+Server::Server(char *puerto, char *arch) : indice(arch){
     this->socket.doBind(puerto);
     this->socket.doListen();
 }
@@ -41,8 +36,9 @@ void Server::aceptarClientes() {
             }
             int size;
             memcpy(&size, &longitud, sizeof (size));
-            Buffer buffer(htonl(size));
-            corriendo = peerskt.recibirDatos(buffer.getData(), buffer.getTamanio());
+            Buffer bufNombreArch(htonl(size));
+            corriendo = peerskt.recibirDatos(bufNombreArch.getData(),
+                    bufNombreArch.getTamanio());
             //----------------------------------------------------------
             unsigned char longitud2[4];
             corriendo = peerskt.recibirDatos(&longitud2[0], 4);
@@ -52,15 +48,16 @@ void Server::aceptarClientes() {
             }
             int size2;
             memcpy(&size2, &longitud2, sizeof (size2));
-            Buffer buffer2(htonl(size2));
-            corriendo = peerskt.recibirDatos(buffer2.getData(), buffer2.getTamanio());
+            Buffer bufHash(htonl(size2));
+            corriendo = peerskt.recibirDatos(bufHash.getData(),
+                    bufHash.getTamanio());
             if (!corriendo) {
                 std::cout << "chanfles 4" << std::endl;
                 return;
             }
             unsigned char respuesta = 1;
             corriendo = peerskt.enviarDatos(&respuesta, 1);
-            //----------------------------------------
+            //---------------------------------------------------------
             unsigned char longitud3[4];
             corriendo = peerskt.recibirDatos(&longitud3[0], 4);
             if (!corriendo) {
@@ -69,14 +66,16 @@ void Server::aceptarClientes() {
             }
             int size3;
             memcpy(&size3, &longitud3, sizeof (size3));
-            Buffer buffer3(htonl(size3));
-            corriendo = peerskt.recibirDatos(buffer3.getData(), buffer3.getTamanio());            
-            printf("\n");
+            size3 = htonl(size3);
+            Buffer bufContenidoArch(size3);
+            corriendo = peerskt.recibirDatos(bufContenidoArch.getData(),
+                    bufContenidoArch.getTamanio());
+            File file((char *) bufHash.getData(), std::ofstream::out | std::ofstream::app);
+            file.escribir(bufContenidoArch.getData());
         }
     }
 }
 
 Server::~Server() {
-    this->indice.close();
 }
 

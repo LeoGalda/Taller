@@ -14,8 +14,9 @@ int main(int argc, char* argv[]) {
         Cliente cliente(argv[1], argv[2]);        
         Accion *accion;
         if (strcmp(argv[3], "push") == 0) {
-           AccionPush push(argv[4],argv[5]);      
-           accion = &push;
+//           AccionPush push(argv[4],argv[5]);      
+//           accion = &push;
+            accion = new AccionPush(argv[4],argv[5]);
         } else if (strcmp(argv[3], "pull") == 0) {
             throw -1;
 //            AccionPull pull(argv[4]);
@@ -31,6 +32,7 @@ int main(int argc, char* argv[]) {
             throw -1;
         }    
         cliente.ejecutar(accion);
+        delete accion;
     } catch (const std::exception &exc) {
         syslog(LOG_ERR, "Error: %s", exc.what());
         return 1;

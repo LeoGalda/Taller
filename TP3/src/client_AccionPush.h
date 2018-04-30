@@ -9,8 +9,8 @@
 
 class AccionPush : public Accion {
 private: 
-    File *file;
-    std::string hash;
+    std::string hash;    
+    File file;
     std::vector<unsigned char> data;
 public:
     AccionPush(char *arch, char *hash);
@@ -19,7 +19,7 @@ public:
     int getTamanio();    
     std::vector<unsigned char> getData();
     unsigned char* getDataEnPos(int pos);
-    unsigned char* procesarArch();
+    void procesarArch(char *data);
     int getSizeFile();
     ~AccionPush();
 };

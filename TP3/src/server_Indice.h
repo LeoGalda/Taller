@@ -5,12 +5,14 @@
 #include <string>
 #include <vector>
 
+#include "common_File.h"
+
 class Indice {
 private:
-//    std::map<char, std::pair<std::string,std::vector<std::string>>> indice;
+    std::map<char, std::pair<std::string,std::vector<std::string>>> indice;
+    File file;
 public:
-    Indice();
-    Indice(const Indice& orig);
+    explicit Indice(char *ruta);    
     virtual ~Indice();
 };
 

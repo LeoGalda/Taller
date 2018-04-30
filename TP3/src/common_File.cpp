@@ -25,10 +25,16 @@ int File::getTamanioNombre() {
     return this->nombreArchivo.size();
 }
 
-char* File::leer(int cantidad){
-    char *buffer = new char [cantidad];
-    this->archivo.read(buffer,cantidad);  
-    return buffer;
+void File::leer(char* buffer,int cantidad){    
+    this->archivo.read(buffer,cantidad);      
+}
+
+void File::write(char* data, int tamanio) {
+//    this->archivo.write(data,tamanio);
+    this->archivo << data;
+}
+void File::escribir(unsigned char* data) {
+    this->archivo << data;
 }
 
 File::~File() {

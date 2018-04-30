@@ -25,8 +25,10 @@ int Cliente::ejecutar(Accion *accion) {
             int tam = tamanioArch;
             tamanioArch = htonl(tamanioArch);
             memcpy(&envio, &tamanioArch, sizeof (tam));
+            Buffer buffer(tam);
             status = socket.enviarDatos(&envio[0], 4);
-            status = socket.enviarDatos(accion->procesarArch(), tam);
+            accion->procesarArch((char *)buffer.getData());
+            status = socket.enviarDatos(buffer.getData(), tam);
         } else {
             printf("error en status???");
         }

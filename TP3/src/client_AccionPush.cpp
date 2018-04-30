@@ -4,14 +4,14 @@
 #include <string.h>
 #include <arpa/inet.h>
 
-AccionPush::AccionPush(char *arch, char *hash) : hash(hash) {
-    this->file = new File(arch,std::ios::in);            
+AccionPush::AccionPush(char *arch, char *hash) : hash(hash),
+                                                 file(arch,std::ios::in){                   
 }
 
 int AccionPush::ejecutar() {
     unsigned char aux[4];
     unsigned int tamanioHash = (unsigned int) this->hash.size();
-    unsigned int tamanioNombre = (unsigned int) this->file->getTamanioNombre();
+    unsigned int tamanioNombre = (unsigned int) this->file.getTamanioNombre();
     tamanioHash = htonl(tamanioHash);
     tamanioNombre = htonl(tamanioNombre);
     this->data.push_back((unsigned char) this->getValorNumerico());
@@ -21,7 +21,7 @@ int AccionPush::ejecutar() {
         aux[j] = 0;
     }
     tamanioNombre = htonl(tamanioNombre);
-    std::string nombreArchivo = this->file->getNombreArchivo();
+    std::string nombreArchivo = this->file.getNombreArchivo();
     for (unsigned int j = 0; j < (unsigned int) tamanioNombre; ++j) {
         this->data.push_back((unsigned char) nombreArchivo[j]);
     }
@@ -51,20 +51,16 @@ unsigned char* AccionPush::getDataEnPos(int pos) {
     return &this->data[pos];
 }
 
-unsigned char* AccionPush::procesarArch(){
+void AccionPush::procesarArch(char *data){
     int tamanio = this->getSizeFile();    
-    return (unsigned char *) this->file->leer(tamanio);
+    this->file.leer(data,tamanio);
 }
 
 int AccionPush::getSizeFile(){
-    return this->file->getTamanioArch();
+    return this->file.getTamanioArch();    
 }
 
-//unsigned char* AccionPush::getArchivo() {
-//    return &this->arch[0];
-//}
-
 AccionPush::~AccionPush() {
-    //    delete[] data;
+//    delete this->file;
 }
 
