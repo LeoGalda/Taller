@@ -30,13 +30,13 @@ void Server::aceptarClientes() {
             unsigned char tipo = 0;
             corriendo = peerskt.recibirDatos(&tipo, 1);
             if (!corriendo) {
-                std::cout << "changles" << std::endl;
+                std::cout << "chanfles 1" << std::endl;
                 return;
             }
             unsigned char longitud[4];
             corriendo = peerskt.recibirDatos(&longitud[0], 4);
             if (!corriendo) {
-                std::cout << "chanfles" << std::endl;
+                std::cout << "chanfles 2" << std::endl;
                 return;
             }
             int size;
@@ -47,19 +47,30 @@ void Server::aceptarClientes() {
             unsigned char longitud2[4];
             corriendo = peerskt.recibirDatos(&longitud2[0], 4);
             if (!corriendo) {
-                std::cout << "chanfles" << std::endl;
+                std::cout << "chanfles 3" << std::endl;
                 return;
             }
             int size2;
             memcpy(&size2, &longitud2, sizeof (size2));
             Buffer buffer2(htonl(size2));
-            corriendo = peerskt.recibirDatos(buffer2.getData(), buffer2.getTamanio());            
-            if (corriendo) {
-                printf("a correr\n");
-                unsigned char respuesta = 1;
-                corriendo = peerskt.enviarDatos(&respuesta,1);
-                corriendo = false;
-            }     
+            corriendo = peerskt.recibirDatos(buffer2.getData(), buffer2.getTamanio());
+            if (!corriendo) {
+                std::cout << "chanfles 4" << std::endl;
+                return;
+            }
+            unsigned char respuesta = 1;
+            corriendo = peerskt.enviarDatos(&respuesta, 1);
+            //----------------------------------------
+            unsigned char longitud3[4];
+            corriendo = peerskt.recibirDatos(&longitud3[0], 4);
+            if (!corriendo) {
+                std::cout << "chanfles 6" << std::endl;
+                return;
+            }
+            int size3;
+            memcpy(&size3, &longitud3, sizeof (size3));
+            Buffer buffer3(htonl(size3));
+            corriendo = peerskt.recibirDatos(buffer3.getData(), buffer3.getTamanio());            
             printf("\n");
         }
     }

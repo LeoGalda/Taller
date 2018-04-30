@@ -15,7 +15,8 @@ public:
     virtual int getTamanio() = 0;
     virtual std::vector<unsigned char> getData() = 0;  
     virtual unsigned char* getDataEnPos(int pos) = 0;
-    virtual void procesarArch() = 0;
+    virtual unsigned char* procesarArch() = 0;
+    virtual int getSizeFile() = 0;
 };        
 #endif
 

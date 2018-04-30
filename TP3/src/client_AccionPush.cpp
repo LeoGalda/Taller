@@ -51,9 +51,13 @@ unsigned char* AccionPush::getDataEnPos(int pos) {
     return &this->data[pos];
 }
 
-void AccionPush::procesarArch(){
-    int tamanio = this->file->getTamanioArch();
-    printf("tamanio del archivo: %i", tamanio); 
+unsigned char* AccionPush::procesarArch(){
+    int tamanio = this->getSizeFile();    
+    return (unsigned char *) this->file->leer(tamanio);
+}
+
+int AccionPush::getSizeFile(){
+    return this->file->getTamanioArch();
 }
 
 //unsigned char* AccionPush::getArchivo() {

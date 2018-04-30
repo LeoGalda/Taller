@@ -15,6 +15,7 @@ public:
     std::string getNombreArchivo() const;
     int getTamanioArch();
     int getTamanioNombre();
+    char* leer(int cantidad);
     virtual ~File();
 
 

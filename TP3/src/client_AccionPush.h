@@ -19,7 +19,8 @@ public:
     int getTamanio();    
     std::vector<unsigned char> getData();
     unsigned char* getDataEnPos(int pos);
-    void procesarArch();
+    unsigned char* procesarArch();
+    int getSizeFile();
     ~AccionPush();
 };
 
