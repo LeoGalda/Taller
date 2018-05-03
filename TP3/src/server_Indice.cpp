@@ -19,7 +19,7 @@ Indice::Indice(char *ruta) : nombreArchivo(ruta) {
     }
 }
 
-void Indice::explode(const std::string &linea, std::vector<std::string> &datos){
+void Indice::explode(const std::string &linea, std::vector<std::string> &datos) {
     size_t pos1 = 0;
     size_t pos2 = 0;
     while (pos2 != linea.npos) {
@@ -53,7 +53,7 @@ void Indice::actualizar() {
         aux.insert(std::pair<string, string>((*i).first, (*i).second));
     }
     string infoAEnviar;
-    std::vector<string> vec;    
+    std::vector<string> vec;
     for (i2 = aux.begin(); i2 != aux.end(); i2++) {
         infoAEnviar = i2->first;
         infoAEnviar.append(" ");
@@ -70,12 +70,13 @@ void Indice::actualizar() {
     }
 }
 
-void Indice::agregar(const std::string nombreArch, const std::string hash,string tipo) {
+void Indice::agregar(const std::string nombreArch, const std::string hash,
+        string tipo) {
     std::vector<string> aux;
     std::cout << "NOMBRE QUE LLEGO:\n" << nombreArch << std::endl;
     std::cout << "HASH QUE LLEGO:\n" << hash << std::endl;
     auto search = this->hashDeArchivos.find(nombreArch);
-    if (search != this->hashDeArchivos.end()) {        
+    if (search != this->hashDeArchivos.end()) {
         aux = this->hashDeArchivos[nombreArch];
         aux.push_back(hash);
         this->hashDeArchivos[nombreArch] = aux;
@@ -83,6 +84,14 @@ void Indice::agregar(const std::string nombreArch, const std::string hash,string
         aux.push_back(hash);
         this->hashDeTags.insert(std::pair<string, string>(tipo, nombreArch));
         this->hashDeArchivos[nombreArch] = aux;
+    }
+}
+
+void Indice::getArchivosTaggeados(unsigned char* tag,
+                                  vector<string>& archivosTaggeados) {
+    auto search = this->hashDeArchivos.find((char *) tag);
+    if (search != this->hashDeArchivos.end()) {
+        archivosTaggeados = this->hashDeArchivos[(char *) tag];
     }
 }
 

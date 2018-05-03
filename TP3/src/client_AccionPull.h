@@ -5,21 +5,18 @@
 #include "common_Socket.h"
 #include <string>
 
-//class AccionPull : public Accion {
-class AccionPull{
-private:    
+class AccionPull : public Accion {
+private:
     std::string hash;
+    std::vector<unsigned char> data;
 public:
     explicit AccionPull(char *hash);
-    int ejecutar();
-    unsigned int getValorNumerico();
-//    virtual int getTamanio();
+    void ejecutar();
     virtual ~AccionPull();
-//    virtual std::string getNombreArchivo() const;
-//    virtual std::vector<unsigned char> getData();  
-//    virtual unsigned char* getDataEnPos(int pos);
-//    virtual void procesarArch(char *data);
-//    virtual int getSizeFile();
+    void enviar(Socket *socket);
+    void responder(Socket *socket);
+    int getValorNumerico();
+    int getTamanio();
 };
 
 #endif 

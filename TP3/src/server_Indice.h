@@ -26,6 +26,7 @@ public:
     void actualizar();
     void agregar(const std::string nombreArch,const std::string hash,
                 const std::string tipo);
+    void getArchivosTaggeados(unsigned char *tag,vector<string> &archivosTaggeados);
     virtual ~Indice();
 };
 

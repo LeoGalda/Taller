@@ -7,7 +7,7 @@ File::File(char *arch, std::ios_base::openmode modo) : nombreArchivo(arch),
     this->archivo.open(this->nombreArchivo, modo);
     if (this->archivo.fail()) {
         int linea = -1;
-        std::string error = "Error al abrir archivo de ejecucion PUSH";
+        std::string error = "Error al abrir archivo";
         throw new ExcpError(error, linea);
     }
 }
