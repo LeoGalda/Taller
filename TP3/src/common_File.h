@@ -16,11 +16,11 @@ public:
     int getTamanioArch();
     int getTamanioNombre();
     void leer(char *buf,int cantidad);
-    void write(char* data,int tamanio);
-    void escribir(unsigned char* data);
+    void escribir(unsigned char* data);    
+    void escribirStr(const std::string data);
+    void getLinea(std::string &linea);
+    bool estaFin();
     virtual ~File();
-
-
 };
 
 #endif 

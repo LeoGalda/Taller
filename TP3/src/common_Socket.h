@@ -2,20 +2,18 @@
 #define COMMON_SOCKET_H
 
 #include <errno.h>
-#include "client_Accion.h"
 #include <netdb.h>
 #include <stdbool.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include "common_Buffer.h"
-#include "common_FormatoComu.h"
 
 class Socket {
 private:
     int fd;
+    
 public:
-
     //Inicializa la instancia this para ser utilizada
     Socket();
 

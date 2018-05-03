@@ -4,6 +4,7 @@
 #include <cstdarg>
 #include <sstream>
 #include <stdexcept>
+#include <string>
 #include "common_ExcpError.h"
 
 ExcpError::ExcpError(std::string &e_msg, int line){    

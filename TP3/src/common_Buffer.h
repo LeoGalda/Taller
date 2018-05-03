@@ -3,21 +3,16 @@
 
 class Buffer {
 private:
-    int tamanio;
-    int usado;
+    int tamanio;    
     unsigned char *data;
     
 public:
-    explicit Buffer(int tamanio);
-    int setDataEnPosicion(unsigned int data, int pos);
-    unsigned char getDataEnPos(int pos) const;
-    unsigned char* getData();
-    void setUsado(int usado);    
-    int getUsado();
+    explicit Buffer(int tamanio);    
+    unsigned char getDataEnPos(int pos);
+//    unsigned char* getMoveData() const;
+    unsigned char* getData();  
     int getTamanio();    
     virtual ~Buffer();
-
-
 };
 
 #endif

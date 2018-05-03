@@ -1,35 +1,28 @@
+#include <algorithm>
+
 #include "common_Buffer.h"
 
-Buffer::Buffer(int tamanio) : tamanio(tamanio) {    
-    this->usado = 0;
+Buffer::Buffer(int tamanio) : tamanio(tamanio) {        
     this->data = new unsigned char[tamanio];
-}
-
-void Buffer::setUsado(int usado){
-    this->usado = usado;
-}
-
-int Buffer::getUsado() {
-    return this->usado;
 }
 
 unsigned char* Buffer::getData() {
     return this->data;
 }
 
-int Buffer::setDataEnPosicion(unsigned int data, int pos) {   
-    this->data[pos] = data;
-    return 0;
-}
-
 int Buffer::getTamanio(){
     return this->tamanio;
 }
 
-unsigned char Buffer::getDataEnPos(int pos) const{
-    if (pos > this->tamanio) return 1;
-    return this->data[pos];
+unsigned char Buffer::getDataEnPos(int pos){
+    if(pos < 0 || pos > this->tamanio)
+        throw -1;
+    return std::move(this->data[pos]);
 }
+//
+//unsigned char* Buffer::getMoveData() const{    
+//    return std::move(this->data);
+//}
 
 
 Buffer::~Buffer() {

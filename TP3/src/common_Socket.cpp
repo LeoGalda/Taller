@@ -15,7 +15,7 @@ int Socket::doBind(char *puerto) {
     bool conectado = false;
     struct addrinfo hints;
     struct addrinfo *ptr, *aux;
-    memset(&hints, 0, sizeof (struct addrinfo));
+    memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_INET; /* IPv4 */
     hints.ai_socktype = SOCK_STREAM; /* TCP */
     hints.ai_flags = 0;
@@ -61,10 +61,10 @@ int Socket::conectar(char *puerto, char *ip) {
     struct addrinfo *aux, *ptr;
     struct addrinfo hints;
     int status;
-    memset(&hints, 0, sizeof (struct addrinfo));
+    memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_INET; /* IPv4 */
     hints.ai_socktype = SOCK_STREAM; /* TCP */
-    hints.ai_flags = AI_PASSIVE;
+    hints.ai_flags = AI_PASSIVE;        
     status = getaddrinfo(ip, puerto, &hints, &ptr);
     if (status != 0) {
         freeaddrinfo(ptr);
@@ -100,14 +100,14 @@ void Socket::aceptar(Socket *peerskt) {
 int Socket::enviarDatos(unsigned char *buf, int tamanio) {
     int bytesEnviados = 0;
     bool errorDelSocket = false, socketCerrado = false;
-    int status = 0;
+    int status = 0; 
     printf("envio:");
     for (int i = 0; i < tamanio; i++) {
         printf("%02x-", buf[i]);
     }    
     std::cout<<std::endl;
     while (bytesEnviados < tamanio && errorDelSocket == false &&
-            socketCerrado == false) {       
+            socketCerrado == false) {
         status = send(this->fd, &buf[bytesEnviados], tamanio - bytesEnviados,
                 MSG_NOSIGNAL);              
         if (status < 0) {

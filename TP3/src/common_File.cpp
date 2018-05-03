@@ -1,7 +1,9 @@
 #include "common_File.h"
 #include "common_ExcpError.h"
+#include <string>
 
-File::File(char *arch, std::ios_base::openmode modo) : nombreArchivo(arch), modo(modo) {
+File::File(char *arch, std::ios_base::openmode modo) : nombreArchivo(arch),
+                                                       modo(modo) {
     this->archivo.open(this->nombreArchivo, modo);
     if (this->archivo.fail()) {
         int linea = -1;
@@ -29,12 +31,21 @@ void File::leer(char* buffer,int cantidad){
     this->archivo.read(buffer,cantidad);      
 }
 
-void File::write(char* data, int tamanio) {
-//    this->archivo.write(data,tamanio);
-    this->archivo << data;
-}
 void File::escribir(unsigned char* data) {
     this->archivo << data;
+}
+
+void File::escribirStr(const std::string data) {
+    this->archivo << data;
+}
+
+
+void File::getLinea(std::string &linea){
+    std::getline(this->archivo,linea);
+}
+
+bool File::estaFin(){
+    return this->archivo.eof();
 }
 
 File::~File() {

@@ -1,7 +1,7 @@
 #ifndef CLIENT_ACCIONPUSH_H
 #define CLIENT_ACCIONPUSH_H
 
-#include "client_Accion.h"
+#include "common_Accion.h"
 #include "common_File.h"
 #include <vector>
 #include <fstream>
@@ -14,14 +14,14 @@ private:
     std::vector<unsigned char> data;
 public:
     AccionPush(char *arch, char *hash);
-    int ejecutar();
-    unsigned int getValorNumerico();    
-    int getTamanio();    
-    std::vector<unsigned char> getData();
-    unsigned char* getDataEnPos(int pos);
+    void ejecutar();
+    void enviar(Socket *socket);
+    void responder(Socket *socket);
+    int getValorNumerico();
+    int getTamanio();
     void procesarArch(char *data);
     int getSizeFile();
-    ~AccionPush();
+    virtual ~AccionPush();
 };
 
 #endif 

@@ -6,16 +6,14 @@
 #include "common_Socket.h"
 #include "server_Indice.h"
 
-#define RESPONSE_MAX_LEN 128
-
 class Server {
 private:
     Socket socket;
-    Indice indice;  
-//    Buffer buffer;
 public:
-    Server(char *puerto, char *ruta);
-    void aceptarClientes();
+    explicit Server(char *puerto);
+    int pushea(Socket *peerskt,Indice *indice);
+    int tagea(Socket *peerskt,Indice *indice);
+    void aceptarClientes(Indice *indice);
     virtual ~Server();
 };
 

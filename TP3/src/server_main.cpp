@@ -3,7 +3,7 @@
 #include <iostream>
 #include <syslog.h>
 #include <stdio.h>
-#include "client_Accion.h"
+#include "common_Accion.h"
 #include "client_AccionPush.h"
 #include "server.h"
 
@@ -11,17 +11,17 @@ using std::cout;
 
 int main(int argc, char** argv) {
     try{
-        Server server(argv[1],argv[2]);    
-        server.aceptarClientes();
+        Server server(argv[1]);  
+        Indice indice(argv[2]);
+        server.aceptarClientes(&indice);
+        indice.actualizar();
     } catch(std::exception &exc){
         syslog(LOG_ERR,"Error: %s", exc.what());   
         return 1;
     } catch(...){
-        syslog(LOG_ERR,"Error: NO TENGO NI PUTA IDEA QUE PASO");        
+        syslog(LOG_ERR,"Error: VERIFICAR");        
         return 1;
     }
-//    Accion *unaAccion = new AccionPush();
-//    unaAccion->ejecutar();
     return 0;
 }
 

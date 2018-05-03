@@ -3,20 +3,21 @@
 
 #include <vector>
 #include <string>
-#include "client_Accion.h"
+#include "common_Accion.h"
 
-//class AccionTag : public Accion {
-class AccionTag{
-private:    
+class AccionTag : public Accion {
+private:
     std::string version;
     std::vector<std::string> hashes;
-public:    
-    AccionTag(char *version);
-    int ejecutar();
+    std::vector<unsigned char> data;
+public:
+    explicit AccionTag(char *version);
+    void ejecutar();
+    void enviar(Socket *socket);
+    void responder(Socket *socket);
     void agregarHash(char *hash);
-    unsigned int getValorNumerico();
+    int getValorNumerico();
     int getTamanio();
-    std::string getNombreArchivo() const;
     virtual ~AccionTag();
 };
 
