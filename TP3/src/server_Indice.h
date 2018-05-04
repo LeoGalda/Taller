@@ -4,8 +4,10 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <set>
 
 #include "common_File.h"
+#include "common_Buffer.h"
 
 using std::vector;
 using std::map;
@@ -16,17 +18,17 @@ class Indice {
 private:
     char *nombreArchivo;
     multimap<string,string> hashDeTags;
-    map<string,vector<string>> hashDeArchivos;    
+    map<string,std::set<string>> hashDeArchivos;    
     
-    void explode(const string &linea, 
-                 vector<string> &vectoresDeString);
+    void explode(const string &linea, vector<string> &vectoresDeString);
     void cargarDatosAMap(vector<string> &datos);
 public:
     explicit Indice(char *ruta);    
     void actualizar();
     void agregar(const std::string nombreArch,const std::string hash,
                 const std::string tipo);
-    void getArchivosTaggeados(unsigned char *tag,vector<string> &archivosTaggeados);
+    void getArchivosTaggeados(unsigned char *tag,std::set<string> &archivosTaggeados);
+    char validarHashes(Buffer *bufNombre,Buffer *bufHash);
     virtual ~Indice();
 };
 

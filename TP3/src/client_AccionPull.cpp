@@ -1,4 +1,5 @@
 #include "client_AccionPull.h"
+#include "common_File.h"
 #include <iostream>
 #include <string.h>
 
@@ -27,9 +28,36 @@ void AccionPull::enviar(Socket* socket) {
     }
 }
 
+
+void AccionPull::crearArchivosPull(Socket* socket) {
+    int sizeDeUINT = sizeof (unsigned int);
+    unsigned int tamanioNombreArch[1];
+    socket->recibirDatos((unsigned char*) tamanioNombreArch, sizeDeUINT);
+    Buffer bufNombreArch(*tamanioNombreArch);
+    socket->recibirDatos(bufNombreArch.getData(), bufNombreArch.getTamanio());
+    std::string nombre = (char *) bufNombreArch.getData() + this->hash; 
+    File file((char *)nombre.c_str(), std::ofstream::out | std::ofstream::app);
+    unsigned int tamanioContenidoArch[1];
+    socket->recibirDatos((unsigned char*) tamanioContenidoArch, sizeDeUINT);
+    Buffer bufContenidoArch(*tamanioContenidoArch);
+    socket->recibirDatos(bufContenidoArch.getData(), bufContenidoArch.getTamanio());
+    file.escribir(bufContenidoArch.getData());    
+}
+
 void AccionPull::responder(Socket* socket) {    
-    Buffer bufNombreTag(100);
-    socket->recibirDatos(bufNombreTag.getData(), bufNombreTag.getTamanio());
+    unsigned char tipo = 0;
+    int status;
+    status = socket->recibirDatos(&tipo, 1);
+    if (status && tipo == 1) {
+        int sizeDeUINT = sizeof (unsigned int);
+        unsigned int cantidadDeArchivos[1];
+        socket->recibirDatos((unsigned char*) cantidadDeArchivos, sizeDeUINT);
+        for (int i = 0; i < (int) *cantidadDeArchivos; i++) {
+            this->crearArchivosPull(socket);
+        }
+    } else {
+        printf("algo mal al recibir la data de responder");
+    }
 }
 
 int AccionPull::getTamanio() {

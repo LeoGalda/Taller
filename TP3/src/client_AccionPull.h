@@ -15,6 +15,7 @@ public:
     virtual ~AccionPull();
     void enviar(Socket *socket);
     void responder(Socket *socket);
+    void crearArchivosPull(Socket *socket);
     int getValorNumerico();
     int getTamanio();
 };

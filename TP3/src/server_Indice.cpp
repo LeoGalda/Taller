@@ -35,12 +35,16 @@ void Indice::explode(const std::string &linea, std::vector<std::string> &datos) 
 }
 
 void Indice::cargarDatosAMap(std::vector<std::string>& datos) {
-    std::vector<string> aux;
-    aux = datos;
+    this->hashDeTags.insert(std::pair<string, string>(datos[0], datos[1]));
+    std::set<string> aux;
+    
+//SEGUIR ACA    
+    for(size_t)
+    std::copy(datos.begin(),datos.end(),aux.begin());
+//    aux = datos;
     aux.erase(aux.end());
     aux.erase(aux.begin());
     aux.erase(aux.begin());
-    this->hashDeTags.insert(std::pair<string, string>(datos[0], datos[1]));
     this->hashDeArchivos[datos[1]] = aux;
 }
 
@@ -53,16 +57,15 @@ void Indice::actualizar() {
         aux.insert(std::pair<string, string>((*i).first, (*i).second));
     }
     string infoAEnviar;
-    std::vector<string> vec;
+    std::set<string> vec;
     for (i2 = aux.begin(); i2 != aux.end(); i2++) {
         infoAEnviar = i2->first;
         infoAEnviar.append(" ");
         infoAEnviar.append(i2->second);
         infoAEnviar.append(" ");
         vec = this->hashDeArchivos[i2->second];
-        std::sort(vec.begin(), vec.end());
-        for (size_t i = 0; i < vec.size(); i++) {
-            infoAEnviar.append(vec[i]);
+        for (std::set<string>::iterator itSet = vec.begin(); itSet != vec.end(); ++itSet) {
+            infoAEnviar.append(*itSet);
             infoAEnviar.append(" ");
         }
         infoAEnviar.append(";\n");
@@ -72,27 +75,37 @@ void Indice::actualizar() {
 
 void Indice::agregar(const std::string nombreArch, const std::string hash,
         string tipo) {
-    std::vector<string> aux;
+    std::set<string> aux;
     std::cout << "NOMBRE QUE LLEGO:\n" << nombreArch << std::endl;
     std::cout << "HASH QUE LLEGO:\n" << hash << std::endl;
     auto search = this->hashDeArchivos.find(nombreArch);
     if (search != this->hashDeArchivos.end()) {
         aux = this->hashDeArchivos[nombreArch];
-        aux.push_back(hash);
+        aux.insert(hash);
         this->hashDeArchivos[nombreArch] = aux;
     } else {
-        aux.push_back(hash);
+        aux.insert(hash);
         this->hashDeTags.insert(std::pair<string, string>(tipo, nombreArch));
         this->hashDeArchivos[nombreArch] = aux;
     }
 }
 
 void Indice::getArchivosTaggeados(unsigned char* tag,
-                                  vector<string>& archivosTaggeados) {
+        std::set<string>& archivosTaggeados) {
     auto search = this->hashDeArchivos.find((char *) tag);
     if (search != this->hashDeArchivos.end()) {
         archivosTaggeados = this->hashDeArchivos[(char *) tag];
     }
+}
+
+char Indice::validarHashes(Buffer *bufNombre, Buffer *bufHash) {
+    //    auto search = this->hashDeArchivos.find((char *) bufNombre->getData());
+    //    if (search != this->hashDeArchivos.end()) {
+    //        if (this->hashDeArchivos[(char *) bufNombre->getData()].) {
+    //
+    //        }
+    //    }
+    return 0;
 }
 
 Indice::~Indice() {

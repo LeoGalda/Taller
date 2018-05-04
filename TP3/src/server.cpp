@@ -6,6 +6,7 @@
 #include <string.h>
 #include <cstdint>
 #include <cstring>
+#include <set>
 #include "server.h"
 #include "common_ExcpError.h"
 #include "common_File.h"
@@ -78,7 +79,7 @@ int Server::pullea(Socket* peerskt, Indice* indice) {
     Buffer bufNombreTag(*longitudNombreTag);
     peerskt->recibirDatos(bufNombreTag.getData(), bufNombreTag.getTamanio());
     unsigned char aux[4];
-    std::vector<std::string> archivosTaggeados;
+    std::set<std::string> archivosTaggeados;
     std::vector<unsigned char> data;
     indice->getArchivosTaggeados(bufNombreTag.getData(), archivosTaggeados);
     unsigned char todoOk;
@@ -97,8 +98,12 @@ int Server::pullea(Socket* peerskt, Indice* indice) {
     }
     data.clear();
     peerskt->enviarDatos(&data[0], 4);
-    for (size_t i = 0; i < archivosTaggeados.size(); ++i) {
-        this->enviarInfoDeTags(peerskt, archivosTaggeados[i]);
+    
+     for (std::set<string>::iterator it = archivosTaggeados.begin();
+                                   it != archivosTaggeados.end(); ++it){
+//    for (size_t i = 0; i < archivosTaggeados.size(); ++i) {
+//        this->enviarInfoDeTags(peerskt, archivosTaggeados[i]);
+        this->enviarInfoDeTags(peerskt, *it);
     }
     return 0;
 }
@@ -128,6 +133,7 @@ int Server::tagea(Socket* peerskt, Indice* indice) {
     return 0;
 }
 
+
 int Server::pushea(Socket *peerskt, Indice *indice) {
     int sizeDeUINT = sizeof (unsigned int);
     unsigned int longitudNomArch[1];
@@ -145,8 +151,8 @@ int Server::pushea(Socket *peerskt, Indice *indice) {
     }
     Buffer bufHash(*longitudHash);
     peerskt->recibirDatos(bufHash.getData(), bufHash.getTamanio());
-
-    unsigned char respuesta = 1;
+    
+    unsigned char respuesta = indice->validarHashes(&bufNombreArch,&bufHash);
     peerskt->enviarDatos(&respuesta, 1);
     //---------------------------------------------------------
     unsigned int longitudArch[1];
