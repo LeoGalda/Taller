@@ -27,8 +27,9 @@ void AccionPull::enviar(Socket* socket) {
     }
 }
 
-void AccionPull::responder(Socket* socket) {
-
+void AccionPull::responder(Socket* socket) {    
+    Buffer bufNombreTag(100);
+    socket->recibirDatos(bufNombreTag.getData(), bufNombreTag.getTamanio());
 }
 
 int AccionPull::getTamanio() {

@@ -55,7 +55,7 @@ void Server::enviarInfoDeTags(Socket *peerskt, std::string nomArchivo) {
     for (unsigned int j = 0; j < tamanioNombre; ++j) {
         data.push_back((unsigned char) nomArchivo[j]);
     }
-    File file((char *)&nomArchivo, std::ofstream::in);
+    File file((char *)nomArchivo.c_str(), std::ofstream::in);
     int tamanioArch = file.getTamanioArch();
     Buffer bufTamanio(tamanioArch);
     file.leer((char *) bufTamanio.getData(), tamanioArch);
