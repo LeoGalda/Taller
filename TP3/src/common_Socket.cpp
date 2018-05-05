@@ -101,11 +101,11 @@ int Socket::enviarDatos(unsigned char *buf, int tamanio) {
     int bytesEnviados = 0;
     bool errorDelSocket = false, socketCerrado = false;
     int status = 0; 
-    printf("envio:");
-    for (int i = 0; i < tamanio; i++) {
-        printf("%02x-", buf[i]);
-    }    
-    std::cout<<std::endl;
+//    printf("envio:");
+//    for (int i = 0; i < tamanio; i++) {
+//        printf("%02x-", buf[i]);
+//    }    
+//    std::cout<<std::endl;
     while (bytesEnviados < tamanio && errorDelSocket == false &&
             socketCerrado == false) {
         status = send(this->fd, &buf[bytesEnviados], tamanio - bytesEnviados,
@@ -137,11 +137,11 @@ int Socket::recibirDatos(unsigned char *buf, int tamanio) {
             socketValido = false;
         }
     }
-    printf("recibido:\n");
-    for (int i = 0; i < tamanio; i++) {
-        printf("%02x-", buf[i]);
-    }
-    std::cout<<std::endl;
+//    printf("recibido:\n");
+//    for (int i = 0; i < tamanio; i++) {
+//        printf("%02x-", buf[i]);
+//    }
+//    std::cout<<std::endl;
     if (socketValido) return bytesRecibidos;
     return 0;
 }

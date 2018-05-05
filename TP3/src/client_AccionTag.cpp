@@ -61,6 +61,11 @@ int AccionTag::getTamanio() {
 }
 
 void AccionTag::responder(Socket* socket) {
+    unsigned char tipo = 0;
+    socket->recibirDatos(&tipo, 1);
+    if(!tipo){
+        std::cout<<"Error: tag/hash incorrecto."<<std::endl;
+    }
 }
 
 AccionTag::~AccionTag() {

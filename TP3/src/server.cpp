@@ -56,7 +56,7 @@ void Server::enviarInfoDeTags(Socket *peerskt, std::string nomArchivo) {
     for (unsigned int j = 0; j < tamanioNombre; ++j) {
         data.push_back((unsigned char) nomArchivo[j]);
     }
-    File file((char *)nomArchivo.c_str(), std::ofstream::in);
+    File file((char *) nomArchivo.c_str(), std::ofstream::in);
     int tamanioArch = file.getTamanioArch();
     Buffer bufTamanio(tamanioArch);
     file.leer((char *) bufTamanio.getData(), tamanioArch);
@@ -65,10 +65,10 @@ void Server::enviarInfoDeTags(Socket *peerskt, std::string nomArchivo) {
         data.push_back(aux[j]);
         aux[j] = 0;
     }
-    for (int i = 0;i < tamanioArch;i++){
+    for (int i = 0; i < tamanioArch; i++) {
         data.push_back(bufTamanio.getDataEnPos(i));
     }
-    peerskt->enviarDatos(&data[0],(int) data.size());
+    peerskt->enviarDatos(&data[0], (int) data.size());
     data.clear();
 }
 
@@ -98,11 +98,11 @@ int Server::pullea(Socket* peerskt, Indice* indice) {
     }
     data.clear();
     peerskt->enviarDatos(&data[0], 4);
-    
-     for (std::set<string>::iterator it = archivosTaggeados.begin();
-                                   it != archivosTaggeados.end(); ++it){
-//    for (size_t i = 0; i < archivosTaggeados.size(); ++i) {
-//        this->enviarInfoDeTags(peerskt, archivosTaggeados[i]);
+
+    for (std::set<string>::iterator it = archivosTaggeados.begin();
+            it != archivosTaggeados.end(); ++it) {
+        //    for (size_t i = 0; i < archivosTaggeados.size(); ++i) {
+        //        this->enviarInfoDeTags(peerskt, archivosTaggeados[i]);
         this->enviarInfoDeTags(peerskt, *it);
     }
     return 0;
@@ -117,22 +117,26 @@ int Server::tagea(Socket* peerskt, Indice* indice) {
     peerskt->recibirDatos((unsigned char*) longitudVersion, sizeDeUINT);
     Buffer bufVersion(*longitudVersion);
     peerskt->recibirDatos(bufVersion.getData(), bufVersion.getTamanio());
+    unsigned char todoOk = indice->validarVersion(&bufVersion);
     //---------------------------------------------------------
-    std::vector<std::string> hashes;
+    std::vector<std::string> hashes;    
+    
     for (int i = 0; i < (int) *cantidadDeHashes; i++) {
         unsigned int longitudHash[1];
         peerskt->recibirDatos((unsigned char*) longitudHash, sizeDeUINT);
         Buffer bufHash(*longitudHash);
         peerskt->recibirDatos(bufHash.getData(), bufHash.getTamanio());
         hashes.push_back((char *) bufHash.getData());
+        todoOk = todoOk * indice->validarHashExiste(&bufHash);
     }
-    for (size_t w = 0; w < hashes.size(); w++) {
-        std::cout << hashes[w] << std::endl;
-        indice->agregar((char *) bufVersion.getData(), hashes[w], "t");
+    if (todoOk) {
+        for (size_t w = 0; w < hashes.size(); w++) {
+            indice->agregar((char *) bufVersion.getData(), hashes[w], "t");
+        }
     }
+    peerskt->enviarDatos(&todoOk, 1);
     return 0;
 }
-
 
 int Server::pushea(Socket *peerskt, Indice *indice) {
     int sizeDeUINT = sizeof (unsigned int);
@@ -151,9 +155,10 @@ int Server::pushea(Socket *peerskt, Indice *indice) {
     }
     Buffer bufHash(*longitudHash);
     peerskt->recibirDatos(bufHash.getData(), bufHash.getTamanio());
-    
-    unsigned char respuesta = indice->validarHashes(&bufNombreArch,&bufHash);
+
+    unsigned char respuesta = indice->validarHashes(&bufNombreArch, &bufHash);
     peerskt->enviarDatos(&respuesta, 1);
+    if (!respuesta) return 0;
     //---------------------------------------------------------
     unsigned int longitudArch[1];
     peerskt->recibirDatos((unsigned char*) longitudArch, sizeDeUINT);

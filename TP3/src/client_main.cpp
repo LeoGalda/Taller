@@ -14,6 +14,10 @@ int main(int argc, char* argv[]) {
         Cliente cliente(argv[1], argv[2]);
         Accion *accion;
         if (strcmp(argv[3], "push") == 0) {
+            if (argc != 6) {
+                std::cout << "Error: argumentos invalidos." << std::endl;
+                throw -1;
+            }
             accion = new AccionPush(argv[4], argv[5]);
             //            AccionPush push(argv[4],argv[5]);
             //            accion = &push;
@@ -25,8 +29,13 @@ int main(int argc, char* argv[]) {
             }
             //            accion = &tag;            
         } else if (strcmp(argv[3], "pull") == 0) {
+            if (argc != 5) {
+                std::cout << "Error: argumentos invalidos." << std::endl;
+                throw -1;
+            }
             accion = new AccionPull(argv[4]);
         } else {
+            std::cout << "Error: argumentos invalidos." << std::endl;
             throw -1;
         }
         cliente.ejecutar(accion);

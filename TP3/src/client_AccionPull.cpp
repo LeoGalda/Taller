@@ -45,10 +45,9 @@ void AccionPull::crearArchivosPull(Socket* socket) {
 }
 
 void AccionPull::responder(Socket* socket) {    
-    unsigned char tipo = 0;
-    int status;
-    status = socket->recibirDatos(&tipo, 1);
-    if (status && tipo == 1) {
+    unsigned char tipo = 0;    
+    socket->recibirDatos(&tipo, 1);
+    if (tipo == 1) {
         int sizeDeUINT = sizeof (unsigned int);
         unsigned int cantidadDeArchivos[1];
         socket->recibirDatos((unsigned char*) cantidadDeArchivos, sizeDeUINT);
@@ -56,7 +55,7 @@ void AccionPull::responder(Socket* socket) {
             this->crearArchivosPull(socket);
         }
     } else {
-        printf("algo mal al recibir la data de responder");
+        std::cout<<"Error: tag/hash incorrecto."<<std::endl;
     }
 }
 

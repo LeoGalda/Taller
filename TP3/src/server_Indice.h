@@ -29,6 +29,8 @@ public:
                 const std::string tipo);
     void getArchivosTaggeados(unsigned char *tag,std::set<string> &archivosTaggeados);
     char validarHashes(Buffer *bufNombre,Buffer *bufHash);
+    unsigned char validarVersion(Buffer *bufVersion);
+    unsigned char validarHashExiste(Buffer *bufHash);
     virtual ~Indice();
 };
 
