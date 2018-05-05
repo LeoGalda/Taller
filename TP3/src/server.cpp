@@ -21,7 +21,7 @@ void Server::aceptarClientes(Indice *indice) {
     this->socket.aceptar(&peerskt);
     int corriendo = 1;
     while (corriendo) {
-        if (this->socket.getFD() == -1) {
+        if (socket.isOnError()) {
             printf("Error en socket\n");
             corriendo = 0;
         } else {
@@ -46,7 +46,7 @@ void Server::aceptarClientes(Indice *indice) {
 
 void Server::enviarInfoDeTags(Socket *peerskt, std::string nomArchivo) {
     std::vector<unsigned char> data;
-    unsigned char aux[4];
+    unsigned char aux[5];
     unsigned int tamanioNombre = (unsigned int) nomArchivo.size();
     memcpy(&aux, &tamanioNombre, 4);
     for (unsigned int j = 0; j < 4; ++j) {
@@ -81,7 +81,7 @@ int Server::pullea(Socket* peerskt, Indice* indice) {
     unsigned char aux[4];
     std::set<std::string> archivosTaggeados;
     std::vector<unsigned char> data;
-    indice->getArchivosTaggeados(bufNombreTag.getData(), archivosTaggeados);
+    indice->getArchivosTaggeados(&bufNombreTag, archivosTaggeados);
     unsigned char todoOk;
     if (archivosTaggeados.empty()) {
         todoOk = 0;
@@ -101,8 +101,6 @@ int Server::pullea(Socket* peerskt, Indice* indice) {
 
     for (std::set<string>::iterator it = archivosTaggeados.begin();
             it != archivosTaggeados.end(); ++it) {
-        //    for (size_t i = 0; i < archivosTaggeados.size(); ++i) {
-        //        this->enviarInfoDeTags(peerskt, archivosTaggeados[i]);
         this->enviarInfoDeTags(peerskt, *it);
     }
     return 0;

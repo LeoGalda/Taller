@@ -4,7 +4,9 @@
 #include <string>
 #include <map>
 #include <utility>
+#include <cstring>
 #include "server_Indice.h"
+#include "common_Conversor.h"
 
 #define ERROR 0
 #define SUCCESS 1
@@ -93,11 +95,13 @@ void Indice::agregar(const std::string nombreArch, const std::string hash,
     }
 }
 
-void Indice::getArchivosTaggeados(unsigned char* tag,
-        std::set<string>& archivosTaggeados) {
-    auto search = this->hashDeArchivos.find((char *) tag);
+void Indice::getArchivosTaggeados(Buffer *buffer,
+        std::set<string>& archivosTaggeados) { 
+    Conversor convertidor;
+    string tag = convertidor.convertirAString(buffer);            
+    auto search = this->hashDeArchivos.find(tag);
     if (search != this->hashDeArchivos.end()) {
-        archivosTaggeados = this->hashDeArchivos[(char *) tag];
+        archivosTaggeados = this->hashDeArchivos[tag];
     }
 }
 

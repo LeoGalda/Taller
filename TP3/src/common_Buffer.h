@@ -7,7 +7,7 @@ private:
     unsigned char *data;
     
 public:
-    explicit Buffer(int tamanio);    
+    explicit Buffer(unsigned int tamanio);    
     unsigned char getDataEnPos(int pos);
 //    unsigned char* getMoveData() const;
     unsigned char* getData();  

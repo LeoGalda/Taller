@@ -35,8 +35,10 @@ public:
     // recibe los datos del socket
     int recibirDatos(unsigned char *buffer,int longitud);        
     
-    // devuelve el File Descriptor
-    int getFD();
+    // devuelve true si el File Descriptor esta en error
+    int isOnError();
+    
+    int recibirPrueba(Buffer *buffer);
 
     // Destruyo la instancia this para liberar sus recursos
     ~Socket();

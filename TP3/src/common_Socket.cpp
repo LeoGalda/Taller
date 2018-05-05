@@ -136,18 +136,35 @@ int Socket::recibirDatos(unsigned char *buf, int tamanio) {
         } else {
             socketValido = false;
         }
-    }
+    }    
 //    printf("recibido:\n");
 //    for (int i = 0; i < tamanio; i++) {
 //        printf("%02x-", buf[i]);
 //    }
 //    std::cout<<std::endl;
-    if (socketValido) return bytesRecibidos;
+    if (socketValido)        
+        return bytesRecibidos;    
     return 0;
 }
 
-int Socket::getFD() {
-    return this->fd;
+//int Socket::recibirPrueba(Buffer* buffer){
+//    int bytesRecibidos = 0;
+//    int s = 0;
+//    bool socketValido = true;
+//    while (bytesRecibidos < buffer->getTamanio() && socketValido) {                
+//        s = recv(this->fd, &buffer->getData()[bytesRecibidos], buffer->getTamanio() - bytesRecibidos, 0);
+//        if (s > 0) {
+//            bytesRecibidos += s;
+//        } else {
+//            socketValido = false;
+//        }
+//    }
+//    if (socketValido) return bytesRecibidos;
+//    return 0;    
+//}
+
+int Socket::isOnError(){
+    return this->fd == -1;
 }
 
 Socket::~Socket() {
