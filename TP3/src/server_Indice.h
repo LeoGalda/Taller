@@ -6,8 +6,9 @@
 #include <vector>
 #include <set>
 
-#include "common_File.h"
 #include "common_Buffer.h"
+#include "common_Conversor.h"
+#include "common_File.h"
 
 using std::vector;
 using std::map;
@@ -19,6 +20,7 @@ private:
     char *nombreArchivo;
     multimap<string,string> hashDeTags;
     map<string,std::set<string>> hashDeArchivos;    
+    Conversor convertidor;    
     
     void explode(const string &linea, vector<string> &vectoresDeString);
     void cargarDatosAMap(vector<string> &datos);

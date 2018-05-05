@@ -118,18 +118,20 @@ int Server::tagea(Socket* peerskt, Indice* indice) {
     unsigned char todoOk = indice->validarVersion(&bufVersion);
     //---------------------------------------------------------
     std::vector<std::string> hashes;    
-    
+    Conversor convertidor;
     for (int i = 0; i < (int) *cantidadDeHashes; i++) {
         unsigned int longitudHash[1];
         peerskt->recibirDatos((unsigned char*) longitudHash, sizeDeUINT);
         Buffer bufHash(*longitudHash);
-        peerskt->recibirDatos(bufHash.getData(), bufHash.getTamanio());
-        hashes.push_back((char *) bufHash.getData());
+        peerskt->recibirDatos(bufHash.getData(), bufHash.getTamanio());        
+        std::string dataHash = convertidor.convertirAString(&bufHash);
+        hashes.push_back(dataHash);
         todoOk = todoOk * indice->validarHashExiste(&bufHash);
     }
     if (todoOk) {
         for (size_t w = 0; w < hashes.size(); w++) {
-            indice->agregar((char *) bufVersion.getData(), hashes[w], "t");
+            std::string dataVersion = convertidor.convertirAString(&bufVersion);
+            indice->agregar(dataVersion, hashes[w], "t");
         }
     }
     peerskt->enviarDatos(&todoOk, 1);
@@ -166,13 +168,13 @@ int Server::pushea(Socket *peerskt, Indice *indice) {
     if (*longitudArch < 0) {
         throw -1;
     }
-    // en esta parte al usar  los buffer valgrind me da error y
-    // no puedo solucionarlo  
-    File file((char *) bufHash.getData(),
-            std::ofstream::out | std::ofstream::app);
-    file.escribir(bufContenidoArch.getData());
-    indice->agregar((char *) bufNombreArch.getData(),
-            (char *) bufHash.getData(), "f");
+    Conversor convertidor;
+    std::string dataHash = convertidor.convertirAString(&bufHash);
+    std::string contenido = convertidor.convertirAString(&bufContenidoArch);
+    std::string nombreArch = convertidor.convertirAString(&bufNombreArch);
+    File file((char *)dataHash.c_str(),std::ofstream::out | std::ofstream::app);    
+    file.escribir(contenido);
+    indice->agregar(nombreArch,dataHash, "f");
     return 0;
 }
 

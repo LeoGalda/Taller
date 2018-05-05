@@ -32,12 +32,10 @@ int main(int argc, char* argv[]) {
             if (argc != 5) {
                 std::cout << "Error: argumentos invalidos." << std::endl;
                 throw -1;
-            }            
-            AccionPull pull(argv[4]);
-            accion = &pull;
-            cliente.ejecutar(accion);
-            return 0;
-//            accion = new AccionPull(argv[4]);
+            }
+//            AccionPull pull(argv[4]);
+//            accion = &pull;
+             accion = new AccionPull(argv[4]);
         } else {
             std::cout << "Error: argumentos invalidos." << std::endl;
             throw -1;

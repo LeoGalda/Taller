@@ -41,7 +41,7 @@ void AccionTag::enviar(Socket* socket) {
         throw -1;
     }
     std::vector<unsigned char> dataAEnviar;
-    for (int i = 0; i < (int) this->hashes.size(); i++) {
+    for (size_t i = 0; i < this->hashes.size(); ++i){
         unsigned char aux[4];
         int cantidadHash = this->hashes[i].size();
         memcpy(&aux, &cantidadHash, 4);

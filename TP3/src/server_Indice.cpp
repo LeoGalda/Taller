@@ -6,7 +6,6 @@
 #include <utility>
 #include <cstring>
 #include "server_Indice.h"
-#include "common_Conversor.h"
 
 #define ERROR 0
 #define SUCCESS 1
@@ -73,7 +72,6 @@ void Indice::actualizar() {
             infoAEnviar.append(" ");
         }
         infoAEnviar.append(";\n");
-        //        std::cout<<"info a enviar: "<<infoAEnviar << std::endl;
         file.escribirStr(infoAEnviar);
     }
 }
@@ -81,8 +79,6 @@ void Indice::actualizar() {
 void Indice::agregar(const std::string nombreArch, const std::string hash,
         string tipo) {
     std::set<string> aux;
-    std::cout << "NOMBRE QUE LLEGO:\n" << nombreArch << std::endl;
-    std::cout << "HASH QUE LLEGO:\n" << hash << std::endl;
     auto search = this->hashDeArchivos.find(nombreArch);
     if (search != this->hashDeArchivos.end()) {
         aux = this->hashDeArchivos[nombreArch];
@@ -96,9 +92,8 @@ void Indice::agregar(const std::string nombreArch, const std::string hash,
 }
 
 void Indice::getArchivosTaggeados(Buffer *buffer,
-        std::set<string>& archivosTaggeados) { 
-    Conversor convertidor;
-    string tag = convertidor.convertirAString(buffer);            
+        std::set<string>& archivosTaggeados) {     
+    string tag = this->convertidor.convertirAString(buffer);            
     auto search = this->hashDeArchivos.find(tag);
     if (search != this->hashDeArchivos.end()) {
         archivosTaggeados = this->hashDeArchivos[tag];
@@ -106,11 +101,12 @@ void Indice::getArchivosTaggeados(Buffer *buffer,
 }
 
 char Indice::validarHashes(Buffer *bufNombre, Buffer *bufHash) {
-    auto search = this->hashDeArchivos.find((char *) bufNombre->getData());
+    string nombreABuscar = this->convertidor.convertirAString(bufNombre);
+    string hashABuscar = this->convertidor.convertirAString(bufHash);
+    auto search = this->hashDeArchivos.find(nombreABuscar);
     if (search != this->hashDeArchivos.end()) {
-        auto search2 = this->hashDeArchivos[(char *)
-                       bufNombre->getData()].find((char *)bufHash->getData());
-        if (search2 != this->hashDeArchivos[(char *)bufNombre->getData()].end()){
+        auto search2 = this->hashDeArchivos[nombreABuscar].find(hashABuscar);
+        if (search2 != this->hashDeArchivos[nombreABuscar].end()){
             return ERROR;
         }
     }
@@ -118,7 +114,8 @@ char Indice::validarHashes(Buffer *bufNombre, Buffer *bufHash) {
 }
 
 unsigned char Indice::validarVersion(Buffer* bufVersion){
-    auto search = this->hashDeArchivos.find((char *) bufVersion->getData());
+    string versionABuscar = this->convertidor.convertirAString(bufVersion);
+    auto search = this->hashDeArchivos.find(versionABuscar);
     if (search != this->hashDeArchivos.end()){
         return ERROR;
     }
@@ -127,10 +124,11 @@ unsigned char Indice::validarVersion(Buffer* bufVersion){
 
 unsigned char Indice::validarHashExiste(Buffer* bufHash) {    
     map<string,std::set<string>>::iterator it;
+    string dataHash = this->convertidor.convertirAString(bufHash);
     for (it = this->hashDeArchivos.begin(); it!=this->hashDeArchivos.end();
                                                         ++it){
         std::set<string>::iterator search = 
-                it->second.find((char *)bufHash->getData());
+                it->second.find(dataHash);
         if (search != it->second.end()){
             return SUCCESS;
         }
