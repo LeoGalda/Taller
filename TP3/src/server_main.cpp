@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "common_Accion.h"
 #include "client_AccionPush.h"
+#include "server_Thread.h"
 #include "server.h"
 
 using std::cout;
@@ -12,7 +13,9 @@ using std::cout;
 int main(int argc, char** argv) {
     try{
         Server server(argv[1]);  
-        Indice indice(argv[2]);
+        Indice indice(argv[2]);        
+        std::vector<Thread*> threads;
+        
         server.aceptarClientes(&indice);
         indice.actualizar();
     } catch(std::exception &exc){
