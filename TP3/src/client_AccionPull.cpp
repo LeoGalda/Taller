@@ -46,7 +46,7 @@ void AccionPull::crearArchivosPull(Socket* socket) {
     Buffer bufContenidoArch(ver);
     socket->recibirDatos(bufContenidoArch.getData(), bufContenidoArch.getTamanio());
     std::string dataEscribir = convertidor.convertirAString(&bufContenidoArch);
-    file.escribirStr(dataEscribir);    
+    file.escribir(dataEscribir);    
 }
 
 void AccionPull::responder(Socket* socket) {    

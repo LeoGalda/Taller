@@ -1,4 +1,4 @@
-#include "Thread.h"
+#include "server_Thread.h"
 
 Thread::Thread() {
 }

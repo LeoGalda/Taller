@@ -6,17 +6,22 @@
 #include "common_Accion.h"
 #include "client_AccionPush.h"
 #include "server_Thread.h"
+#include "server_Versionador.h"
+#include "server_Aceptador.h"
 #include "server.h"
 
 using std::cout;
 
 int main(int argc, char** argv) {
     try{
-        Server server(argv[1]);  
+//        Server server(argv[1]);  
         Indice indice(argv[2]);        
-        std::vector<Thread*> threads;
-        
-        server.aceptarClientes(&indice);
+        Server server;
+        Aceptador aceptador(argv[1],indice);    
+        server.aceptarCliente(aceptador);
+        aceptador.join();        
+//        server->aceptar(aceptador);                       
+//        server.aceptarClientes(&indice);
         indice.actualizar();
     } catch(std::exception &exc){
         syslog(LOG_ERR,"Error: %s", exc.what());   

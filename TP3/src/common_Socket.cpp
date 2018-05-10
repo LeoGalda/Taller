@@ -10,6 +10,9 @@
 Socket::Socket() {
 }
 
+Socket::Socket(int fd): fd(fd){    
+}
+
 int Socket::doBind(char *puerto) {
     int status;
     bool conectado = false;
@@ -134,6 +137,7 @@ int Socket::recibirDatos(unsigned char *buf, int tamanio) {
         if (s > 0) {
             bytesRecibidos += s;
         } else {
+            std::cout<<"SOCKET INVALIDO EN RECIBIR DATOS"<<std::endl;
             socketValido = false;
         }
     }    
@@ -165,6 +169,10 @@ int Socket::recibirDatos(unsigned char *buf, int tamanio) {
 
 int Socket::isOnError(){
     return this->fd == -1;
+}
+
+void Socket::destruir(){
+    
 }
 
 Socket::~Socket() {

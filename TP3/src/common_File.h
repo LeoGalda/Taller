@@ -17,7 +17,7 @@ public:
     int getTamanioNombre();
     void leer(char *buf,int cantidad);
     void escribir(std::string data);    
-    void escribirStr(const std::string data);
+//    void escribirStr(const std::string data);
     void getLinea(std::string &linea);
     bool estaFin();
     virtual ~File();

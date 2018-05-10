@@ -16,7 +16,10 @@ private:
 public:
     //Inicializa la instancia this para ser utilizada
     Socket();
-
+    
+    //Inicializa la instancia con el file descripto pasado por parametro
+    explicit Socket(int fd);
+    
     //hace el bind al puerto que se va a asociar al socket
     int doBind(char *puerto);
 
@@ -36,10 +39,10 @@ public:
     int recibirDatos(unsigned char *buffer,int longitud);        
     
     // devuelve true si el File Descriptor esta en error
-    int isOnError();
-    
-    int recibirPrueba(Buffer *buffer);
+    int isOnError();    
 
+    void destruir();
+    
     // Destruyo la instancia this para liberar sus recursos
     ~Socket();
 };

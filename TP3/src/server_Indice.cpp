@@ -72,7 +72,8 @@ void Indice::actualizar() {
             infoAEnviar.append(" ");
         }
         infoAEnviar.append(";\n");
-        file.escribirStr(infoAEnviar);
+//        file.escribirStr(infoAEnviar);
+        file.escribir(infoAEnviar);
     }
 }
 

@@ -32,13 +32,13 @@ void File::leer(char* buffer,int cantidad){
     this->archivo.read(buffer,cantidad);      
 }
 
-void File::escribir(unsigned char* data) {
+void File::escribir(std::string data) {
     this->archivo << data;
 }
 
-void File::escribirStr(const std::string data) {
-    this->archivo << data;
-}
+//void File::escribirStr(const std::string data) {
+//    this->archivo << data;
+//}
 
 
 void File::getLinea(std::string &linea){
