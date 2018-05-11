@@ -17,8 +17,12 @@ public:
     //Inicializa la instancia this para ser utilizada
     Socket();
     
-    //Inicializa la instancia con el file descripto pasado por parametro
-    explicit Socket(int fd);
+    explicit Socket(Socket&& other);
+    
+//    //Inicializa la instancia con el file descripto pasado por parametro
+//    explicit Socket(int fd);
+    
+    Socket& operator=(Socket&& other);
     
     //hace el bind al puerto que se va a asociar al socket
     int doBind(char *puerto);

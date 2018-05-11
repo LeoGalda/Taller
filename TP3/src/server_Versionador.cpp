@@ -12,28 +12,26 @@
 #include "server_Versionador.h"
 
 Versionador::Versionador(Socket &socket, Indice &indice) :
-                                        socket(socket), indice(indice) {
+                                   socket(std::move(socket)), indice(indice) {
 }
 
 void Versionador::run() {   
     unsigned char tipo = 0;
-    int corriendo;
-    std::cout<<"estoy en error?:"<<this->socket.isOnError()<<std::endl;
+    int corriendo;    
     corriendo = this->socket.recibirDatos(&tipo, 1);
     if (!corriendo) {
         std::cout << "error al recibir dato " << std::endl;        
         return;
     }
-    printf("tipo: %02x\n",tipo);
-//    if (tipo == 1) {
-//        corriendo = this->pushea();
-//    } else if (tipo == 2) {
-//        corriendo = this->tagea();
-//    } else if (tipo == 3) {
-//        corriendo = this->pullea();
-//    } else {
-//        std::cout << "tipo erroneo" << std::endl;
-//    }
+    if (tipo == 1) {
+        corriendo = this->pushea();
+    } else if (tipo == 2) {
+        corriendo = this->tagea();
+    } else if (tipo == 3) {
+        corriendo = this->pullea();
+    } else {
+        std::cout << "tipo erroneo" << std::endl;
+    }
 }
 
 void Versionador::enviarInfoDeTags(std::string nomArchivo) {
@@ -131,6 +129,7 @@ int Versionador::tagea() {
 }
 
 int Versionador::pushea() {
+    std::cout<<"PUSHEAR"<<std::endl;
     int sizeDeUINT = sizeof (unsigned int);
     unsigned int longitudNomArch[1];
     this->socket.recibirDatos((unsigned char*) longitudNomArch, sizeDeUINT);

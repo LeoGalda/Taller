@@ -10,7 +10,20 @@
 Socket::Socket() {
 }
 
-Socket::Socket(int fd): fd(fd){    
+Socket::Socket(Socket&& other) {
+    this->fd = other.fd;
+    other.fd = 0;
+}
+
+Socket& Socket::operator=(Socket&& other){
+    if (this == &other){
+        return *this;
+    }
+    
+    this->fd = other.fd;
+    other.fd = 0;
+    
+    return *this;
 }
 
 int Socket::doBind(char *puerto) {
@@ -18,7 +31,7 @@ int Socket::doBind(char *puerto) {
     bool conectado = false;
     struct addrinfo hints;
     struct addrinfo *ptr, *aux;
-    memset(&hints, 0, sizeof(struct addrinfo));
+    memset(&hints, 0, sizeof (struct addrinfo));
     hints.ai_family = AF_INET; /* IPv4 */
     hints.ai_socktype = SOCK_STREAM; /* TCP */
     hints.ai_flags = 0;
@@ -64,10 +77,10 @@ int Socket::conectar(char *puerto, char *ip) {
     struct addrinfo *aux, *ptr;
     struct addrinfo hints;
     int status;
-    memset(&hints, 0, sizeof(struct addrinfo));
+    memset(&hints, 0, sizeof (struct addrinfo));
     hints.ai_family = AF_INET; /* IPv4 */
     hints.ai_socktype = SOCK_STREAM; /* TCP */
-    hints.ai_flags = AI_PASSIVE;        
+    hints.ai_flags = AI_PASSIVE;
     status = getaddrinfo(ip, puerto, &hints, &ptr);
     if (status != 0) {
         freeaddrinfo(ptr);
@@ -103,16 +116,16 @@ void Socket::aceptar(Socket *peerskt) {
 int Socket::enviarDatos(unsigned char *buf, int tamanio) {
     int bytesEnviados = 0;
     bool errorDelSocket = false, socketCerrado = false;
-    int status = 0; 
-//    printf("envio:");
-//    for (int i = 0; i < tamanio; i++) {
-//        printf("%02x-", buf[i]);
-//    }    
-//    std::cout<<std::endl;
+    int status = 0;
+    printf("envio:");
+    for (int i = 0; i < tamanio; i++) {
+        printf("%02x-", buf[i]);
+    }
+    std::cout << std::endl;
     while (bytesEnviados < tamanio && errorDelSocket == false &&
             socketCerrado == false) {
         status = send(this->fd, &buf[bytesEnviados], tamanio - bytesEnviados,
-                MSG_NOSIGNAL);              
+                MSG_NOSIGNAL);
         if (status < 0) {
             printf("Error enviar cliente datos: %s\n", strerror(errno));
             errorDelSocket = true;
@@ -137,17 +150,22 @@ int Socket::recibirDatos(unsigned char *buf, int tamanio) {
         if (s > 0) {
             bytesRecibidos += s;
         } else {
-            std::cout<<"SOCKET INVALIDO EN RECIBIR DATOS"<<std::endl;
-            socketValido = false;
+            if (s == -1) {
+                std::cout << "SOCKET INVALIDO EN RECIBIR DATOS" << std::endl;
+                socketValido = false;
+            } else {
+                std::cout << "recibi 0 bytes" << std::endl;
+                socketValido = false;
+            }
         }
-    }    
-//    printf("recibido:\n");
-//    for (int i = 0; i < tamanio; i++) {
-//        printf("%02x-", buf[i]);
-//    }
-//    std::cout<<std::endl;
-    if (socketValido)        
-        return bytesRecibidos;    
+    }
+    printf("recibido:\n");
+    for (int i = 0; i < tamanio; i++) {
+        printf("%02x-", buf[i]);
+    }
+    std::cout << std::endl;
+    if (socketValido)
+        return bytesRecibidos;
     return 0;
 }
 
@@ -167,15 +185,17 @@ int Socket::recibirDatos(unsigned char *buf, int tamanio) {
 //    return 0;    
 //}
 
-int Socket::isOnError(){
+int Socket::isOnError() {
     return this->fd == -1;
 }
 
-void Socket::destruir(){
-    
+void Socket::destruir() {
+
 }
 
 Socket::~Socket() {
-    shutdown(this->fd, SHUT_RDWR);
-    close(this->fd);
+    if (this->fd) {
+        shutdown(this->fd, SHUT_RDWR);
+        close(this->fd);
+    }
 }
