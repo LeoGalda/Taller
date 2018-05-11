@@ -8,7 +8,7 @@ void Thread::start() {
 }
 
 void Thread::join() {
-    thread.join();
+    this->thread.join();
 }
 
 Thread::Thread(Thread&& other) {

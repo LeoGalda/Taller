@@ -1,4 +1,5 @@
 #include "common_Conversor.h"
+#include <string>
 
 Conversor::Conversor() {
 }
@@ -12,4 +13,3 @@ std::string Conversor::convertirAString(Buffer* buffer) const{
 
 Conversor::~Conversor() {
 }
-

@@ -26,6 +26,7 @@ private:
     void cargarDatosAMap(vector<string> &datos);
 public:
     explicit Indice(char *ruta);    
+    Indice(Indice&& other);
     void actualizar();
     void agregar(const std::string nombreArch,const std::string hash,
                 const std::string tipo);

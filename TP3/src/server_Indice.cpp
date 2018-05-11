@@ -23,6 +23,16 @@ Indice::Indice(char *ruta) : nombreArchivo(ruta) {
     }
 }
 
+Indice::Indice(Indice&& other){
+    this->convertidor = other.convertidor;
+    this->hashDeArchivos = other.hashDeArchivos;
+    this->hashDeTags = other.hashDeTags;
+    this->nombreArchivo = other.nombreArchivo;
+    other.hashDeArchivos.clear();
+    other.hashDeTags.clear();
+    other.nombreArchivo = nullptr;
+}
+
 void Indice::explode(const std::string &linea, std::vector<std::string> &datos){
     size_t pos1 = 0;
     size_t pos2 = 0;
@@ -52,16 +62,19 @@ void Indice::cargarDatosAMap(std::vector<std::string>& datos) {
 }
 
 void Indice::actualizar() {
+    printf("voy a actualizar gil\n");
     File file(this->nombreArchivo, std::ios::out);
     std::multiset<std::pair<string, string>> aux;
     multimap<string, string>::iterator i;
     std::multiset<std::pair<string, string>>::iterator i2;
     for (i = this->hashDeTags.begin(); i != this->hashDeTags.end(); i++) {
+        printf("encontre elementos de hashDeTags");
         aux.insert(std::pair<string, string>((*i).first, (*i).second));
     }
     string infoAEnviar;
     std::set<string> vec;
     for (i2 = aux.begin(); i2 != aux.end(); i2++) {
+        printf("entre al segundo forrrr\n");
         infoAEnviar = i2->first;
         infoAEnviar.append(" ");
         infoAEnviar.append(i2->second);
@@ -72,7 +85,7 @@ void Indice::actualizar() {
             infoAEnviar.append(*itSet);
             infoAEnviar.append(" ");
         }
-        infoAEnviar.append(";\n");
+        infoAEnviar.append(";\n");        
 //        file.escribirStr(infoAEnviar);
         file.escribir(infoAEnviar);
     }

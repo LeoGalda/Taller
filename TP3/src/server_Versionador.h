@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <fstream>
 #include <vector>
+#include <string>
 #include "common_Socket.h"
 #include "server_Indice.h"
 #include "server_Thread.h"

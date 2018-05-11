@@ -14,7 +14,7 @@
 #include "server_Versionador.h"
 
 Versionador::Versionador(Socket &socket, Indice &indice) :
-                                   socket(std::move(socket)), indice(indice) {
+                         socket(std::move(socket)), indice(std::move(indice)){
 }
 
 void Versionador::run() {   

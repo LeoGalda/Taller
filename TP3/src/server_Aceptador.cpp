@@ -1,9 +1,8 @@
 #include "server_Aceptador.h"
-#include "server_Conexion.h"
 #include "server_Versionador.h"
 
 Aceptador::Aceptador(char *puerto, Indice &indice) :
-indice(indice), finalizado(false) {
+indice(std::move(indice)), finalizado(false) {
     this->socket.doBind(puerto);
     this->socket.doListen();
 }
@@ -24,7 +23,7 @@ void Aceptador::run() {
 
 void Aceptador::finalizar() {
     finalizado = true;
-    //    this->socket.cerrar();
+    this->socket.destruir();
     this->finalizarThreads();
 }
 
@@ -36,6 +35,6 @@ void Aceptador::finalizarThreads() {
 }
 
 Aceptador::~Aceptador() {
-    this->finalizarThreads();
+//    this->finalizarThreads();
 }
 

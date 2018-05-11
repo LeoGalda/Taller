@@ -12,8 +12,6 @@ public:
     std::string convertirAString(Buffer *buffer) const;
     virtual ~Conversor();
 private:
-
 };
 
 #endif
-

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string.h>
 #include <string>
+#include "common_Conversor.h"
 
 AccionPull::AccionPull(char *hash) : hash(hash) {
 }
