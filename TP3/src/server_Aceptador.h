@@ -5,6 +5,7 @@
 #include "server_Indice.h"
 #include "common_Socket.h"
 #include <mutex>
+#include <vector>
 
 class Aceptador : public Thread {
 private:

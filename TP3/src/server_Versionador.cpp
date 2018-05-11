@@ -4,6 +4,8 @@
 #include <exception>
 #include <stdio.h>
 #include <string.h>
+#include <string>
+#include <vector>
 #include <cstdint>
 #include <cstring>
 #include <set>
@@ -63,11 +65,11 @@ void Versionador::enviarInfoDeTags(std::string nomArchivo) {
 }
 
 int Versionador::pullea() {
-    int sizeDeUINT = sizeof (unsigned int);
+    int sizeDeUINT = sizeof(unsigned int);
     unsigned int longitudNombreTag[1];
     this->socket.recibirDatos((unsigned char*) longitudNombreTag, sizeDeUINT);
     Buffer bufNombreTag(*longitudNombreTag);
-    this->socket.recibirDatos(bufNombreTag.getData(), bufNombreTag.getTamanio());
+    this->socket.recibirDatos(bufNombreTag.getData(),bufNombreTag.getTamanio());
     unsigned char aux[4];
     std::set<std::string> archivosTaggeados;
     std::vector<unsigned char> data;
@@ -97,7 +99,7 @@ int Versionador::pullea() {
 }
 
 int Versionador::tagea() {
-    int sizeDeUINT = sizeof (unsigned int);
+    int sizeDeUINT = sizeof(unsigned int);
     unsigned int cantidadDeHashes[1];
     this->socket.recibirDatos((unsigned char*) cantidadDeHashes, sizeDeUINT);
     //----------------------------------------------------------    
@@ -128,16 +130,16 @@ int Versionador::tagea() {
     return 0;
 }
 
-int Versionador::pushea() {
-    std::cout<<"PUSHEAR"<<std::endl;
-    int sizeDeUINT = sizeof (unsigned int);
+int Versionador::pushea() {    
+    int sizeDeUINT = sizeof(unsigned int);
     unsigned int longitudNomArch[1];
     this->socket.recibirDatos((unsigned char*) longitudNomArch, sizeDeUINT);
     if (*longitudNomArch < 0) {
         throw -1;
     }
     Buffer bufNombreArch(*longitudNomArch);
-    this->socket.recibirDatos(bufNombreArch.getData(), bufNombreArch.getTamanio());
+    this->socket.recibirDatos(bufNombreArch.getData(),
+                                bufNombreArch.getTamanio());
     //----------------------------------------------------------    
     unsigned int longitudHash[1];
     this->socket.recibirDatos((unsigned char*) longitudHash, sizeDeUINT);
@@ -147,7 +149,8 @@ int Versionador::pushea() {
     Buffer bufHash(*longitudHash);
     this->socket.recibirDatos(bufHash.getData(), bufHash.getTamanio());
 
-    unsigned char respuesta = this->indice.validarHashes(&bufNombreArch, &bufHash);
+    unsigned char respuesta = this->indice.validarHashes(&bufNombreArch, 
+                                                            &bufHash);
     this->socket.enviarDatos(&respuesta, 1);
     if (!respuesta) return 0;
     //---------------------------------------------------------
@@ -163,7 +166,8 @@ int Versionador::pushea() {
     std::string dataHash = convertidor.convertirAString(&bufHash);
     std::string contenido = convertidor.convertirAString(&bufContenidoArch);
     std::string nombreArch = convertidor.convertirAString(&bufNombreArch);
-    File file((char *) dataHash.c_str(), std::ofstream::out | std::ofstream::app);
+    File file((char *) dataHash.c_str(), 
+                                    std::ofstream::out | std::ofstream::app);
     file.escribir(contenido);
     this->indice.agregar(nombreArch, dataHash, "f");
     return 0;

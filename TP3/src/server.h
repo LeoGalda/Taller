@@ -10,7 +10,6 @@ public:
     void aceptarCliente(Aceptador &aceptador);
     virtual ~Server();
 private:
-
 };
 
 #endif

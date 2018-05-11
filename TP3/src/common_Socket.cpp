@@ -31,7 +31,7 @@ int Socket::doBind(char *puerto) {
     bool conectado = false;
     struct addrinfo hints;
     struct addrinfo *ptr, *aux;
-    memset(&hints, 0, sizeof (struct addrinfo));
+    memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_INET; /* IPv4 */
     hints.ai_socktype = SOCK_STREAM; /* TCP */
     hints.ai_flags = 0;
@@ -77,7 +77,7 @@ int Socket::conectar(char *puerto, char *ip) {
     struct addrinfo *aux, *ptr;
     struct addrinfo hints;
     int status;
-    memset(&hints, 0, sizeof (struct addrinfo));
+    memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_INET; /* IPv4 */
     hints.ai_socktype = SOCK_STREAM; /* TCP */
     hints.ai_flags = AI_PASSIVE;
@@ -117,11 +117,11 @@ int Socket::enviarDatos(unsigned char *buf, int tamanio) {
     int bytesEnviados = 0;
     bool errorDelSocket = false, socketCerrado = false;
     int status = 0;
-    printf("envio:");
-    for (int i = 0; i < tamanio; i++) {
-        printf("%02x-", buf[i]);
-    }
-    std::cout << std::endl;
+//    printf("envio:");
+//    for (int i = 0; i < tamanio; i++) {
+//        printf("%02x-", buf[i]);
+//    }
+//    std::cout << std::endl;
     while (bytesEnviados < tamanio && errorDelSocket == false &&
             socketCerrado == false) {
         status = send(this->fd, &buf[bytesEnviados], tamanio - bytesEnviados,
@@ -151,46 +151,29 @@ int Socket::recibirDatos(unsigned char *buf, int tamanio) {
             bytesRecibidos += s;
         } else {
             if (s == -1) {
-                std::cout << "SOCKET INVALIDO EN RECIBIR DATOS" << std::endl;
+//                std::cout << "SOCKET INVALIDO EN RECIBIR DATOS" << std::endl;
                 socketValido = false;
             } else {
-                std::cout << "recibi 0 bytes" << std::endl;
+//                std::cout << "recibi 0 bytes" << std::endl;
                 socketValido = false;
             }
         }
     }
-    printf("recibido:\n");
-    for (int i = 0; i < tamanio; i++) {
-        printf("%02x-", buf[i]);
-    }
-    std::cout << std::endl;
+//    printf("recibido:\n");
+//    for (int i = 0; i < tamanio; i++) {
+//        printf("%02x-", buf[i]);
+//    }
+//    std::cout << std::endl;
     if (socketValido)
         return bytesRecibidos;
     return 0;
 }
-
-//int Socket::recibirPrueba(Buffer* buffer){
-//    int bytesRecibidos = 0;
-//    int s = 0;
-//    bool socketValido = true;
-//    while (bytesRecibidos < buffer->getTamanio() && socketValido) {                
-//        s = recv(this->fd, &buffer->getData()[bytesRecibidos], buffer->getTamanio() - bytesRecibidos, 0);
-//        if (s > 0) {
-//            bytesRecibidos += s;
-//        } else {
-//            socketValido = false;
-//        }
-//    }
-//    if (socketValido) return bytesRecibidos;
-//    return 0;    
-//}
 
 int Socket::isOnError() {
     return this->fd == -1;
 }
 
 void Socket::destruir() {
-
 }
 
 Socket::~Socket() {

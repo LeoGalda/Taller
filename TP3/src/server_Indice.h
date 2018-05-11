@@ -29,7 +29,8 @@ public:
     void actualizar();
     void agregar(const std::string nombreArch,const std::string hash,
                 const std::string tipo);
-    void getArchivosTaggeados(Buffer *buffer,std::set<string> &archivosTaggeados);
+    void getArchivosTaggeados(Buffer *buffer,
+                                std::set<string> &archivosTaggeados);
     char validarHashes(Buffer *bufNombre,Buffer *bufHash);
     unsigned char validarVersion(Buffer *bufVersion);
     unsigned char validarHashExiste(Buffer *bufHash);

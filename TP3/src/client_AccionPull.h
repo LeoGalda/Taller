@@ -4,6 +4,7 @@
 #include "common_Accion.h"
 #include "common_Socket.h"
 #include <string>
+#include <vector>
 
 class AccionPull : public Accion {
 private:

@@ -2,11 +2,10 @@
 #define SERVER_VERSIONADOR_H
 #include <stdbool.h>
 #include <fstream>
-#include "common_Buffer.h"
+#include <vector>
 #include "common_Socket.h"
 #include "server_Indice.h"
 #include "server_Thread.h"
-#include "server_Aceptador.h"
 
 class Versionador : public Thread{
 private:

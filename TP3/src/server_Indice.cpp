@@ -23,7 +23,7 @@ Indice::Indice(char *ruta) : nombreArchivo(ruta) {
     }
 }
 
-void Indice::explode(const std::string &linea, std::vector<std::string> &datos) {
+void Indice::explode(const std::string &linea, std::vector<std::string> &datos){
     size_t pos1 = 0;
     size_t pos2 = 0;
     while (pos2 != linea.npos) {
@@ -67,7 +67,8 @@ void Indice::actualizar() {
         infoAEnviar.append(i2->second);
         infoAEnviar.append(" ");
         vec = this->hashDeArchivos[i2->second];
-        for (std::set<string>::iterator itSet = vec.begin(); itSet != vec.end(); ++itSet) {
+        for (std::set<string>::iterator itSet = vec.begin(); 
+                                                itSet != vec.end(); ++itSet) {
             infoAEnviar.append(*itSet);
             infoAEnviar.append(" ");
         }

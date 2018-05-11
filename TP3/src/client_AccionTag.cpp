@@ -1,6 +1,7 @@
 #include "client_AccionTag.h"
 #include <iostream>
 #include <string.h>
+#include <vector>
 
 AccionTag::AccionTag(char *version) : version(version) {
 }
@@ -63,7 +64,7 @@ int AccionTag::getTamanio() {
 void AccionTag::responder(Socket* socket) {
     unsigned char tipo = 0;
     socket->recibirDatos(&tipo, 1);
-    if(!tipo){
+    if (!tipo){
         std::cout<<"Error: tag/hash incorrecto."<<std::endl;
     }
 }

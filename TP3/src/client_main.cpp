@@ -43,10 +43,10 @@ int main(int argc, char* argv[]) {
         cliente.ejecutar(accion);
 
         delete accion;
-    } catch (const std::exception &exc) {
+    } catch(const std::exception &exc) {
         syslog(LOG_ERR, "Error: %s", exc.what());
         return 1;
-    } catch (...) {
+    } catch(...) {
         syslog(LOG_ERR, "Error en cliente: NO TENGO NI IDEA QUE PASO");
         return 1;
     }

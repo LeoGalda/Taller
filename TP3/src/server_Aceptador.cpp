@@ -12,11 +12,8 @@ void Aceptador::run() {
     while (!this->finalizado) {
         Socket peerskt;// = new Socket();
 //        Socket* sarasa = &peerskt;
-        std::cout<<"esperar cliente";
         this->socket.aceptar(&peerskt);
-        std::cout<<"cliente aceptado";
         if (!peerskt.isOnError()) {
-//            Versionador *versionador = new Versionador(std::move(peerskt), this->indice);
             Versionador *versionador = new Versionador(peerskt, this->indice);
             versionador->start();
             this->threads.push_back(versionador);            

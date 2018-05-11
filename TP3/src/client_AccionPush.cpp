@@ -49,7 +49,7 @@ void AccionPush::responder(Socket* socket) {
     if (status && tipo == 1) {
         int tamanioArch = this->getSizeFile();
         unsigned char envio[4];
-        memcpy(&envio, &tamanioArch, sizeof (tamanioArch));
+        memcpy(&envio, &tamanioArch, sizeof(tamanioArch));
         Buffer buffer(tamanioArch);
         status = socket->enviarDatos(&envio[0], 4);
         this->procesarArch((char *) buffer.getData());
