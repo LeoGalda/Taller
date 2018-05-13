@@ -7,9 +7,9 @@ File::File(char *arch, std::ios_base::openmode modo) : nombreArchivo(arch),
     this->archivo.open(this->nombreArchivo, modo);
     if (this->archivo.fail()) {
         std::cout<<"Error: archivo inexistente."<<std::endl;
-        int linea = -1;
-        std::string error = "Error al abrir archivo";
-        throw new ExcpError(error, linea);
+//        int linea = -1;
+//        std::string error = "Error al abrir archivo";
+        throw -1;
     }
 }
 

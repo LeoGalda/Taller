@@ -11,7 +11,6 @@
 
 int main(int argc, char* argv[]) {
     try {
-        Cliente cliente(argv[1], argv[2]);
         Accion *accion;
         if (strcmp(argv[3], "push") == 0) {
             if (argc != 6) {
@@ -40,15 +39,16 @@ int main(int argc, char* argv[]) {
             std::cout << "Error: argumentos invalidos." << std::endl;
             throw -1;
         }
+        Cliente cliente(argv[1], argv[2]);
         cliente.ejecutar(accion);
 
         delete accion;
     } catch(const std::exception &exc) {
         syslog(LOG_ERR, "Error: %s", exc.what());
-        return 1;
+        return 0;
     } catch(...) {
-        syslog(LOG_ERR, "Error en cliente: NO TENGO NI IDEA QUE PASO");
-        return 1;
+        syslog(LOG_ERR, "Error en cliente");
+        return 0;
     }
     return 0;
 }

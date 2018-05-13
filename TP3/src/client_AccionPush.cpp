@@ -9,7 +9,7 @@
 #define MAX_TAMANIO_BUFFER 50
 
 AccionPush::AccionPush(char *arch, char *hash) : hash(hash),
-file(arch, std::ios::in) {
+                                        file(arch, std::ios::in) {
 }
 
 void AccionPush::ejecutar() {
