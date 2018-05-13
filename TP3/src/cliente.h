@@ -1,19 +1,21 @@
 #ifndef CLIENTE_H
 #define CLIENTE_H
 
-//#include "common_Buffer.h"
 #include "common_Socket.h"
 #include "common_Accion.h"
 
 class Cliente {
 private:
     Socket socket;
-//    Buffer buffer;
     
 public:
-    Cliente();
+//constructor del cliente y realiza el connect    
     Cliente(char *ip, char *puerto);
+    
+//ejecuta la logica del cliente    
     int ejecutar(Accion *accion);
+    
+//destructor del cliente    
     virtual ~Cliente();
 };
 

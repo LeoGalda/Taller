@@ -9,17 +9,25 @@
 
 class Aceptador : public Thread {
 private:
-    Indice indice;
+    Indice *indice;
     bool finalizado;
     Socket socket;
-//    std::vector<Conexion*> conexiones;
     std::vector<Thread*> threads;
     
 public:
-    Aceptador(char *puerto,Indice &indice);
+//constructor del aceptador y realiza el bind y el listen    
+    Aceptador(char *puerto,Indice *indice);
+    
+//ejecuta la logica del hilo aceptador    
     virtual void run();
+    
+//finaliza la logica y destruye el socket    
     void finalizar();
+    
+//finaliza los threads    
     void finalizarThreads();
+    
+//destructor del aceptador   
     virtual ~Aceptador();
 };
 

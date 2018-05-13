@@ -9,8 +9,13 @@ class ExcpError : public std::exception {
 private:
     std::string mensaje;
 public:
-    ExcpError(std::string &message, int line);
+//constructor de la ExcpError    
+    ExcpError(const std::string &message, int line);
+
+//devuelve el mensaje de la excepcion    
     virtual const char *what() const noexcept;
+    
+//destructor de la excpError    
     virtual ~ExcpError() noexcept;
 };
 

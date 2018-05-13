@@ -19,7 +19,7 @@ std::string File::getNombreArchivo() const {
 
 int File::getTamanioArch() {
     this->archivo.seekg(0, this->archivo.end);
-    int length = this->archivo.tellg();
+    int length = this->archivo.tellg();    
     this->archivo.seekg(0, this->archivo.beg);    
     return length;
 }
@@ -32,13 +32,14 @@ void File::leer(char* buffer,int cantidad){
     this->archivo.read(buffer,cantidad);      
 }
 
-void File::escribir(std::string data) {
-    this->archivo << data;
-}
 
-//void File::escribirStr(const std::string data) {
+//void File::escribir(const std::string data) {
 //    this->archivo << data;
 //}
+
+void File::operator <<(const std::string data){
+    this->archivo << data;
+}
 
 
 void File::getLinea(std::string &linea){

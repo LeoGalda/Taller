@@ -7,11 +7,19 @@ private:
     unsigned char *data;
     
 public:
+//constructor del buffer y crea data segun el tamanio pasado por parametro    
     explicit Buffer(unsigned int tamanio);    
+    
+//devuelve el valor de data en la posicion pasada por parametro    
     unsigned char getDataEnPos(int pos);
-//    unsigned char* getMoveData() const;
+    
+//devuelve un puntero a la posicion de data    
     unsigned char* getData();  
+    
+//devuelve el tamanio de data    
     int getTamanio();    
+    
+//destructor del buffer    
     virtual ~Buffer();
 };
 

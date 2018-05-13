@@ -38,8 +38,8 @@ void AccionPull::crearArchivosPull(Socket* socket) {
     socket->recibirDatos((unsigned char*) tamanioNombreArch, sizeDeUINT);
     Buffer bufNombreArch(*tamanioNombreArch);
     socket->recibirDatos(bufNombreArch.getData(), bufNombreArch.getTamanio());
-     std::string nombre = convertidor.convertirAString(&bufNombreArch);
-    nombre += this->hash;    
+     std::string nombre = convertidor.convertirAString(&bufNombreArch);    
+    nombre += "." + this->hash;    
     File file((char *)nombre.c_str(), std::ofstream::out | std::ofstream::app);
     unsigned int tamanioContenidoArch[1];
     socket->recibirDatos((unsigned char*) tamanioContenidoArch, sizeDeUINT);
@@ -48,7 +48,8 @@ void AccionPull::crearArchivosPull(Socket* socket) {
     socket->recibirDatos(bufContenidoArch.getData(), 
                          bufContenidoArch.getTamanio());
     std::string dataEscribir = convertidor.convertirAString(&bufContenidoArch);
-    file.escribir(dataEscribir);    
+    file << dataEscribir;
+//    file.escribir(dataEscribir);    
 }
 
 void AccionPull::responder(Socket* socket) {    

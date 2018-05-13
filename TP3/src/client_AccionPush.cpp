@@ -6,8 +6,10 @@
 #include <vector>
 #include <string>
 
+#define MAX_TAMANIO_BUFFER 50
+
 AccionPush::AccionPush(char *arch, char *hash) : hash(hash),
-                                                file(arch, std::ios::in) {
+file(arch, std::ios::in) {
 }
 
 void AccionPush::ejecutar() {
@@ -34,12 +36,28 @@ void AccionPush::ejecutar() {
 }
 
 void AccionPush::enviar(Socket *socket) {
-    int status;    
+    int status;
     status = socket->enviarDatos(&this->data[0], this->getTamanio());
     if (status) {
         printf("Error al enviar los datos\n");
         throw -1;
     }
+}
+
+int AccionPush::enviarDataDeArchivo(Socket *socket, int tamanio) {
+    int bytesAEnviar = 0;
+    if (tamanio < MAX_TAMANIO_BUFFER) {
+        bytesAEnviar = tamanio;
+    } else {
+        bytesAEnviar = MAX_TAMANIO_BUFFER;
+    }
+    if (bytesAEnviar > 0) {
+        Buffer buffer(bytesAEnviar);
+        this->file.leer((char *) buffer.getData(), bytesAEnviar);
+        
+        socket->enviarDatos(buffer.getData(), bytesAEnviar);        
+    }
+    return bytesAEnviar;
 }
 
 void AccionPush::responder(Socket* socket) {
@@ -50,10 +68,14 @@ void AccionPush::responder(Socket* socket) {
         int tamanioArch = this->getSizeFile();
         unsigned char envio[4];
         memcpy(&envio, &tamanioArch, sizeof(tamanioArch));
-        Buffer buffer(tamanioArch);
         status = socket->enviarDatos(&envio[0], 4);
-        this->procesarArch((char *) buffer.getData());
-        status = socket->enviarDatos(buffer.getData(), tamanioArch);
+        int cantDeBytesDelArchivoEnviado = 0;
+        int tamanio = tamanioArch;
+        while (cantDeBytesDelArchivoEnviado < tamanioArch) {
+            int enviados = this->enviarDataDeArchivo(socket,tamanio);
+            cantDeBytesDelArchivoEnviado += enviados;
+            tamanio -= enviados;                    
+        }
     } else {
     }
 }
@@ -64,11 +86,6 @@ int AccionPush::getValorNumerico() {
 
 int AccionPush::getTamanio() {
     return this->data.size();
-}
-
-void AccionPush::procesarArch(char *data) {
-    int tamanio = this->getSizeFile();
-    this->file.leer(data, tamanio);
 }
 
 int AccionPush::getSizeFile() {

@@ -23,15 +23,15 @@ Indice::Indice(char *ruta) : nombreArchivo(ruta) {
     }
 }
 
-Indice::Indice(Indice&& other){
-    this->convertidor = other.convertidor;
-    this->hashDeArchivos = other.hashDeArchivos;
-    this->hashDeTags = other.hashDeTags;
-    this->nombreArchivo = other.nombreArchivo;
-    other.hashDeArchivos.clear();
-    other.hashDeTags.clear();
-    other.nombreArchivo = nullptr;
-}
+//Indice::Indice(Indice&& other) {
+//    this->convertidor = other.convertidor;
+//    this->hashDeArchivos = other.hashDeArchivos;
+//    this->hashDeTags = other.hashDeTags;
+//    this->nombreArchivo = other.nombreArchivo;
+//    other.hashDeArchivos.clear();
+//    other.hashDeTags.clear();
+//    other.nombreArchivo = nullptr;
+//}
 
 void Indice::explode(const std::string &linea, std::vector<std::string> &datos){
     size_t pos1 = 0;
@@ -62,37 +62,35 @@ void Indice::cargarDatosAMap(std::vector<std::string>& datos) {
 }
 
 void Indice::actualizar() {
-    printf("voy a actualizar gil\n");
     File file(this->nombreArchivo, std::ios::out);
     std::multiset<std::pair<string, string>> aux;
     multimap<string, string>::iterator i;
     std::multiset<std::pair<string, string>>::iterator i2;
     for (i = this->hashDeTags.begin(); i != this->hashDeTags.end(); i++) {
-        printf("encontre elementos de hashDeTags");
         aux.insert(std::pair<string, string>((*i).first, (*i).second));
     }
     string infoAEnviar;
     std::set<string> vec;
     for (i2 = aux.begin(); i2 != aux.end(); i2++) {
-        printf("entre al segundo forrrr\n");
         infoAEnviar = i2->first;
         infoAEnviar.append(" ");
         infoAEnviar.append(i2->second);
         infoAEnviar.append(" ");
         vec = this->hashDeArchivos[i2->second];
-        for (std::set<string>::iterator itSet = vec.begin(); 
-                                                itSet != vec.end(); ++itSet) {
+        for (std::set<string>::iterator itSet = vec.begin();
+                itSet != vec.end(); ++itSet) {
             infoAEnviar.append(*itSet);
             infoAEnviar.append(" ");
         }
         infoAEnviar.append(";\n");        
-//        file.escribirStr(infoAEnviar);
-        file.escribir(infoAEnviar);
+//        file.escribir(infoAEnviar);
+        file << infoAEnviar;
     }
 }
 
 void Indice::agregar(const std::string nombreArch, const std::string hash,
         string tipo) {
+    Lock l(this->mute);
     std::set<string> aux;
     auto search = this->hashDeArchivos.find(nombreArch);
     if (search != this->hashDeArchivos.end()) {
@@ -106,51 +104,81 @@ void Indice::agregar(const std::string nombreArch, const std::string hash,
     }
 }
 
+bool Indice::soyArchivo(const string data) {
+    multimap<string, string>::iterator i;
+    for (i = this->hashDeTags.begin(); i != this->hashDeTags.end(); i++) {
+        if ((*i).second == data){
+            if ((*i).first == "f"){
+                return true;
+            }         
+        }        
+    }
+    return false;
+}
+
 void Indice::getArchivosTaggeados(Buffer *buffer,
-        std::set<string>& archivosTaggeados) {     
-    string tag = this->convertidor.convertirAString(buffer);            
+        std::set<string>& archivosTaggeados) {
+    Lock l(this->mute);
+    string tag = this->convertidor.convertirAString(buffer);
     auto search = this->hashDeArchivos.find(tag);
     if (search != this->hashDeArchivos.end()) {
-        archivosTaggeados = this->hashDeArchivos[tag];
+        std::set<string> hashesTaggeados;
+        hashesTaggeados = this->hashDeArchivos[tag];
+        std::set<string>::iterator itTag;
+        map<string, std::set < string>>::iterator itHash;
+        for (itTag = hashesTaggeados.begin();
+                itTag != hashesTaggeados.end(); itTag++) {
+            for (itHash = this->hashDeArchivos.begin();
+                    itHash != this->hashDeArchivos.end(); ++itHash) {
+                auto searchArch = itHash->second.find(*itTag);
+                if (searchArch != this->hashDeArchivos[itHash->first].end()) {
+                    if (this->soyArchivo(itHash->first)) {
+                        archivosTaggeados.insert(itHash->first);
+                    }
+                }
+            }
+        }
     }
 }
 
 char Indice::validarHashes(Buffer *bufNombre, Buffer *bufHash) {
+    Lock l(this->mute);
     string nombreABuscar = this->convertidor.convertirAString(bufNombre);
     string hashABuscar = this->convertidor.convertirAString(bufHash);
     auto search = this->hashDeArchivos.find(nombreABuscar);
     if (search != this->hashDeArchivos.end()) {
         auto search2 = this->hashDeArchivos[nombreABuscar].find(hashABuscar);
-        if (search2 != this->hashDeArchivos[nombreABuscar].end()){
+        if (search2 != this->hashDeArchivos[nombreABuscar].end()) {
             return ERROR;
         }
     }
     return SUCCESS;
 }
 
-unsigned char Indice::validarVersion(Buffer* bufVersion){
+unsigned char Indice::validarVersion(Buffer* bufVersion) {
+    Lock l(this->mute);
     string versionABuscar = this->convertidor.convertirAString(bufVersion);
     auto search = this->hashDeArchivos.find(versionABuscar);
-    if (search != this->hashDeArchivos.end()){
+    if (search != this->hashDeArchivos.end()) {
         return ERROR;
     }
     return SUCCESS;
 }
 
-unsigned char Indice::validarHashExiste(Buffer* bufHash) {    
-    map<string,std::set<string>>::iterator it;
+unsigned char Indice::validarHashExiste(Buffer* bufHash) {
+    Lock l(this->mute);
+    map<string, std::set < string>>::iterator it;
     string dataHash = this->convertidor.convertirAString(bufHash);
-    for (it = this->hashDeArchivos.begin(); it!=this->hashDeArchivos.end();
-                                                        ++it){
-        std::set<string>::iterator search = 
+    for (it = this->hashDeArchivos.begin(); it != this->hashDeArchivos.end();
+            ++it) {
+        std::set<string>::iterator search =
                 it->second.find(dataHash);
-        if (search != it->second.end()){
+        if (search != it->second.end()) {
             return SUCCESS;
         }
     }
     return ERROR;
 }
-
 
 Indice::~Indice() {
 }

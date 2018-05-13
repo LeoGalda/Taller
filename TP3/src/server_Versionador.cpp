@@ -13,16 +13,17 @@
 #include "common_File.h"
 #include "server_Versionador.h"
 
-Versionador::Versionador(Socket &socket, Indice &indice) :
-                         socket(std::move(socket)), indice(std::move(indice)){
+#define MAX_TAMANIO_BUFFER 50
+
+Versionador::Versionador(Socket &socket, Indice *indice) :
+socket(std::move(socket)), indice(std::move(indice)) {
 }
 
-void Versionador::run() {   
+void Versionador::run() {
     unsigned char tipo = 0;
-    int corriendo;    
+    int corriendo;
     corriendo = this->socket.recibirDatos(&tipo, 1);
     if (!corriendo) {
-        std::cout << "error al recibir dato " << std::endl;        
         return;
     }
     if (tipo == 1) {
@@ -36,7 +37,24 @@ void Versionador::run() {
     }
 }
 
-void Versionador::enviarInfoDeTags(std::string nomArchivo) {
+
+int Versionador::enviarDataDeArchivo(int tamanio,File *file){
+    int bytesAEnviar = 0;
+    if (tamanio < MAX_TAMANIO_BUFFER) {
+        bytesAEnviar = tamanio;
+    } else {
+        bytesAEnviar = MAX_TAMANIO_BUFFER;
+    }
+    if (bytesAEnviar > 0) {
+        Buffer buffer(bytesAEnviar);
+        file->leer((char *) buffer.getData(), bytesAEnviar);        
+        this->socket.enviarDatos(buffer.getData(), bytesAEnviar);        
+    }
+    return bytesAEnviar;
+}
+
+
+void Versionador::enviarInfoDeTags(const std::string nomArchivo) {
     std::vector<unsigned char> data;
     unsigned char aux[5];
     unsigned int tamanioNombre = (unsigned int) nomArchivo.size();
@@ -50,18 +68,20 @@ void Versionador::enviarInfoDeTags(std::string nomArchivo) {
     }
     File file((char *) nomArchivo.c_str(), std::ofstream::in);
     int tamanioArch = file.getTamanioArch();
-    Buffer bufTamanio(tamanioArch);
-    file.leer((char *) bufTamanio.getData(), tamanioArch);
     memcpy(&aux, &tamanioArch, 4);
     for (unsigned int j = 0; j < 4; ++j) {
         data.push_back(aux[j]);
         aux[j] = 0;
     }
-    for (int i = 0; i < tamanioArch; i++) {
-        data.push_back(bufTamanio.getDataEnPos(i));
-    }
     this->socket.enviarDatos(&data[0], (int) data.size());
     data.clear();
+    int cantDeBytesDelArchivoEnviado = 0;
+    int tamanio = tamanioArch;
+    while (cantDeBytesDelArchivoEnviado < tamanioArch) {
+        int enviados = this->enviarDataDeArchivo(tamanio,&file);
+        cantDeBytesDelArchivoEnviado += enviados;
+        tamanio -= enviados;
+    }
 }
 
 int Versionador::pullea() {
@@ -69,11 +89,12 @@ int Versionador::pullea() {
     unsigned int longitudNombreTag[1];
     this->socket.recibirDatos((unsigned char*) longitudNombreTag, sizeDeUINT);
     Buffer bufNombreTag(*longitudNombreTag);
-    this->socket.recibirDatos(bufNombreTag.getData(),bufNombreTag.getTamanio());
+    this->socket.recibirDatos(bufNombreTag.getData(), 
+                              bufNombreTag.getTamanio());
     unsigned char aux[4];
     std::set<std::string> archivosTaggeados;
     std::vector<unsigned char> data;
-    this->indice.getArchivosTaggeados(&bufNombreTag, archivosTaggeados);
+    this->indice->getArchivosTaggeados(&bufNombreTag, archivosTaggeados);
     unsigned char todoOk;
     if (archivosTaggeados.empty()) {
         todoOk = 0;
@@ -81,7 +102,6 @@ int Versionador::pullea() {
         return 0;
     }
     todoOk = 1;
-
     this->socket.enviarDatos(&todoOk, 1);
     unsigned int tamanioHash = (unsigned int) archivosTaggeados.size();
     memcpy(&aux, &tamanioHash, 4);
@@ -107,7 +127,7 @@ int Versionador::tagea() {
     this->socket.recibirDatos((unsigned char*) longitudVersion, sizeDeUINT);
     Buffer bufVersion(*longitudVersion);
     this->socket.recibirDatos(bufVersion.getData(), bufVersion.getTamanio());
-    unsigned char todoOk = this->indice.validarVersion(&bufVersion);
+    unsigned char todoOk = this->indice->validarVersion(&bufVersion);
     //---------------------------------------------------------
     std::vector<std::string> hashes;
     Conversor convertidor;
@@ -118,19 +138,19 @@ int Versionador::tagea() {
         this->socket.recibirDatos(bufHash.getData(), bufHash.getTamanio());
         std::string dataHash = convertidor.convertirAString(&bufHash);
         hashes.push_back(dataHash);
-        todoOk = todoOk * this->indice.validarHashExiste(&bufHash);
+        todoOk = todoOk * this->indice->validarHashExiste(&bufHash);
     }
     if (todoOk) {
         for (size_t w = 0; w < hashes.size(); w++) {
             std::string dataVersion = convertidor.convertirAString(&bufVersion);
-            this->indice.agregar(dataVersion, hashes[w], "t");
+            this->indice->agregar(dataVersion, hashes[w], "t");
         }
     }
     this->socket.enviarDatos(&todoOk, 1);
     return 0;
 }
 
-int Versionador::pushea() {    
+int Versionador::pushea() {
     int sizeDeUINT = sizeof(unsigned int);
     unsigned int longitudNomArch[1];
     this->socket.recibirDatos((unsigned char*) longitudNomArch, sizeDeUINT);
@@ -139,7 +159,7 @@ int Versionador::pushea() {
     }
     Buffer bufNombreArch(*longitudNomArch);
     this->socket.recibirDatos(bufNombreArch.getData(),
-                                bufNombreArch.getTamanio());
+            bufNombreArch.getTamanio());
     //----------------------------------------------------------    
     unsigned int longitudHash[1];
     this->socket.recibirDatos((unsigned char*) longitudHash, sizeDeUINT);
@@ -149,8 +169,8 @@ int Versionador::pushea() {
     Buffer bufHash(*longitudHash);
     this->socket.recibirDatos(bufHash.getData(), bufHash.getTamanio());
 
-    unsigned char respuesta = this->indice.validarHashes(&bufNombreArch, 
-                                                            &bufHash);
+    unsigned char respuesta = this->indice->validarHashes(&bufNombreArch,
+            &bufHash);
     this->socket.enviarDatos(&respuesta, 1);
     if (!respuesta) return 0;
     //---------------------------------------------------------
@@ -166,10 +186,11 @@ int Versionador::pushea() {
     std::string dataHash = convertidor.convertirAString(&bufHash);
     std::string contenido = convertidor.convertirAString(&bufContenidoArch);
     std::string nombreArch = convertidor.convertirAString(&bufNombreArch);
-    File file((char *) dataHash.c_str(), 
-                                    std::ofstream::out | std::ofstream::app);
-    file.escribir(contenido);
-    this->indice.agregar(nombreArch, dataHash, "f");
+    File file((char *) dataHash.c_str(),
+            std::ofstream::out | std::ofstream::app);
+    //    file.escribir(contenido);
+    file << contenido;
+    this->indice->agregar(nombreArch, dataHash, "f");
     return 0;
 }
 

@@ -11,14 +11,32 @@
 class Versionador : public Thread{
 private:
     Socket socket;
-    Indice indice;
+    Indice *indice;
+    
 public:
-    Versionador(Socket &socket, Indice &indice);
+//llama al constructor del versionador    
+    Versionador(Socket &socket, Indice *indice);
+    
+//ejecuta la logica del push    
     int pushea();
+
+//ejecuta la logica del tag    
     int tagea();
+    
+//ejecuta la logica del pull    
     int pullea();
+    
+//ejecuta la logica del versionador    
     virtual void run();
-    void enviarInfoDeTags(std::string nomArchivo);
+    
+//envia la informacion de los tags    
+    void enviarInfoDeTags(const std::string nomArchivo);
+    
+//envia por el socket la informacion del archivo
+//teniendo como maximo la constante de MAX_TAMANIO_BUFFER
+    int enviarDataDeArchivo(int tamanio,File *file);    
+    
+//llama al destructor del versionador    
     virtual ~Versionador();
 };
 

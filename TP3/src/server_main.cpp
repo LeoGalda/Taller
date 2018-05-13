@@ -14,18 +14,12 @@ using std::cout;
 
 int main(int argc, char** argv) {
     try{
-//        Server server(argv[1]);  
         Indice indice(argv[2]);        
         Server server;
-        Aceptador aceptador(argv[1],indice);    
+        Aceptador aceptador(argv[1],&indice);    
         server.aceptarCliente(aceptador);
-        std::cout<<"estoy fuera"<<std::endl;
-//        aceptador.finalizar();
-        std::cout<<"pase finalizar"<<std::endl;
         aceptador.join();  
-        std::cout<<"pase el join"<<std::endl;
         indice.actualizar();
-        std::cout<<"ya actualize"<<std::endl;
     } catch(std::exception &exc){
         syslog(LOG_ERR,"Error: %s", exc.what());   
         return 1;

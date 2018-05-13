@@ -1,16 +1,15 @@
 #include "server_Aceptador.h"
 #include "server_Versionador.h"
 
-Aceptador::Aceptador(char *puerto, Indice &indice) :
-indice(std::move(indice)), finalizado(false) {
+Aceptador::Aceptador(char *puerto, Indice *indice) :
+indice(indice), finalizado(false) {
     this->socket.doBind(puerto);
     this->socket.doListen();
 }
 
 void Aceptador::run() {
     while (!this->finalizado) {
-        Socket peerskt;// = new Socket();
-//        Socket* sarasa = &peerskt;
+        Socket peerskt;
         this->socket.aceptar(&peerskt);
         if (!peerskt.isOnError()) {
             Versionador *versionador = new Versionador(peerskt, this->indice);
@@ -35,6 +34,5 @@ void Aceptador::finalizarThreads() {
 }
 
 Aceptador::~Aceptador() {
-//    this->finalizarThreads();
 }
 

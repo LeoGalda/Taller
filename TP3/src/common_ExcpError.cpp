@@ -7,9 +7,9 @@
 #include <string>
 #include "common_ExcpError.h"
 
-ExcpError::ExcpError(std::string &e_msg, int line){    
+ExcpError::ExcpError(const std::string &e_msg, int line){    
     std::stringstream msg;
-    msg << "ERROR LA PUTA MADRE:" << e_msg << " - line: " <<line <<"\n";    
+    msg << "ERROR :" << e_msg << " - line: " <<line <<"\n";    
     this->mensaje = msg.str();
 }
 
