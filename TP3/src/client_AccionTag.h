@@ -26,7 +26,8 @@ public:
     void responder(Socket *socket);
     
 //agrega un hash al vector de hash    
-    void agregarHash(char *hash);
+//    void agregarHash(char *hash);
+    void agregarHash(std::string &hash);
 
 //devuelve el valor numerico que le corresponde    
     int getValorNumerico();

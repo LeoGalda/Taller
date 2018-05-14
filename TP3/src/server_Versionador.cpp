@@ -154,18 +154,12 @@ int Versionador::pushea() {
     int sizeDeUINT = sizeof(unsigned int);
     unsigned int longitudNomArch[1];
     this->socket.recibirDatos((unsigned char*) longitudNomArch, sizeDeUINT);
-    if (*longitudNomArch < 0) {
-        throw -1;
-    }
     Buffer bufNombreArch(*longitudNomArch);
     this->socket.recibirDatos(bufNombreArch.getData(),
             bufNombreArch.getTamanio());
     //----------------------------------------------------------    
     unsigned int longitudHash[1];
     this->socket.recibirDatos((unsigned char*) longitudHash, sizeDeUINT);
-    if (*longitudHash < 0) {
-        throw -1;
-    }
     Buffer bufHash(*longitudHash);
     this->socket.recibirDatos(bufHash.getData(), bufHash.getTamanio());
 
@@ -179,9 +173,6 @@ int Versionador::pushea() {
     Buffer bufContenidoArch(*longitudArch);
     this->socket.recibirDatos(bufContenidoArch.getData(),
             bufContenidoArch.getTamanio());
-    if (*longitudArch < 0) {
-        throw -1;
-    }
     Conversor convertidor;
     std::string dataHash = convertidor.convertirAString(&bufHash);
     std::string contenido = convertidor.convertirAString(&bufContenidoArch);

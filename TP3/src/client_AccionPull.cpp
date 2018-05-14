@@ -21,13 +21,8 @@ void AccionPull::ejecutar() {
     }
 }
 
-void AccionPull::enviar(Socket* socket) {
-    int status;    
-    status = socket->enviarDatos(&this->data[0], this->getTamanio());
-    if (status) {
-        printf("Error al enviar los datos\n");
-        throw -1;
-    }
+void AccionPull::enviar(Socket* socket) { 
+    socket->enviarDatos(&this->data[0], this->getTamanio());
 }
 
 
@@ -48,8 +43,7 @@ void AccionPull::crearArchivosPull(Socket* socket) {
     socket->recibirDatos(bufContenidoArch.getData(), 
                          bufContenidoArch.getTamanio());
     std::string dataEscribir = convertidor.convertirAString(&bufContenidoArch);
-    file << dataEscribir;
-//    file.escribir(dataEscribir);    
+    file << dataEscribir; 
 }
 
 void AccionPull::responder(Socket* socket) {    

@@ -1,15 +1,14 @@
 #include "common_File.h"
-#include "common_ExcpError.h"
+//#include "common_ExcpError.h"
 #include <string>
+#include <exception>
+#include <stdexcept>
 
 File::File(char *arch, std::ios_base::openmode modo) : nombreArchivo(arch),
                                                        modo(modo) {
     this->archivo.open(this->nombreArchivo, modo);
     if (this->archivo.fail()) {
-        std::cout<<"Error: archivo inexistente."<<std::endl;
-        int linea = -1;
-        std::string error = "Error al abrir archivo";
-        throw new ExcpError(error, linea);
+        throw std::runtime_error("Error: archivo inexistente.");
     }
 }
 
@@ -31,11 +30,6 @@ int File::getTamanioNombre() {
 void File::leer(char* buffer,int cantidad){    
     this->archivo.read(buffer,cantidad);      
 }
-
-
-//void File::escribir(const std::string data) {
-//    this->archivo << data;
-//}
 
 void File::operator <<(const std::string data){
     this->archivo << data;

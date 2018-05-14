@@ -27,9 +27,6 @@ public:
 
 //realiza una lectura de la cantidad pasada por parametro    
     void leer(char *buf,int cantidad);
-
-////escribe en el archivo la data pasada por parametro    
-//    void escribir(const std::string data);    
     
 //devuelve una linea del archivo    
     void getLinea(std::string &linea);

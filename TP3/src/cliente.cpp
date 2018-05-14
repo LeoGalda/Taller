@@ -12,7 +12,7 @@ int Cliente::ejecutar(Accion *accion) {
         accion->enviar(&this->socket);
         accion->responder(&this->socket);
     }catch(...){
-        printf("die mother fucker");
+        printf("error");
     }   
     return 0;
 }

@@ -174,7 +174,7 @@ int Socket::isOnError() {
 }
 
 void Socket::destruir() {
-    if (this->fd) {
+    if (!this->isOnError()) {
         shutdown(this->fd, SHUT_RDWR);
         close(this->fd);
     }    

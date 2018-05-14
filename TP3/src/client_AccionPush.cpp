@@ -9,7 +9,7 @@
 #define MAX_TAMANIO_BUFFER 50
 
 AccionPush::AccionPush(char *arch, char *hash) : hash(hash),
-file(arch, std::ios::in) {
+                                        file(arch, std::ios::in) {
 }
 
 void AccionPush::ejecutar() {
@@ -36,12 +36,7 @@ void AccionPush::ejecutar() {
 }
 
 void AccionPush::enviar(Socket *socket) {
-    int status;
-    status = socket->enviarDatos(&this->data[0], this->getTamanio());
-    if (status) {
-        printf("Error al enviar los datos\n");
-        throw -1;
-    }
+    socket->enviarDatos(&this->data[0], this->getTamanio());
 }
 
 int AccionPush::enviarDataDeArchivo(Socket *socket, int tamanio) {

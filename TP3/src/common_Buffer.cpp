@@ -1,11 +1,13 @@
 #include <algorithm>
 
 #include "common_Buffer.h"
+#include <exception>
+#include <stdexcept>
 
 Buffer::Buffer(unsigned int tamanio) : tamanio(tamanio) {
     this->data = new unsigned char[tamanio];
     if (this->data == NULL) {
-        throw -1;
+    
     }
 }
 
