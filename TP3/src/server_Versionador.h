@@ -4,9 +4,12 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <mutex>
 #include "common_Socket.h"
 #include "server_Indice.h"
 #include "server_Thread.h"
+#include "common_Protocolo.h"
+
 
 class Versionador : public Thread{
 private:
@@ -30,11 +33,11 @@ public:
     virtual void run();
     
 //envia la informacion de los tags    
-    void enviarInfoDeTags(const std::string nomArchivo);
+    void enviarInfoDeTags(const std::string nomArchivo,Protocolo *protocolo);
     
 //envia por el socket la informacion del archivo
 //teniendo como maximo la constante de MAX_TAMANIO_BUFFER
-    int enviarDataDeArchivo(int tamanio,File *file);    
+    int enviarDataDeArchivo(int tamanio,File *file,Protocolo *protocolo);    
     
 //llama al destructor del versionador    
     virtual ~Versionador();

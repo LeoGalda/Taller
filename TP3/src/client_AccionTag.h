@@ -9,30 +9,26 @@ class AccionTag : public Accion {
 private:
     std::string version;
     std::vector<std::string> hashes;
-    std::vector<unsigned char> data;
     
 public:
 //constructor del Accion Tag    
     explicit AccionTag(char *version);
 
 //ejecuta la logica del tag y guarda en data los datos a enviar.            
-    void ejecutar();
+    void ejecutar(Protocolo *protocolo);
     
 //envia los datos qeu se encuetran en data y todos sus hashes con 
 //sus respectivos tamanios    
-    void enviar(Socket *socket);
+    void enviar(Protocolo *protocolo);
     
 //recibe la respuesta del server    
-    void responder(Socket *socket);
+    void responder(Protocolo *protocolo);
     
 //agrega un hash al vector de hash    
     void agregarHash(char *hash);
 
 //devuelve el valor numerico que le corresponde    
-    int getValorNumerico();
-    
-//devuelve el tamanio de data     
-    int getTamanio();
+    unsigned char getValorNumerico();   
     
 //destructor del AccionTag    
     virtual ~AccionTag();

@@ -20,12 +20,10 @@ int main(int argc, char** argv) {
         server.aceptarCliente(aceptador);
         aceptador.join();  
         indice.actualizar();
-    } catch(std::exception &exc){
-        syslog(LOG_ERR,"Error: %s", exc.what());   
-        return 1;
-    } catch(...){
-        syslog(LOG_ERR,"Error: VERIFICAR");        
-        return 1;
+    }catch (const std::exception &exc) {
+        std::cout << exc.what() << std::endl;
+    } catch (...) {
+        std::cout << "Error en servidor" << std::endl;
     }
     return 0;
 }

@@ -2,23 +2,23 @@
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
-      <in>client_Accion.cpp</in>
       <in>client_AccionPull.cpp</in>
       <in>client_AccionPush.cpp</in>
       <in>client_AccionTag.cpp</in>
       <in>client_main.cpp</in>
       <in>cliente.cpp</in>
+      <in>common_Accion.cpp</in>
       <in>common_Buffer.cpp</in>
-      <in>common_ExcpError.cpp</in>
-      <in>common_FormatoComu.cpp</in>
-      <in>common_FormatoComu.h</in>
-      <in>common_Lock.cpp</in>
+      <in>common_Conversor.cpp</in>
+      <in>common_File.cpp</in>
+      <in>common_Protocolo.cpp</in>
       <in>common_Socket.cpp</in>
-      <in>common_Versionado.cpp</in>
-      <in>common_Versionado.h</in>
       <in>server.cpp</in>
+      <in>server_Aceptador.cpp</in>
       <in>server_Indice.cpp</in>
-      <in>server_Indice.h</in>
+      <in>server_Lock.cpp</in>
+      <in>server_Thread.cpp</in>
+      <in>server_Versionador.cpp</in>
       <in>server_main.cpp</in>
     </df>
     <logicalFolder name="ExternalFiles"
@@ -63,10 +63,6 @@
           <preBuildCommand></preBuildCommand>
         </preBuild>
       </makefileType>
-      <item path="client_Accion.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="0">
-        </ccTool>
-      </item>
       <item path="client_AccionPull.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
         </ccTool>
@@ -87,19 +83,23 @@
         <ccTool flags="0">
         </ccTool>
       </item>
+      <item path="common_Accion.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
       <item path="common_Buffer.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
         </ccTool>
       </item>
-      <item path="common_ExcpError.cpp" ex="false" tool="1" flavor2="8">
+      <item path="common_Conversor.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
         </ccTool>
       </item>
-      <item path="common_FormatoComu.cpp" ex="false" tool="1" flavor2="0">
+      <item path="common_File.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="0">
+        </ccTool>
       </item>
-      <item path="common_FormatoComu.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="common_Lock.cpp" ex="false" tool="1" flavor2="8">
+      <item path="common_Protocolo.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
         </ccTool>
       </item>
@@ -107,17 +107,29 @@
         <ccTool flags="0">
         </ccTool>
       </item>
-      <item path="common_Versionado.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="common_Versionado.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="server.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
         </ccTool>
       </item>
-      <item path="server_Indice.cpp" ex="false" tool="1" flavor2="0">
+      <item path="server_Aceptador.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="0">
+        </ccTool>
       </item>
-      <item path="server_Indice.h" ex="false" tool="3" flavor2="0">
+      <item path="server_Indice.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="server_Lock.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="server_Thread.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="server_Versionador.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="0">
+        </ccTool>
       </item>
       <item path="server_main.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">

@@ -116,10 +116,9 @@ bool Indice::soyArchivo(const string data) {
     return false;
 }
 
-void Indice::getArchivosTaggeados(Buffer *buffer,
+void Indice::getArchivosTaggeados(const std::string tag,
         std::set<string>& archivosTaggeados) {
     Lock l(this->mute);
-    string tag = this->convertidor.convertirAString(buffer);
     auto search = this->hashDeArchivos.find(tag);
     if (search != this->hashDeArchivos.end()) {
         std::set<string> hashesTaggeados;
@@ -140,45 +139,88 @@ void Indice::getArchivosTaggeados(Buffer *buffer,
         }
     }
 }
+//void Indice::getArchivosTaggeados(Buffer *buffer,
+//        std::set<string>& archivosTaggeados) {
+//    Lock l(this->mute);
+//    string tag = this->convertidor.convertirAString(buffer);
+//    auto search = this->hashDeArchivos.find(tag);
+//    if (search != this->hashDeArchivos.end()) {
+//        std::set<string> hashesTaggeados;
+//        hashesTaggeados = this->hashDeArchivos[tag];
+//        std::set<string>::iterator itTag;
+//        map<string, std::set < string>>::iterator itHash;
+//        for (itTag = hashesTaggeados.begin();
+//                itTag != hashesTaggeados.end(); itTag++) {
+//            for (itHash = this->hashDeArchivos.begin();
+//                    itHash != this->hashDeArchivos.end(); ++itHash) {
+//                auto searchArch = itHash->second.find(*itTag);
+//                if (searchArch != this->hashDeArchivos[itHash->first].end()) {
+//                    if (this->soyArchivo(itHash->first)) {
+//                        archivosTaggeados.insert(itHash->first);
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
-char Indice::validarHashes(Buffer *bufNombre, Buffer *bufHash) {
+char Indice::validarHashes(const std::string &nombre,const std::string &hash){
     Lock l(this->mute);
-    string nombreABuscar = this->convertidor.convertirAString(bufNombre);
-    string hashABuscar = this->convertidor.convertirAString(bufHash);
-    auto search = this->hashDeArchivos.find(nombreABuscar);
+    auto search = this->hashDeArchivos.find(nombre);
     if (search != this->hashDeArchivos.end()) {
-        auto search2 = this->hashDeArchivos[nombreABuscar].find(hashABuscar);
-        if (search2 != this->hashDeArchivos[nombreABuscar].end()) {
+        auto search2 = this->hashDeArchivos[nombre].find(hash);
+        if (search2 != this->hashDeArchivos[nombre].end()) {
             return ERROR;
         }
     }
     return SUCCESS;
 }
 
-unsigned char Indice::validarVersion(Buffer* bufVersion) {
-    Lock l(this->mute);
-    string versionABuscar = this->convertidor.convertirAString(bufVersion);
-    auto search = this->hashDeArchivos.find(versionABuscar);
+unsigned char Indice::validarVersion(const std::string &version) {
+    Lock l(this->mute);    
+    auto search = this->hashDeArchivos.find(version);
     if (search != this->hashDeArchivos.end()) {
         return ERROR;
     }
     return SUCCESS;
 }
+//unsigned char Indice::validarVersion(Buffer* bufVersion) {
+//    Lock l(this->mute);
+//    string versionABuscar = this->convertidor.convertirAString(bufVersion);
+//    auto search = this->hashDeArchivos.find(versionABuscar);
+//    if (search != this->hashDeArchivos.end()) {
+//        return ERROR;
+//    }
+//    return SUCCESS;
+//}
 
-unsigned char Indice::validarHashExiste(Buffer* bufHash) {
+unsigned char Indice::validarHashExiste(const std::string &hash) {
     Lock l(this->mute);
     map<string, std::set < string>>::iterator it;
-    string dataHash = this->convertidor.convertirAString(bufHash);
     for (it = this->hashDeArchivos.begin(); it != this->hashDeArchivos.end();
             ++it) {
         std::set<string>::iterator search =
-                it->second.find(dataHash);
+                it->second.find(hash);
         if (search != it->second.end()) {
             return SUCCESS;
         }
     }
     return ERROR;
 }
+//unsigned char Indice::validarHashExiste(Buffer* bufHash) {
+//    Lock l(this->mute);
+//    map<string, std::set < string>>::iterator it;
+//    string dataHash = this->convertidor.convertirAString(bufHash);
+//    for (it = this->hashDeArchivos.begin(); it != this->hashDeArchivos.end();
+//            ++it) {
+//        std::set<string>::iterator search =
+//                it->second.find(dataHash);
+//        if (search != it->second.end()) {
+//            return SUCCESS;
+//        }
+//    }
+//    return ERROR;
+//}
 
 Indice::~Indice() {
 }

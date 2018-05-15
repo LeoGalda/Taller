@@ -3,10 +3,11 @@
 
 #include "common_Socket.h"
 #include "common_Accion.h"
+#include "common_Protocolo.h"
 
 class Cliente {
 private:
-    Socket socket;
+    Socket socket;    
     
 public:
 //constructor del cliente y realiza el connect    

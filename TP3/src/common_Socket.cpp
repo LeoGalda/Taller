@@ -4,10 +4,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
-
+#include <arpa/inet.h>
+#include <exception>
+#include <stdexcept>
 #include "common_Socket.h"
 
+#define MAX_CLIENTES_EN_ESPERA 20
+
 Socket::Socket() {
+    this->fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (this->isOnError()) {
+        throw std::runtime_error("error en instanciar socket");
+    }
 }
 
 Socket::Socket(Socket&& other) {
@@ -15,56 +23,44 @@ Socket::Socket(Socket&& other) {
     other.fd = 0;
 }
 
-Socket& Socket::operator=(Socket&& other){
-    if (this == &other){
+Socket& Socket::operator=(Socket&& other) {
+    if (this == &other) {
         return *this;
     }
-    
+
     this->fd = other.fd;
     other.fd = 0;
-    
+
     return *this;
 }
 
 int Socket::doBind(char *puerto) {
-    int status;
-    bool conectado = false;
+    int size = 1;
     struct addrinfo hints;
-    struct addrinfo *ptr, *aux;
-    memset(&hints, 0, sizeof(struct addrinfo));
-    hints.ai_family = AF_INET; /* IPv4 */
-    hints.ai_socktype = SOCK_STREAM; /* TCP */
-    hints.ai_flags = 0;
-    status = getaddrinfo(0, puerto, &hints, &ptr);
-    if (status != 0) {
-        freeaddrinfo(ptr);
-        printf("Error in getaddrinfo: %s\n", gai_strerror(status));
+    struct addrinfo *result;
+    int status = 0;
+
+    setsockopt(this->fd, SOL_SOCKET, SO_REUSEADDR, &size, sizeof (size));
+    memset(&hints, 0, sizeof (struct addrinfo));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;
+    status = getaddrinfo(NULL, puerto, &hints, &result);
+    if (status == -1) {
+        fprintf(stderr, "Error : %s\n", strerror(errno));
         return 1;
     }
-    for (aux = ptr; aux != NULL && conectado == false;
-            aux = aux->ai_next) {
-        this->fd = socket(aux->ai_family, aux->ai_socktype, aux->ai_protocol);
-        if (this->fd == -1) {
-            freeaddrinfo(ptr);
-            printf("Error: %s\n", strerror(errno));
-            return 1;
-        } else {
-            status = bind(this->fd, aux->ai_addr, aux->ai_addrlen);
-            if (status == -1) {
-                freeaddrinfo(ptr);
-                printf("Error: %s\n", strerror(errno));
-                return 1;
-            }
-            conectado = (status != -1);
-        }
+    status = bind(this->fd, result->ai_addr, result->ai_addrlen);
+    if (status == -1) {
+        fprintf(stderr, "Error : %s\n", strerror(errno));
+        return 1;
     }
-    freeaddrinfo(ptr);
-    if (!conectado) return 1;
+    freeaddrinfo(result);
     return 0;
 }
 
 int Socket::doListen() {
-    int status = listen(this->fd, 20);
+    int status = listen(this->fd, MAX_CLIENTES_EN_ESPERA);
     if (status == -1) {
         printf("Error: %s\n", strerror(errno));
         return 1;
@@ -72,40 +68,16 @@ int Socket::doListen() {
     return 0;
 }
 
-int Socket::conectar(char *puerto, char *ip) {
-    bool conectado = false;
-    struct addrinfo *aux, *ptr;
-    struct addrinfo hints;
-    int status;
-    memset(&hints, 0, sizeof(struct addrinfo));
-    hints.ai_family = AF_INET; /* IPv4 */
-    hints.ai_socktype = SOCK_STREAM; /* TCP */
-    hints.ai_flags = AI_PASSIVE;
-    status = getaddrinfo(ip, puerto, &hints, &ptr);
-    if (status != 0) {
-        freeaddrinfo(ptr);
-        printf("Error in getaddrinfo: %s\n", gai_strerror(status));
+int Socket::conectar(char* puerto, char* ip) {
+    struct sockaddr_in hints;
+
+    hints.sin_family = AF_INET;
+    hints.sin_port = htons((uint16_t) atoi(puerto));
+    hints.sin_addr.s_addr = inet_addr(ip);
+    if (connect(this->fd, (struct sockaddr *) &hints, sizeof (hints)) < 0) {
+        printf("Error: %s\n", strerror(errno));
         return 1;
     }
-    for (aux = ptr; aux != NULL && conectado == false;
-            aux = aux->ai_next) {
-        this->fd = socket(aux->ai_family, aux->ai_socktype, aux->ai_protocol);
-        if (this->fd == -1) {
-            freeaddrinfo(ptr);
-            printf("Error: %s\n", strerror(errno));
-            return 1;
-        } else {
-            status = connect(this->fd, aux->ai_addr, aux->ai_addrlen);
-            if (status == -1) {
-                freeaddrinfo(ptr);
-                printf("Error: %s\n", strerror(errno));
-                return 1;
-            }
-            conectado = (status != -1);
-        }
-    }
-    freeaddrinfo(ptr);
-    if (!conectado) return 1;
     return 0;
 }
 
@@ -151,10 +123,10 @@ int Socket::recibirDatos(unsigned char *buf, int tamanio) {
             bytesRecibidos += s;
         } else {
             if (s == -1) {
-//                std::cout << "SOCKET INVALIDO EN RECIBIR DATOS" << std::endl;
+                //                std::cout << "SOCKET INVALIDO EN RECIBIR DATOS" << std::endl;
                 socketValido = false;
             } else {
-//                std::cout << "recibi 0 bytes" << std::endl;
+                //                std::cout << "recibi 0 bytes" << std::endl;
                 socketValido = false;
             }
         }
@@ -174,10 +146,10 @@ int Socket::isOnError() {
 }
 
 void Socket::destruir() {
-    if (this->fd) {
+    if (!this->isOnError()) {
         shutdown(this->fd, SHUT_RDWR);
         close(this->fd);
-    }    
+    }
 }
 
 Socket::~Socket() {

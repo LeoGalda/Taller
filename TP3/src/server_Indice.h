@@ -43,17 +43,21 @@ public:
     
 //guarda en el segundo parametro los archivos de 
 //los tagg que fueron pasado en el buffer
-    void getArchivosTaggeados(Buffer *buffer,
+    void getArchivosTaggeados(const std::string tag,
                                 std::set<string> &archivosTaggeados);
+//    void getArchivosTaggeados(Buffer *buffer,
+//                                std::set<string> &archivosTaggeados);
     
 //valida si existe en nombre y el hash pasado por parametro    
-    char validarHashes(Buffer *bufNombre,Buffer *bufHash);
+    char validarHashes(const std::string &nombre,const std::string &hash);
     
 //valida si existe la version pasada por parametro    
-    unsigned char validarVersion(Buffer *bufVersion);
+    unsigned char validarVersion(const std::string &version);
+//    unsigned char validarVersion(Buffer *bufVersion);
     
 //valida si existe el hash pasado por parametro    
-    unsigned char validarHashExiste(Buffer *bufHash);
+    unsigned char validarHashExiste(const std::string &hash);
+//    unsigned char validarHashExiste(Buffer *bufHash);
     
 //devuelve si el elemento pasado por parametro corresponde a 
 //un archivo o a un tag    

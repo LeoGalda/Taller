@@ -3,76 +3,41 @@
 #include <iostream>
 #include <string.h>
 #include <string>
-#include "common_Conversor.h"
+
 
 AccionPull::AccionPull(char *hash) : hash(hash) {
 }
 
-void AccionPull::ejecutar() {
-    unsigned char aux[5];
-    unsigned int tamanioHash = (unsigned int) this->hash.size();
-    this->data.push_back((unsigned char) this->getValorNumerico());
-    memcpy(&aux, &tamanioHash, 4);
-    for (unsigned int j = 0; j < 4; ++j) {
-        this->data.push_back(aux[j]);
-    }
-    for (unsigned int j = 0; j < (unsigned int) this->hash.size(); ++j) {
-        this->data.push_back((unsigned char) this->hash[j]);
-    }
+void AccionPull::ejecutar(Protocolo *protocolo) {
+    protocolo->enviarComando(this->getValorNumerico());
+    protocolo->formatearYEnviarLongitud((int)this->hash.size());
+    protocolo->enviarData(this->hash);
 }
 
-void AccionPull::enviar(Socket* socket) {
-    int status;    
-    status = socket->enviarDatos(&this->data[0], this->getTamanio());
-    if (status) {
-        printf("Error al enviar los datos\n");
-        throw -1;
-    }
+void AccionPull::enviar(Protocolo *protocolo) { 
 }
 
-
-void AccionPull::crearArchivosPull(Socket* socket) {
-    int sizeDeUINT = sizeof(unsigned int);
-    Conversor convertidor;
-    unsigned int tamanioNombreArch[1];
-    socket->recibirDatos((unsigned char*) tamanioNombreArch, sizeDeUINT);
-    Buffer bufNombreArch(*tamanioNombreArch);
-    socket->recibirDatos(bufNombreArch.getData(), bufNombreArch.getTamanio());
-     std::string nombre = convertidor.convertirAString(&bufNombreArch);    
-    nombre += "." + this->hash;    
+void AccionPull::crearArchivosPull(Protocolo *protocolo) {
+    std::string nombre = protocolo->recibirYFormatear();               
+    nombre += "." + this->hash;        
     File file((char *)nombre.c_str(), std::ofstream::out | std::ofstream::app);
-    unsigned int tamanioContenidoArch[1];
-    socket->recibirDatos((unsigned char*) tamanioContenidoArch, sizeDeUINT);
-    unsigned int ver = *tamanioContenidoArch;    
-    Buffer bufContenidoArch(ver);
-    socket->recibirDatos(bufContenidoArch.getData(), 
-                         bufContenidoArch.getTamanio());
-    std::string dataEscribir = convertidor.convertirAString(&bufContenidoArch);
+    std::string dataEscribir = protocolo->recibirYFormatear();
     file << dataEscribir;
-//    file.escribir(dataEscribir);    
 }
 
-void AccionPull::responder(Socket* socket) {    
-    unsigned char tipo = 0;    
-    socket->recibirDatos(&tipo, 1);    
+void AccionPull::responder(Protocolo *protocolo) {    
+    unsigned char tipo = protocolo->recibirComando();         
     if (tipo == 1) {
-        int sizeDeUINT = sizeof(unsigned int);
-        unsigned int cantidadDeArchivos[1];
-        socket->recibirDatos((unsigned char*) cantidadDeArchivos, sizeDeUINT);
-        for (int i = 0; i < (int) *cantidadDeArchivos; i++) {
-            this->crearArchivosPull(socket);
+        int cantidadDeArchivos = protocolo->recibirLongitud();
+        for (int i = 0; i < cantidadDeArchivos; i++) {
+            this->crearArchivosPull(protocolo);
         }
     } else {
         std::cout<<"Error: tag/hash incorrecto."<<std::endl;
     }
 }
 
-int AccionPull::getTamanio() {
-    return this->data.size();
-}
-
-
-int AccionPull::getValorNumerico() {
+unsigned char AccionPull::getValorNumerico() {
     return 3;
 }
 

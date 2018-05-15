@@ -1,11 +1,14 @@
 #include <algorithm>
 
 #include "common_Buffer.h"
+#include <exception>
+#include <stdexcept>
+
 
 Buffer::Buffer(unsigned int tamanio) : tamanio(tamanio) {
     this->data = new unsigned char[tamanio];
     if (this->data == NULL) {
-        throw -1;
+        throw std::runtime_error("error al crear el buffer");
     }
 }
 
@@ -24,10 +27,6 @@ unsigned char Buffer::getDataEnPos(int pos) {
     }
     return std::move(this->data[pos]);
 }
-//
-//unsigned char* Buffer::getMoveData() const{    
-//    return std::move(this->data);
-//}
 
 Buffer::~Buffer() {
     delete[] this->data;
