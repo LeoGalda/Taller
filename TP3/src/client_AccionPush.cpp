@@ -20,9 +20,6 @@ void AccionPush::ejecutar(Protocolo *protocolo) {
     protocolo->enviarData(this->hash);    
 }
 
-void AccionPush::enviar(Protocolo *protocolo) {
-}
-
 int AccionPush::enviarDataDeArchivo(Protocolo *protocolo, int tamanio) {
     int bytesAEnviar = 0;
     if (tamanio < MAX_TAMANIO_BUFFER) {

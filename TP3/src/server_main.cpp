@@ -20,9 +20,9 @@ int main(int argc, char** argv) {
         server.aceptarCliente(aceptador);
         aceptador.join();  
         indice.actualizar();
-    }catch (const std::exception &exc) {
+    }catch(const std::exception &exc) {
         std::cout << exc.what() << std::endl;
-    } catch (...) {
+    } catch(...) {
         std::cout << "Error en servidor" << std::endl;
     }
     return 0;

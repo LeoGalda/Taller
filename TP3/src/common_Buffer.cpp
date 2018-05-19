@@ -22,8 +22,7 @@ int Buffer::getTamanio() {
 
 unsigned char Buffer::getDataEnPos(int pos) {
     if (pos < 0 || pos > this->tamanio) {
-        printf("quiere acceder a una posicion invalida\n");
-        throw -1;
+        throw std::runtime_error("quiere acceder a una posicion invalida\n");
     }
     return std::move(this->data[pos]);
 }

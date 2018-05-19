@@ -11,29 +11,20 @@ class AccionPush : public Accion {
 private: 
     std::string hash;    
     File file;
-//    std::vector<unsigned char> data;
     
 public:
 //constructor del AccionPush    
     AccionPush(char *arch, char *hash);
     
-//ejecuta la logica del push y guarda en data los datos a enviar.        
-//    void ejecutar();
+//ejecuta la logica del push.        
     void ejecutar(Protocolo *protocolo);
     
-//envia los datos qeu se encuetran en data;     
-    void enviar(Protocolo *protocolo);
-//    void enviar(Socket *socket);
 
 //envia el contenido del archivo al server    
     void responder(Protocolo *protocolo);
-//    void responder(Socket *socket);
     
 //devuelve el valor numerico que le corresponde       
-    unsigned char getValorNumerico();
-    
-////devuelve el tamanio de data     
-//    int getTamanio();
+    unsigned char getValorNumerico();    
     
 //realiza una lectura del archivo y lo guarda en data    
     void procesarArch(char *data);
@@ -44,7 +35,6 @@ public:
 //envia por el socket la informacion del archivo
 //teniendo como maximo la constante de MAX_TAMANIO_BUFFER
     int enviarDataDeArchivo(Protocolo *protocolo,int tamanio);
-//    int enviarDataDeArchivo(Socket *socket,int tamanio);
     
 //destructor del AccionPush        
     virtual ~AccionPush();

@@ -14,9 +14,6 @@ void AccionPull::ejecutar(Protocolo *protocolo) {
     protocolo->enviarData(this->hash);
 }
 
-void AccionPull::enviar(Protocolo *protocolo) { 
-}
-
 void AccionPull::crearArchivosPull(Protocolo *protocolo) {
     std::string nombre = protocolo->recibirYFormatear();               
     nombre += "." + this->hash;        

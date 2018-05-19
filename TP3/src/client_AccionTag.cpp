@@ -28,9 +28,6 @@ unsigned char AccionTag::getValorNumerico() {
     return 2;
 }
 
-void AccionTag::enviar(Protocolo *protocolo) {
-}
-
 void AccionTag::responder(Protocolo *protocolo) {
     unsigned char tipo = protocolo->recibirComando();         
     if (!tipo) {

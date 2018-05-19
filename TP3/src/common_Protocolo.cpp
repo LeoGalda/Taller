@@ -1,6 +1,7 @@
 #include "common_Protocolo.h"
 #include <string.h>
 #include <iostream>
+#include <string>
 
 Protocolo::Protocolo(Socket *socket) : socket(socket) {
 }
@@ -9,7 +10,7 @@ std::string Protocolo::recibirYFormatear() const {
     int sizeDeUINT = sizeof(unsigned int);
     unsigned int longitudARecibir[1];
     this->socket->recibirDatos((unsigned char*) longitudARecibir, sizeDeUINT);
-    Buffer buffer(*longitudARecibir);
+    Buffer buffer(ntohl(*longitudARecibir));    
     this->socket->recibirDatos(buffer.getData(), buffer.getTamanio());
     return this->convertirAString(&buffer);
 }
@@ -31,8 +32,9 @@ unsigned char Protocolo::recibirComando() {
 }
 
 void Protocolo::formatearYEnviarLongitud(int longitud) {
-    unsigned char aux[TAMANIO_DEL_ENVIO_LONG];
-    memcpy(&aux, &longitud, TAMANIO_DEL_ENVIO_LONG);
+    unsigned char aux[TAMANIO_DEL_ENVIO_LONG];  
+    longitud = htonl(longitud);
+    memcpy(&aux, &longitud, TAMANIO_DEL_ENVIO_LONG);    
     this->socket->enviarDatos(aux, TAMANIO_DEL_ENVIO_LONG);
 }
 
@@ -44,7 +46,7 @@ int Protocolo::recibirLongitud() {
     int sizeDeUINT = sizeof(unsigned int);
     unsigned int longitud[1];
     this->socket->recibirDatos((unsigned char*) longitud, sizeDeUINT);
-    return *longitud;
+    return ntohl(*longitud);
 }
 
 Protocolo::~Protocolo() {

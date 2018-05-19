@@ -14,11 +14,8 @@ public:
 //constructor del AccionPull
     explicit AccionPull(char *hash);
     
-//ejecuta la logica del pull y guarda en data los datos a enviar.    
-    void ejecutar(Protocolo *protocolo);
-    
-//envia los datos qeu se encuetran en data;    
-    void enviar(Protocolo *protocolo);
+//ejecuta la logica del pull
+    void ejecutar(Protocolo *protocolo);    
 
 //recibe la respuesta del server y dependiendo la respuesta realiza
 //las acciones pertinentes    

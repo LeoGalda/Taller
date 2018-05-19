@@ -72,36 +72,6 @@ void Versionador::enviarInfoDeTags(const std::string nomArchivo,
         tamanio -= enviados;
     }
 }
-//void Versionador::enviarInfoDeTags(const std::string nomArchivo,
-//                                    Protocolo *protocolo) {    
-//    std::vector<unsigned char> data;
-//    unsigned char aux[5];
-//    unsigned int tamanioNombre = (unsigned int) nomArchivo.size();
-//    memcpy(&aux, &tamanioNombre, 4);
-//    for (unsigned int j = 0; j < 4; ++j) {
-//        data.push_back(aux[j]);
-//        aux[j] = 0;
-//    }
-//    for (unsigned int j = 0; j < tamanioNombre; ++j) {
-//        data.push_back((unsigned char) nomArchivo[j]);
-//    }
-//    File file((char *) nomArchivo.c_str(), std::ofstream::in);
-//    int tamanioArch = file.getTamanioArch();
-//    memcpy(&aux, &tamanioArch, 4);
-//    for (unsigned int j = 0; j < 4; ++j) {
-//        data.push_back(aux[j]);
-//        aux[j] = 0;
-//    }
-//    this->socket.enviarDatos(&data[0], (int) data.size());
-//    data.clear();
-//    int cantDeBytesDelArchivoEnviado = 0;
-//    int tamanio = tamanioArch;
-//    while (cantDeBytesDelArchivoEnviado < tamanioArch) {
-//        int enviados = this->enviarDataDeArchivo(tamanio, &file);
-//        cantDeBytesDelArchivoEnviado += enviados;
-//        tamanio -= enviados;
-//    }
-//}
 
 int Versionador::pullea() {
     Protocolo protocolo(&this->socket);
@@ -122,44 +92,11 @@ int Versionador::pullea() {
     }
     return 0;
 }
-//int Versionador::pullea() {
-//    int sizeDeUINT = sizeof (unsigned int);
-//    unsigned int longitudNombreTag[1];
-//    this->socket.recibirDatos((unsigned char*) longitudNombreTag, sizeDeUINT);
-//    Buffer bufNombreTag(*longitudNombreTag);
-//    this->socket.recibirDatos(bufNombreTag.getData(),
-//            bufNombreTag.getTamanio());
-//    unsigned char aux[4];
-//    std::set<std::string> archivosTaggeados;
-//    std::vector<unsigned char> data;
-//    this->indice->getArchivosTaggeados(&bufNombreTag, archivosTaggeados);
-//    unsigned char todoOk;
-//    if (archivosTaggeados.empty()) {
-//        todoOk = 0;
-//        this->socket.enviarDatos(&todoOk, 1);
-//        return 0;
-//    }
-//    todoOk = 1;
-//    this->socket.enviarDatos(&todoOk, 1);
-//    unsigned int tamanioHash = (unsigned int) archivosTaggeados.size();
-//    memcpy(&aux, &tamanioHash, 4);
-//    for (unsigned int j = 0; j < 4; ++j) {
-//        data.push_back(aux[j]);
-//    }
-//    data.clear();
-//    this->socket.enviarDatos(&data[0], 4);
-//
-//    for (std::set<string>::iterator it = archivosTaggeados.begin();
-//            it != archivosTaggeados.end(); ++it) {
-//        this->enviarInfoDeTags(*it);
-//    }
-//    return 0;
-//}
 
 int Versionador::tagea() {
     Protocolo protocolo(&this->socket);
     int cantidadDeHashes;
-    cantidadDeHashes = (int) protocolo.recibirComando();
+    cantidadDeHashes = protocolo.recibirLongitud();
     std::string version = protocolo.recibirYFormatear();
     unsigned char todoOk = this->indice->validarVersion(version);
     std::vector<std::string> hashes;
@@ -178,37 +115,6 @@ int Versionador::tagea() {
     protocolo.enviarComando(todoOk);
     return 0;
 }
-//int Versionador::tagea() {
-//    int sizeDeUINT = sizeof(unsigned int);
-//    unsigned int cantidadDeHashes[1];
-//    this->socket.recibirDatos((unsigned char*) cantidadDeHashes, sizeDeUINT);
-//    //----------------------------------------------------------    
-//    unsigned int longitudVersion[1];
-//    this->socket.recibirDatos((unsigned char*) longitudVersion, sizeDeUINT);
-//    Buffer bufVersion(*longitudVersion);
-//    this->socket.recibirDatos(bufVersion.getData(), bufVersion.getTamanio());
-//    unsigned char todoOk = this->indice->validarVersion(&bufVersion);
-//    //---------------------------------------------------------
-//    std::vector<std::string> hashes;
-//    Conversor convertidor;
-//    for (int i = 0; i < (int) *cantidadDeHashes; i++) {
-//        unsigned int longitudHash[1];
-//        this->socket.recibirDatos((unsigned char*) longitudHash, sizeDeUINT);
-//        Buffer bufHash(*longitudHash);
-//        this->socket.recibirDatos(bufHash.getData(), bufHash.getTamanio());
-//        std::string dataHash = convertidor.convertirAString(&bufHash);
-//        hashes.push_back(dataHash);
-//        todoOk = todoOk * this->indice->validarHashExiste(&bufHash);
-//    }
-//    if (todoOk) {
-//        for (size_t w = 0; w < hashes.size(); w++) {
-//            std::string dataVersion = convertidor.convertirAString(&bufVersion);
-//            this->indice->agregar(dataVersion, hashes[w], "t");
-//        }
-//    }
-//    this->socket.enviarDatos(&todoOk, 1);
-//    return 0;
-//}
 
 int Versionador::pushea() {
     Protocolo protocolo(&this->socket);

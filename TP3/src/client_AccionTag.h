@@ -14,12 +14,9 @@ public:
 //constructor del Accion Tag    
     explicit AccionTag(char *version);
 
-//ejecuta la logica del tag y guarda en data los datos a enviar.            
-    void ejecutar(Protocolo *protocolo);
-    
-//envia los datos qeu se encuetran en data y todos sus hashes con 
-//sus respectivos tamanios    
-    void enviar(Protocolo *protocolo);
+//envia los datos  de la logica del tag y todos sus hashes con 
+//sus respectivos tamanios           
+    void ejecutar(Protocolo *protocolo);   
     
 //recibe la respuesta del server    
     void responder(Protocolo *protocolo);

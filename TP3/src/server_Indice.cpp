@@ -23,16 +23,6 @@ Indice::Indice(char *ruta) : nombreArchivo(ruta) {
     }
 }
 
-//Indice::Indice(Indice&& other) {
-//    this->convertidor = other.convertidor;
-//    this->hashDeArchivos = other.hashDeArchivos;
-//    this->hashDeTags = other.hashDeTags;
-//    this->nombreArchivo = other.nombreArchivo;
-//    other.hashDeArchivos.clear();
-//    other.hashDeTags.clear();
-//    other.nombreArchivo = nullptr;
-//}
-
 void Indice::explode(const std::string &linea, std::vector<std::string> &datos){
     size_t pos1 = 0;
     size_t pos2 = 0;
@@ -82,8 +72,7 @@ void Indice::actualizar() {
             infoAEnviar.append(*itSet);
             infoAEnviar.append(" ");
         }
-        infoAEnviar.append(";\n");        
-//        file.escribir(infoAEnviar);
+        infoAEnviar.append(";\n");     
         file << infoAEnviar;
     }
 }
@@ -139,30 +128,6 @@ void Indice::getArchivosTaggeados(const std::string tag,
         }
     }
 }
-//void Indice::getArchivosTaggeados(Buffer *buffer,
-//        std::set<string>& archivosTaggeados) {
-//    Lock l(this->mute);
-//    string tag = this->convertidor.convertirAString(buffer);
-//    auto search = this->hashDeArchivos.find(tag);
-//    if (search != this->hashDeArchivos.end()) {
-//        std::set<string> hashesTaggeados;
-//        hashesTaggeados = this->hashDeArchivos[tag];
-//        std::set<string>::iterator itTag;
-//        map<string, std::set < string>>::iterator itHash;
-//        for (itTag = hashesTaggeados.begin();
-//                itTag != hashesTaggeados.end(); itTag++) {
-//            for (itHash = this->hashDeArchivos.begin();
-//                    itHash != this->hashDeArchivos.end(); ++itHash) {
-//                auto searchArch = itHash->second.find(*itTag);
-//                if (searchArch != this->hashDeArchivos[itHash->first].end()) {
-//                    if (this->soyArchivo(itHash->first)) {
-//                        archivosTaggeados.insert(itHash->first);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
 
 char Indice::validarHashes(const std::string &nombre,const std::string &hash){
     Lock l(this->mute);
@@ -184,15 +149,6 @@ unsigned char Indice::validarVersion(const std::string &version) {
     }
     return SUCCESS;
 }
-//unsigned char Indice::validarVersion(Buffer* bufVersion) {
-//    Lock l(this->mute);
-//    string versionABuscar = this->convertidor.convertirAString(bufVersion);
-//    auto search = this->hashDeArchivos.find(versionABuscar);
-//    if (search != this->hashDeArchivos.end()) {
-//        return ERROR;
-//    }
-//    return SUCCESS;
-//}
 
 unsigned char Indice::validarHashExiste(const std::string &hash) {
     Lock l(this->mute);
@@ -207,20 +163,7 @@ unsigned char Indice::validarHashExiste(const std::string &hash) {
     }
     return ERROR;
 }
-//unsigned char Indice::validarHashExiste(Buffer* bufHash) {
-//    Lock l(this->mute);
-//    map<string, std::set < string>>::iterator it;
-//    string dataHash = this->convertidor.convertirAString(bufHash);
-//    for (it = this->hashDeArchivos.begin(); it != this->hashDeArchivos.end();
-//            ++it) {
-//        std::set<string>::iterator search =
-//                it->second.find(dataHash);
-//        if (search != it->second.end()) {
-//            return SUCCESS;
-//        }
-//    }
-//    return ERROR;
-//}
+
 
 Indice::~Indice() {
 }

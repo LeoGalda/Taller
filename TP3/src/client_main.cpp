@@ -33,14 +33,12 @@ int main(int argc, char* argv[]) {
         }
         Cliente cliente(argv[1], argv[2]);
         cliente.ejecutar(accion);
-
         delete accion;
-
-    } catch (const std::invalid_argument &exc) {
+    } catch(const std::invalid_argument &exc) {
         std::cout << "Error: argumentos invalidos." << std::endl;
-    } catch (const std::exception &exc) {
+    } catch(const std::exception &exc) {
         std::cout << exc.what() << std::endl;
-    } catch (...) {
+    } catch(...) {
         std::cout << "Error no capturado" << std::endl;
     }
     return 0;
